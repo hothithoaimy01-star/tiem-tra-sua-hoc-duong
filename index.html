@@ -2591,7 +2591,7 @@
     const PACK_QTY = 5;
     const SIZE_PACK_COST = 8000;
 
-    // Hồ sơ 19 nhân vật đặc trưng (10 nhân vật mới + 9 nhân vật quen thuộc)
+    // Hồ sơ 20 nhân vật đặc trưng (11 nhân vật mới + 9 nhân vật quen thuộc)
     const customerProfiles = [
         // --- 10 NHÂN VẬT MỚI SIÊU ĐẶC TRƯNG ---
         {
@@ -2797,6 +2797,17 @@
             winMsg: 'Chốt đơn mượt mà! Chúc quán hôm nay nổ đơn ầm ầm nha!',
             loseMsg: 'Á á nhầm đơn rồi quán ơi! Đền đơn chết anh luôn, anh sang quán khác lấy hàng đây!',
             timeoutMsg: 'Quá 20 giây bị tính giao trễ đơn ShopeeFood rồi quán ơi! Anh hủy đơn đi đây!'
+        },
+        {
+            id: 'be_bap', img: 'chau_chu_quan_be_bap.png', name: 'Bé Bắp (3 Tuổi) 🌽',
+            getOrders: (tea, size, top) => [
+                `Mợ Ba ơi! Bắp thèm <b style="color:#d81b60">${tea}</b> ly <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b> nha mợ! 🥺`,
+                `Mợ Ba cho Bắp 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> nhiều <b style="color:#e65100">${top}</b> đi ạ! 🌽`,
+                `Mợ Ba ơi Bắp ngoan nè! Pha Bắp <b style="color:#d81b60">${tea}</b> ly <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nha! 💛`
+            ],
+            winMsg: 'Ngon quá mợ Ba ơi! Bắp hun mợ Ba cái chụt nè! 😘',
+            loseMsg: 'Hổng phải món Bắp thích! Bắp dỗi mợ Ba luôn, Bắp đi méc mẹ đây!',
+            timeoutMsg: 'Mợ Ba ơi Bắp đợi mỏi chân rồi! Bắp chạy về với mẹ đây!'
         }
     ];
 
