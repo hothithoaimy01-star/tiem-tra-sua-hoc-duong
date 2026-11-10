@@ -2591,7 +2591,7 @@
     const PACK_QTY = 5;
     const SIZE_PACK_COST = 8000;
 
-    // Hồ sơ 22 nhân vật đặc trưng (13 nhân vật mới + 9 nhân vật quen thuộc)
+    // Hồ sơ 23 nhân vật đặc trưng (14 nhân vật mới + 9 nhân vật quen thuộc)
     const customerProfiles = [
         // --- 10 NHÂN VẬT MỚI SIÊU ĐẶC TRƯNG ---
         {
@@ -2830,6 +2830,17 @@
             winMsg: 'Ủa sao ngon dữ thần vậy chị Hai ơi!! Hào uống đã cái nư luôn, mai mốt lên thăm chị Hai Hào ghé nữa nha! 😋🌾',
             loseMsg: 'Ơ chị Hai ơi hình như lộn ly của Hào mất rồi! Thôi ngại quá, Hào đi dạo vòng vòng trước nha!',
             timeoutMsg: 'Chị Hai ơi xe đò dưới quê sắp chạy mất rồi! Đợi 20 giây lâu quá Hào chạy ra bến xe đây!'
+        },
+        {
+            id: 'thuy_trang', img: 'ban_than_Thuy_Trang.png', name: 'Thùy Trang (25T) 👓',
+            getOrders: (tea, size, top) => [
+                `Mỹ ơi Mỹ à! Đồng nghiệp cũ ghé ủng hộ nè, pha cho tui 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> tâm sự chuyện công ty cũ coi! 👓✨`,
+                `Ê Mỹ, từ hồi bà nghỉ việc mở quán tới giờ tui thèm trà sữa quá trời! Cho tui 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> múc đầy <b style="color:#e65100">${top}</b> nhanh gọn lẹ nha bạn hiền! 💖`,
+                `Chị bạn 25 tuổi vừa tan ca chạy qua quán Mỹ liền nè! Làm giúp tui 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> chuẩn vị tui thích đi! ☕`
+            ],
+            winMsg: 'Trời ơi Mỹ pha đỉnh quá trời luôn á! Ngon hơn hồi tụi mình hay đặt ship ở công ty cũ nữa, mãi keo nha bạn thân! 💖',
+            loseMsg: 'Ủa alo Mỹ ơi?! Làm sai món của tui rồi bà nội, bạn thân kiểu này tui dỗi đi về công ty luôn á nha!',
+            timeoutMsg: 'Mỹ ơi tui đợi 20 giây muốn xỉu luôn rồi nè! Chắc khách đông quá hả, tui ghé lại sau nha bạn thân!'
         }
     ];
 
