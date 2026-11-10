@@ -2,22 +2,28 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Tiệm Trà Sữa Học Đường - Game Pha Chế &amp; Quản Lý Theo Ngày</title>
     <style>
         * {
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        button, .size-btn, .ingredient-card, .cup-visual-box, .top-icon-btn, .scroll-nav-btn {
+            touch-action: manipulation;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #fce4ec 0%, #f7ebe1 50%, #e8f5e9 100%);
             margin: 0;
-            padding: 10px;
+            padding: 10px max(10px, env(safe-area-inset-right)) 10px max(10px, env(safe-area-inset-left));
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
         }
         #game-container {
             width: 100%;
@@ -29,6 +35,7 @@
             padding: 12px 16px;
             position: relative;
             overflow: hidden;
+            margin: auto;
         }
         #confetti-canvas {
             position: absolute;
@@ -52,11 +59,70 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 18px;
+            padding: 14px;
+            overflow-y: auto;
         }
         .overlay-screen.active {
             display: flex;
             animation: fadeInOverlay 0.3s ease;
+        }
+        .mobile-start-card, .modal-card {
+            margin: auto;
+        }
+
+        /* Màn nhắc xoay ngang trên điện thoại cầm dọc */
+        #rotate-prompt {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(255, 240, 246, 0.98), rgba(254, 243, 199, 0.96));
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        #rotate-prompt.active { display: flex; }
+        .rotate-card {
+            width: 100%;
+            max-width: 360px;
+            background: #ffffff;
+            border: 3px solid #ffb6c1;
+            border-radius: 24px;
+            padding: 22px 18px;
+            box-shadow: 0 18px 42px rgba(233, 30, 99, 0.22);
+        }
+        .rotate-phone-icon {
+            font-size: 52px;
+            display: inline-block;
+            margin-bottom: 8px;
+            animation: tiltToLandscape 1.8s ease-in-out infinite;
+        }
+        @keyframes tiltToLandscape {
+            0%, 20% { transform: rotate(0deg) scale(1); }
+            55%, 80% { transform: rotate(-90deg) scale(1.08); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .rotate-title {
+            font-size: 19px;
+            font-weight: 900;
+            color: #d81b60;
+            margin-bottom: 6px;
+        }
+        .rotate-desc {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.45;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .rotate-hint-msg {
+            font-size: 11.5px;
+            color: #b45309;
+            font-weight: 700;
+            margin-top: 8px;
+            min-height: 16px;
         }
         @keyframes fadeInOverlay {
             from { opacity: 0; }
@@ -1247,6 +1313,8 @@
         }
         .oreo-biscuit-item {
             position: absolute;
+            width: 20%;
+            aspect-ratio: 1 / 1;
             z-index: 6;
             pointer-events: none;
             filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
@@ -1256,8 +1324,8 @@
         /* Bánh flan, Trái cây sấy, Thạch cá SVG sắc nét */
         .flan-svg-item {
             position: absolute;
-            width: 44px;
-            height: 32px;
+            width: 39%;
+            aspect-ratio: 46 / 34;
             z-index: 7;
             pointer-events: none;
             filter: drop-shadow(0 3px 4px rgba(120, 53, 15, 0.25));
@@ -1265,6 +1333,8 @@
         }
         .fruit-chip-svg {
             position: absolute;
+            width: 24%;
+            aspect-ratio: 1 / 1;
             z-index: 7;
             pointer-events: none;
             filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
@@ -1272,8 +1342,8 @@
         }
         .fish-jelly-svg {
             position: absolute;
-            width: 28px;
-            height: 17px;
+            width: 25%;
+            aspect-ratio: 40 / 24;
             z-index: 5;
             pointer-events: none;
             filter: drop-shadow(0 1.5px 2px rgba(15, 23, 42, 0.22));
@@ -1490,48 +1560,194 @@
         }
         @keyframes floatUp { 0% { opacity: 0; transform: translateY(0) scale(0.7); } 30% { opacity: 1; transform: translateY(-20px) scale(1.2); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
 
-        /* RESPONSIVE */
-        @media (max-width: 920px) {
-            .main-workspace { grid-template-columns: 300px 1fr; gap: 10px; }
+        /* RESPONSIVE ĐA THIẾT BỊ & XOAY NGANG MÀN HÌNH */
+        @media (max-width: 1024px) {
+            body { padding: 6px max(6px, env(safe-area-inset-right)) 6px max(6px, env(safe-area-inset-left)); }
+            #game-container { padding: 10px 12px; min-height: auto; border-radius: 18px; }
+            .main-workspace { grid-template-columns: clamp(256px, 34vw, 315px) minmax(0, 1fr); gap: 10px; }
+            .horizontal-row {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 3px;
+            }
+            .horizontal-row .ingredient-card { flex: 1 0 64px; }
             .drink-img-wrap { width: 58px; height: 64px; }
             .img-crop-box { height: 50px; }
             .tap-target-glow { top: 40px; }
             .pour-stream { top: 40px; }
             .mini-catch-cup { top: 44px; width: 20px; height: 22px; }
-            .topping-img-wrap { width: 60px; height: 40px; }
+            .topping-img-wrap { width: 58px; height: 40px; }
             .item-label { font-size: 9.5px; }
         }
-        @media (max-height: 540px) and (min-width: 720px) {
-            body { padding: 5px; }
-            #game-container { padding: 8px 10px; min-height: auto; }
-            .top-bar { padding: 4px 10px; margin-bottom: 5px; }
-            .missions-strip { padding: 3px 10px; margin-bottom: 5px; }
-            .left-station { padding: 6px; gap: 5px; }
-            .customer-area { min-height: 82px; padding: 5px; gap: 4px; }
-            .avatar-container { width: 52px; height: 52px; }
-            .patience-wrap { padding: 2px 5px; }
-            .patience-track { height: 7px; }
-            .patience-label, .patience-time-badge { font-size: 9.5px; }
-            .cup-stage { height: 112px; }
-            .cup-visual-box.size-M { width: 74px; height: 86px; }
-            .cup-visual-box.size-L { width: 88px; height: 106px; }
-            .right-station { gap: 4px; }
-            .shelf-box { padding: 4px 8px; }
-            .drink-img-wrap { width: 50px; height: 54px; }
-            .img-crop-box { height: 42px; }
-            .tap-target-glow { top: 34px; }
-            .pour-stream { top: 34px; }
-            .mini-catch-cup { top: 38px; width: 18px; height: 20px; }
-            .topping-img-wrap { width: 50px; height: 34px; }
+
+        /* Màn hình ngang thấp (Laptop 1366x600 / Điện thoại xoay ngang 640x360 -> 932x430) */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 4px max(4px, env(safe-area-inset-right)) 4px max(4px, env(safe-area-inset-left));
+                align-items: flex-start;
+            }
+            #game-container {
+                padding: 7px 9px;
+                min-height: auto;
+                border-radius: 16px;
+                overflow: visible;
+            }
+            .overlay-screen {
+                position: fixed;
+                inset: 0;
+                z-index: 250;
+                padding: 8px;
+                align-items: flex-start;
+            }
+            .mobile-start-card {
+                max-width: 540px;
+                padding: 12px 16px;
+                border-radius: 20px;
+            }
+            .start-mascot-row { gap: 8px; margin-bottom: 6px; }
+            .start-mascot { width: 48px; height: 48px; }
+            .start-mascot.center-cup { font-size: 38px; }
+            .start-title { font-size: 19px; margin: 2px 0; }
+            .start-subtitle { font-size: 11px; margin-bottom: 8px; }
+            .start-progress-box { padding: 6px; margin-bottom: 10px; border-radius: 12px; }
+            .start-stat b { font-size: 14px; }
+            .btn-play-big { padding: 10px 14px; font-size: 15px; border-radius: 14px; margin-bottom: 8px; }
+            .btn-secondary-pill { padding: 7px 8px; font-size: 11.5px; }
+
+            .modal-card {
+                max-height: 94dvh;
+                padding: 10px 14px;
+                border-radius: 16px;
+            }
+            .modal-card.compact { max-width: 500px; overflow-y: auto; }
+            .modal-header { padding-bottom: 6px; margin-bottom: 8px; }
+            .modal-title { font-size: 16px; }
+            .stars-row { font-size: 24px; margin: 2px 0 4px 0; }
+            .day-summary-list { padding: 7px 10px; margin: 6px 0 8px 0; gap: 4px; }
+            .summary-mission-item { font-size: 11.5px; }
+            .market-items-grid { grid-template-columns: repeat(auto-fill, minmax(122px, 1fr)); gap: 6px; }
+
+            .top-bar { padding: 3px 8px; margin-bottom: 3px; gap: 4px; border-radius: 10px; flex-wrap: nowrap; }
+            .brand-title { font-size: 12.5px; gap: 5px; white-space: nowrap; }
+            .day-badge { font-size: 10px; padding: 1px 6px; }
+            .stats-bar { gap: 4px; flex-wrap: nowrap; }
+            .stat-pill { padding: 2px 6px; font-size: 10px; white-space: nowrap; }
+            .top-icon-btn { padding: 2px 7px; font-size: 11px; white-space: nowrap; }
+
+            .missions-strip {
+                padding: 2px 8px;
+                margin-bottom: 4px;
+                gap: 5px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .missions-label { font-size: 10px; white-space: nowrap; }
+            #missions-list { flex-wrap: nowrap !important; }
+            .mission-chip { white-space: nowrap; flex-shrink: 0; font-size: 9.5px; padding: 1px 6px; }
+
+            .main-workspace {
+                grid-template-columns: clamp(230px, 37vw, 294px) minmax(0, 1fr);
+                gap: 6px;
+                align-items: start;
+            }
+            .left-station { padding: 5px; gap: 4px; border-radius: 12px; }
+            .customer-area { min-height: 58px; padding: 4px 6px; gap: 3px; border-radius: 10px; }
+            .customer-top-row { gap: 6px; }
+            .avatar-container { width: 42px; height: 42px; padding: 2px; border-radius: 9px; }
+            .customer-name-tag { font-size: 8px; padding: 1px 5px; max-width: 78px; }
+            .speech-bubble {
+                padding: 4px 7px;
+                font-size: 10px;
+                line-height: 1.26;
+                max-height: 48px;
+                overflow-y: auto;
+            }
+            .bubble-error-detail { font-size: 9px; padding: 1px 5px; margin-top: 2px; }
+            .patience-wrap { padding: 1px 5px; gap: 4px; }
+            .patience-track { height: 5.5px; }
+            .patience-label, .patience-time-badge { font-size: 9px; min-width: 24px; }
+
+            .cup-area { padding: 4px 5px; border-radius: 10px; flex: 0 0 auto; }
+            .cup-and-size-row { gap: 6px; }
+            .size-vertical-group { width: 76px; gap: 4px; }
+            .size-btn { padding: 4px 3px; font-size: 10px; border-radius: 8px; }
+            .stock-mini { font-size: 8px; padding: 0 4px; }
+            .cup-stage { height: 86px; width: 96px; margin-top: 0; }
+            .cup-coaster { width: 64px; height: 8px; }
+            .cup-visual-box.size-M { width: 58px; height: 68px; }
+            .cup-visual-box.size-L { width: 67px; height: 78px; }
+            .cup-status-text { margin-top: 2px; gap: 3px; font-size: 8.5px; }
+            .cup-tag { padding: 1px 4px; }
+            .cup-hint-pill { font-size: 9px; padding: 1px 6px; margin-top: 2px; }
+            .actions-group { gap: 5px; }
+            .action-btn, .reset-btn { padding: 5px 5px; font-size: 10.5px; border-radius: 9px; }
+            #message { min-height: 16px; font-size: 9.5px; padding: 2px 6px; }
+            #message:empty { display: none; min-height: 0; padding: 0; }
+
+            .right-station {
+                gap: 4px;
+                justify-content: flex-start;
+                max-height: calc(100dvh - 68px);
+                overflow-y: auto;
+                padding-right: 2px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .shelf-box { padding: 4px 7px; border-radius: 10px; flex-shrink: 0; }
+            .shelf-title { font-size: 10px; margin-bottom: 3px; }
+            .horizontal-row {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                gap: 5px;
+                padding-bottom: 2px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .horizontal-row .ingredient-card { flex: 1 0 58px; padding: 3px 2px; border-radius: 9px; }
+            .drink-img-wrap { width: 42px; height: 46px; margin-bottom: 1px; }
+            .img-crop-box { height: 36px; }
+            .tap-target-glow { top: 28px; width: 12px; height: 12px; }
+            .pour-stream { top: 28px; }
+            .ingredient-card.pouring-active .pour-stream { height: 13px; }
+            .mini-catch-cup { top: 32px; width: 15px; height: 17px; }
+            .topping-img-wrap { width: 44px; height: 28px; margin-bottom: 1px; }
+            .topping-scroll-row { gap: 5px; padding: 11px 2px 4px 2px; margin-top: -8px; }
+            .topping-scroll-row .topping-card { flex: 0 0 66px; padding: 3px 2px; }
+            .card-stock-badge { font-size: 8.5px; padding: 0 4px; top: 2px; left: 3px; }
+            .item-label { font-size: 8.8px; line-height: 1.12; }
         }
-        @media (max-width: 719px) {
-            .main-workspace { grid-template-columns: 1fr; }
-            .horizontal-row { overflow-x: auto; padding-bottom: 4px; }
-            .ingredient-card { min-width: 90px; }
+
+        /* Dự phòng màn hình rất hẹp hoặc đang cầm dọc */
+        @media (max-width: 559px), ((max-width: 767px) and (orientation: portrait)) {
+            body { padding: 4px; align-items: flex-start; }
+            #game-container { padding: 8px; min-height: auto; border-radius: 14px; overflow: visible; }
+            .overlay-screen { position: fixed; inset: 0; z-index: 250; padding: 10px; align-items: flex-start; }
+            .main-workspace { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+            .horizontal-row { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+            .ingredient-card { flex: 0 0 82px; }
         }
     </style>
 </head>
 <body>
+
+<!-- NHẮC XOAY NGANG TRÊN ĐIỆN THOẠI KHI ĐANG CẦM DỌC -->
+<div id="rotate-prompt" aria-live="polite">
+    <div class="rotate-card">
+        <div class="rotate-phone-icon">📱</div>
+        <div class="rotate-title">Xoay Ngang Màn Hình Để Pha Chế!</div>
+        <div class="rotate-desc">
+            Tiệm Trà Sữa Học Đường có 4 quầy pha chế rộng rãi, hoạt động mượt nhất khi xoay ngang thiết bị.
+        </div>
+        <button class="btn-play-big" style="margin-bottom: 8px; padding: 11px 14px; font-size: 14px;" onclick="requestLandscapeFullscreen()">
+            🔄 Bật Màn Hình Ngang &amp; Toàn Màn Hình
+        </button>
+        <button class="btn-secondary-pill" style="width: 100%;" onclick="dismissRotatePrompt()">
+            ▶ Vẫn chơi ở màn hình hiện tại
+        </button>
+        <div class="rotate-hint-msg" id="rotate-hint-msg"></div>
+    </div>
+</div>
 
 <!-- LY MINI ĐI THEO CON TRỎ -->
 <div id="floating-mini-cup">
@@ -2453,6 +2669,7 @@
 
     function isPatiencePaused() {
         if (isServing || !currentCustomer) return true;
+        if (document.getElementById('rotate-prompt')?.classList.contains('active')) return true;
         if (document.getElementById('start-screen').classList.contains('active')) return true;
         if (document.getElementById('day-end-modal').classList.contains('active')) return true;
         if (document.getElementById('market-modal').classList.contains('active')) return true;
@@ -3213,8 +3430,8 @@
         </svg>`;
     }
 
-    function createOreoBiscuitSvg(sizePx) {
-        return `<svg width="${sizePx}" height="${sizePx}" viewBox="0 0 28 28">
+    function createOreoBiscuitSvg() {
+        return `<svg width="100%" height="100%" viewBox="0 0 28 28">
             <circle cx="14" cy="16" r="11" fill="#1c1917" stroke="#0c0a09" stroke-width="1.2"/>
             <rect x="4" y="12.5" width="20" height="4" rx="2" fill="#f8fafc"/>
             <circle cx="14" cy="11.5" r="10.5" fill="#292524" stroke="#1c1917" stroke-width="1.2" stroke-dasharray="2 1.2"/>
@@ -3227,7 +3444,7 @@
         const creamTop = withWhipCream
             ? `<path d="M 17 8 Q 20 2 23 5 Q 26 2 29 8 Z" fill="#fffdf9" stroke="#fde68a" stroke-width="0.9"/><circle cx="23" cy="4.2" r="1.4" fill="#fff"/>`
             : '';
-        return `<svg width="44" height="32" viewBox="0 0 46 34">
+        return `<svg width="100%" height="100%" viewBox="0 0 46 34">
             <defs>
                 <linearGradient id="${uid}-cust" x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stop-color="#fef08a"/>
@@ -3250,7 +3467,7 @@
 
     function createDriedFruitSvg(toppingName, idx) {
         if (toppingName === 'Dâu tây sấy giòn') {
-            return `<svg width="26" height="28" viewBox="0 0 36 38">
+            return `<svg width="100%" height="100%" viewBox="0 0 36 38">
                 <path d="M 18 4 C 28 4, 34 11, 31 20 C 28 29, 21 35, 18 35 C 15 35, 8 29, 5 20 C 2 11, 8 4, 18 4 Z" fill="#e11d48" stroke="#be123c" stroke-width="1.5"/>
                 <path d="M 18 8 C 25 8, 29 13, 27 19 C 24 26, 20 30, 18 30 C 16 30, 12 26, 9 19 C 7 13, 11 8, 18 8 Z" fill="#fb7185"/>
                 <path d="M 18 11 C 21 12, 23 16, 21 22 L 18 27 L 15 22 C 13 16, 15 12, 18 11 Z" fill="#fff1f2" opacity="0.92"/>
@@ -3265,7 +3482,7 @@
             const skin = isPurple ? '#6b21a8' : '#4d7c0f';
             const flesh = isPurple ? '#d8b4fe' : '#d9f99d';
             const core = isPurple ? '#a855f7' : '#84cc16';
-            return `<svg width="24" height="22" viewBox="0 0 32 28">
+            return `<svg width="100%" height="100%" viewBox="0 0 32 28">
                 <ellipse cx="16" cy="14" rx="13.5" ry="11" fill="${skin}"/>
                 <ellipse cx="16" cy="14" rx="11" ry="8.8" fill="${flesh}"/>
                 <ellipse cx="16" cy="14" rx="6.2" ry="4.5" fill="${core}" opacity="0.45"/>
@@ -3274,7 +3491,7 @@
                 <path d="M 8 9 Q 12 7 16 7.5" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round"/>
             </svg>`;
         }
-        return `<svg width="28" height="28" viewBox="0 0 38 38">
+        return `<svg width="100%" height="100%" viewBox="0 0 38 38">
             <circle cx="19" cy="19" r="16.5" fill="#dc2626"/>
             <circle cx="19" cy="19" r="14.5" fill="#fef3c7" stroke="#f59e0b" stroke-width="0.9"/>
             <path d="M 19 11 L 21 16 L 26 16 L 22 19.5 L 23.5 25 L 19 21.8 L 14.5 25 L 16 19.5 L 12 16 L 17 16 Z" fill="#fde68a" stroke="#d97706" stroke-width="0.8"/>
@@ -3284,7 +3501,7 @@
     }
 
     function createJellyFishSvg(color, idx) {
-        return `<svg width="28" height="17" viewBox="0 0 40 24">
+        return `<svg width="100%" height="100%" viewBox="0 0 40 24">
             <path d="M 11 12 L 2 5 Q 5 12 2 19 Z" fill="${color}" fill-opacity="0.82"/>
             <path d="M 18 4 Q 24 0 27 5 Z" fill="${color}" fill-opacity="0.78"/>
             <ellipse cx="23" cy="12" rx="13" ry="7.2" fill="${color}" fill-opacity="0.9" stroke="rgba(255,255,255,0.45)" stroke-width="0.9"/>
@@ -3308,7 +3525,7 @@
 
         // 1. Nhóm topping nằm trên bề mặt trà (Bánh flan, Kem cheese, Kem khoai môn, Vụn Oreo, Trái cây sấy giòn)
         if (toppingName === 'Bánh flan') {
-            container.style.height = '38px';
+            container.style.height = '28%';
             container.style.bottom = hasTea ? '57%' : '4%';
             [
                 { left: '13%', top: '2px', rot: '-8deg', delay: '0s', cream: false },
@@ -3362,16 +3579,17 @@
                 cap.classList.add('oreo-cap');
                 cap.insertAdjacentHTML('beforeend', createCreamDripSvg('#f1f5f9', 'rgba(100, 116, 139, 0.35)'));
                 [
-                    { left: '16%', top: '-7px', size: 22, rot: '-16deg', delay: '0.06s' },
-                    { left: '58%', top: '-5px', size: 19, rot: '18deg', delay: '0.12s' }
+                    { left: '16%', top: '-7px', pct: 20, rot: '-16deg', delay: '0.06s' },
+                    { left: '58%', top: '-5px', pct: 17, rot: '18deg', delay: '0.12s' }
                 ].forEach(b => {
                     const biscuit = document.createElement('div');
                     biscuit.className = 'oreo-biscuit-item';
                     biscuit.style.left = b.left;
                     biscuit.style.top = b.top;
+                    biscuit.style.width = `${b.pct}%`;
                     biscuit.style.transform = `rotate(${b.rot})`;
                     biscuit.style.animationDelay = b.delay;
-                    biscuit.innerHTML = createOreoBiscuitSvg(b.size);
+                    biscuit.innerHTML = createOreoBiscuitSvg();
                     cap.appendChild(biscuit);
                 });
                 for (let i = 0; i < 18; i++) {
@@ -3390,7 +3608,7 @@
         }
 
         if (toppingName === 'Dâu tây sấy giòn' || toppingName === 'Nho sấy giòn' || toppingName === 'Táo sấy giòn') {
-            container.style.height = '38px';
+            container.style.height = '28%';
             container.style.bottom = hasTea ? '57%' : '4%';
             const spots = [
                 { left: '12%', top: '3px', rot: '-20deg', scale: 0.94 },
@@ -3706,11 +3924,62 @@
         }
     }
 
+    // =========================================================
+    // 10. HỖ TRỢ XOAY NGANG & ĐA KÍCH THƯỚC THIẾT BỊ
+    // =========================================================
+    let userDismissedPortraitPrompt = false;
+
+    function syncOrientationUI() {
+        const promptEl = document.getElementById('rotate-prompt');
+        const hintEl = document.getElementById('rotate-hint-msg');
+        const isLandscape = window.innerWidth >= window.innerHeight;
+        const shouldAskRotate = !isLandscape && window.innerWidth <= 920 && !userDismissedPortraitPrompt;
+
+        if (isLandscape) {
+            userDismissedPortraitPrompt = false;
+            if (hintEl) hintEl.innerText = '';
+        }
+        if (promptEl) promptEl.classList.toggle('active', shouldAskRotate);
+        if (typeof resizeCanvas === 'function') resizeCanvas();
+    }
+
+    async function requestLandscapeFullscreen() {
+        const hintEl = document.getElementById('rotate-hint-msg');
+        try {
+            if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+                await document.documentElement.requestFullscreen();
+            }
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
+            syncOrientationUI();
+        } catch (err) {
+            if (hintEl) {
+                hintEl.innerText = '📲 Hãy xoay ngang điện thoại thủ công (hoặc bật Tự động xoay trên máy) nhé!';
+            }
+            syncOrientationUI();
+        }
+    }
+
+    function dismissRotatePrompt() {
+        userDismissedPortraitPrompt = true;
+        const promptEl = document.getElementById('rotate-prompt');
+        if (promptEl) promptEl.classList.remove('active');
+        syncOrientationUI();
+    }
+
+    window.addEventListener('orientationchange', () => setTimeout(syncOrientationUI, 120));
+    window.addEventListener('resize', syncOrientationUI);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', syncOrientationUI);
+    }
+
     // Khởi tạo ban đầu
     document.getElementById('sound-btn').innerText = soundEnabled ? '🔊' : '🔇';
     buildShelves();
     updateInventoryUI();
     refreshStartScreen();
+    syncOrientationUI();
 </script>
 </body>
 </html>
