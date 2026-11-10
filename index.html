@@ -499,9 +499,22 @@
             border-radius: 14px;
             padding: 8px 10px;
             display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 112px;
+            transition: background 0.25s ease, border-color 0.25s ease;
+        }
+        .customer-area.customer-angry {
+            background: #fff5f5;
+            border-color: #ef4444;
+            border-style: solid;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.16);
+        }
+        .customer-top-row {
+            display: flex;
             align-items: center;
             gap: 10px;
-            min-height: 100px;
+            width: 100%;
         }
         .avatar-wrapper {
             display: flex;
@@ -521,7 +534,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
+            transition: background 0.25s ease, box-shadow 0.25s ease;
+        }
+        .customer-angry .avatar-container {
+            background: #fee2e2;
+            box-shadow: 0 0 0 2px #f87171, 0 4px 10px rgba(239, 68, 68, 0.25);
+        }
+        .angry-badge {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            font-size: 16px;
+            line-height: 1;
+            display: none;
+            z-index: 6;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            animation: angryPulse 0.45s ease-in-out infinite alternate;
+        }
+        .customer-angry .angry-badge { display: block; }
+        @keyframes angryPulse {
+            0% { transform: scale(0.9) rotate(-8deg); }
+            100% { transform: scale(1.22) rotate(8deg); }
         }
         .customer-name-tag {
             background: #ff6b8b;
@@ -534,12 +568,24 @@
             max-width: 114px;
             overflow: hidden;
             text-overflow: ellipsis;
+            transition: background 0.25s ease;
         }
-        .chibi-avatar { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .customer-angry .customer-name-tag { background: #dc2626; }
+        .chibi-avatar { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 10px; }
         .chibi-avatar.pop { animation: bounceIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .chibi-avatar.angry-leave { animation: angryWalkOut 1.75s ease forwards; }
         @keyframes bounceIn {
             0% { transform: scale(0.5); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes angryWalkOut {
+            0% { transform: translateX(0) rotate(0deg); opacity: 1; }
+            10% { transform: translateX(-5px) rotate(-6deg); opacity: 1; }
+            20% { transform: translateX(5px) rotate(6deg); opacity: 1; }
+            30% { transform: translateX(-5px) rotate(-6deg); opacity: 1; }
+            40% { transform: translateX(4px) rotate(4deg); opacity: 1; }
+            55% { transform: translateX(0) scale(1.03); opacity: 1; }
+            100% { transform: translateX(-46px) rotate(-12deg) scale(0.82); opacity: 0; }
         }
         .avatar-fallback {
             width: 100%; height: 100%; border-radius: 50%;
@@ -558,6 +604,7 @@
             line-height: 1.4;
             color: #333;
             position: relative;
+            transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
         .speech-bubble::before {
             content: ''; position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
@@ -569,6 +616,82 @@
             border-width: 7px 9px 7px 0; border-style: solid;
             border-color: transparent #ffd1dc transparent transparent; z-index: 1;
         }
+        .speech-bubble.bubble-angry {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+            box-shadow: 0 3px 10px rgba(239, 68, 68, 0.14);
+        }
+        .speech-bubble.bubble-angry::before {
+            border-color: transparent #fef2f2 transparent transparent;
+        }
+        .speech-bubble.bubble-angry::after {
+            border-color: transparent #ef4444 transparent transparent;
+        }
+        .bubble-error-detail {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #b91c1c;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* THANH TRẠNG THÁI CHỜ ĐỢI (20 GIÂY / KHÁCH) */
+        .patience-wrap {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 6px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+        .patience-label {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .patience-track {
+            flex: 1;
+            height: 9px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+        }
+        .patience-fill {
+            height: 100%;
+            width: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #22c55e, #10b981);
+            transition: width 0.12s linear, background 0.25s ease;
+        }
+        .patience-fill.warn {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+        .patience-fill.danger {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            animation: patienceDangerPulse 0.45s ease-in-out infinite alternate;
+        }
+        @keyframes patienceDangerPulse {
+            0% { opacity: 0.72; }
+            100% { opacity: 1; }
+        }
+        .patience-time-badge {
+            font-size: 11px;
+            font-weight: 900;
+            min-width: 32px;
+            text-align: right;
+            color: #15803d;
+        }
+        .patience-time-badge.warn { color: #d97706; }
+        .patience-time-badge.danger { color: #dc2626; }
 
         /* QUẦY PHA CHẾ LY + CÁI VÁ ĐỔ TOPPING */
         .cup-area {
@@ -1384,8 +1507,11 @@
             .top-bar { padding: 4px 10px; margin-bottom: 5px; }
             .missions-strip { padding: 3px 10px; margin-bottom: 5px; }
             .left-station { padding: 6px; gap: 5px; }
-            .customer-area { min-height: 76px; padding: 5px; }
-            .avatar-container { width: 54px; height: 54px; }
+            .customer-area { min-height: 82px; padding: 5px; gap: 4px; }
+            .avatar-container { width: 52px; height: 52px; }
+            .patience-wrap { padding: 2px 5px; }
+            .patience-track { height: 7px; }
+            .patience-label, .patience-time-badge { font-size: 9.5px; }
             .cup-stage { height: 112px; }
             .cup-visual-box.size-M { width: 74px; height: 86px; }
             .cup-visual-box.size-L { width: 88px; height: 106px; }
@@ -1536,15 +1662,25 @@
         <!-- CỘT TRÁI -->
         <div class="left-station">
             <div class="customer-area" id="customer-box">
-                <div class="avatar-wrapper">
-                    <div class="avatar-container">
-                        <img id="customer-img" class="chibi-avatar" src="khach1.png" alt="Khách hàng" onerror="handleImageError(this)">
-                        <div id="avatar-fallback-box" class="avatar-fallback">KH</div>
+                <div class="customer-top-row">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-container">
+                            <img id="customer-img" class="chibi-avatar" src="khach1.png" alt="Khách hàng" onerror="handleImageError(this)">
+                            <div id="avatar-fallback-box" class="avatar-fallback">KH</div>
+                            <div class="angry-badge" id="angry-badge">💢</div>
+                        </div>
+                        <div class="customer-name-tag" id="customer-name">Khách quen</div>
                     </div>
-                    <div class="customer-name-tag" id="customer-name">Khách quen</div>
+                    <div class="speech-bubble" id="speech-bubble">
+                        <div id="order-text">Đang mở cửa đón khách...</div>
+                    </div>
                 </div>
-                <div class="speech-bubble">
-                    <div id="order-text">Đang mở cửa đón khách...</div>
+                <div class="patience-wrap" id="patience-wrap">
+                    <span class="patience-label">⏳ Chờ đợi</span>
+                    <div class="patience-track">
+                        <div class="patience-fill" id="patience-fill"></div>
+                    </div>
+                    <span class="patience-time-badge" id="patience-time">20s</span>
                 </div>
             </div>
 
@@ -1734,7 +1870,8 @@
                 `Đưa nhau đi trốn khỏi phố thị ồn ào, nhớ cầm theo 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> múc đầy <b style="color:#e65100">${top}</b> lên đồi ngắm mây nha!`
             ],
             winMsg: 'Quá chill luôn người anh em! Uống ly này xong là có cảm hứng viết ngay bài rap mới gửi Đồng Âm!',
-            loseMsg: 'Ơ kìa Đồng Âm ơi, pha nhầm nhịp rồi! Sửa lại hộ anh chút cho đúng điệu nào!'
+            loseMsg: 'Ơ kìa Đồng Âm ơi, pha nhầm nhịp rồi! Lệch beat quá, anh đi tìm cảm hứng quán khác đây!',
+            timeoutMsg: 'Đợi 20 giây mà chưa thấy nhạc cất lên luôn! Thôi anh mang tiền về cho mẹ, qua quán khác đây!'
         },
         {
             id: 'hieu_thu_hai', img: 'hieu_thu_hai.png', name: 'HIEUTHUHAI 😎',
@@ -1744,7 +1881,8 @@
                 `Vừa quay xong 2 Ngày 1 Đêm mệt rã rời, cho anh chàng GERDNANG 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> full <b style="color:#e65100">${top}</b> giải khát coi!`
             ],
             winMsg: 'Uầy quá đỉnh, trình pha chế 10/10 không có nhưng! Cảm ơn người đẹp nha!',
-            loseMsg: 'Khoan đã ơi! Sai vị rồi nè, làm lại cho Hiếu ly đúng bài đi!'
+            loseMsg: 'Khoan đã ơi! Sai vị rồi nè, trình pha thế này chưa chấm được rồi! Hiếu lượn đây!',
+            timeoutMsg: 'Trời ơi ngủ một giấc hết 20 giây luôn rồi hả?! Hiếu đi quay tiếp đây, khỏi uống nha!'
         },
         {
             id: 'phap_kieu', img: 'phap_kieu.png', name: 'Pháp Kiều 💅',
@@ -1754,7 +1892,8 @@
                 `Bắn cung tên tình yêu trúng tim quán luôn nè! Cho Kiều xin 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> chuẩn gu nha cưng!`
             ],
             winMsg: 'Ối giời ơi keo lì tái châu luôn cưng ơi! 10 điểm thanh lịch, quá slay!',
-            loseMsg: 'Ủa alo mấy cưng ơi?! Sao pha nhầm món của Xà nữ rồi, sửa lẹ không Kiều giận tím người à nha!'
+            loseMsg: 'Ủa alo mấy cưng ơi?! Pha nhầm món của Xà nữ rồi, Kiều giận tím người bỏ về đây!',
+            timeoutMsg: 'Đợi 20 giây mất cả nét keo lì của chị luôn rồi mấy cưng ơi! Kiều bỏ đi nha, xì!'
         },
         {
             id: 'truc_nhan', img: 'truc_nhan.png', name: 'Trúc Nhân 😜',
@@ -1764,7 +1903,8 @@
                 `Thương lắm, nhớ lắm mà... khát bốn chữ lắm luôn! Cho Nhân 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> giải nhiệt đi!`
             ],
             winMsg: 'Sáng mắt chưa!! Ngon xỉu luôn á trời, bất ngờ thật sự luôn đó!',
-            loseMsg: 'Úi chà thật bất ngờ... nhầm món của Nhân mất rồi! Pha lại giùm Nhân đi mà!'
+            loseMsg: 'Úi chà thật bất ngờ... nhầm món của Nhân mất rồi! Dỗi luôn, Nhân đi quán khác đây!',
+            timeoutMsg: 'Có không giữ mất đừng tìm nha!! Đợi 20 giây không thèm pha thì Nhân đi luôn!'
         },
         {
             id: 'le_duong_bao_lam', img: 'le_duong_bao_lam.png', name: 'Lâm Đồng Nai 😂',
@@ -1774,7 +1914,8 @@
                 `Trời ơi tin được hông! Vừa đi quay về ghé quán chốt liền 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b>, múc nhiều nhiều vô nha bà nội!`
             ],
             winMsg: 'Trời ơi ngon chấn động Đồng Nai luôn mấy bà ơi! 10 điểm không nói nhiều!',
-            loseMsg: 'Ủa Diễm ơi?! Cái gì zậy Diễm, pha nhầm công thức của anh Lâm rồi nè! Sửa lại lẹ đi bà nội!'
+            loseMsg: 'Ủa Diễm ơi?! Cái gì zậy Diễm, pha nhầm của anh Lâm rồi! Anh la làng lên rồi anh bỏ về đây!',
+            timeoutMsg: 'Trời ơi tin được hông, bắt Lee Min Ho Đồng Nai đứng nắng 20 giây luôn á Diễm?! Về luôn!'
         },
         {
             id: 'cardi_B', img: 'cardi_B.png', name: 'Cardi B 💄',
@@ -1784,7 +1925,8 @@
                 `Từ New York bay thẳng qua đây chỉ để uống 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> thôi đó cưng! Đừng làm chị mất mood nha!`
             ],
             winMsg: 'OKURRR! I like it like that! Ngon đỉnh nóc luôn cưng ơi!',
-            loseMsg: 'What was that?! Nhầm order của chị rồi cưng ơi! Fix it right now không là chị rap diss luôn á!'
+            loseMsg: 'What was that?! Nhầm order của chị rồi cưng ơi! Hết mood rồi, Bardi out nha!',
+            timeoutMsg: '20 seconds?! Chị bay từ New York tới đây không phải để đứng chờ đâu nha! Bye cưng!'
         },
         {
             id: 'phuong_my_chi', img: 'phuong_my_chi.png', name: 'Phương Mỹ Chi 🇻🇳',
@@ -1794,7 +1936,8 @@
                 `Đẩy xe bò ngang qua thấy quán đông vui quá! Bán cho Chi 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nha, cảm ơn quán nhiều ạ!`
             ],
             winMsg: 'Dạ ngon ngọt như câu hò quê hương luôn ạ! Em cảm ơn quán nhiều lắm!',
-            loseMsg: 'Ới quán ơi, hình như nhầm món của Chi mất rồi, làm lại giúp em nha!'
+            loseMsg: 'Ới quán ơi, nhầm món của Chi mất rồi! Thôi em buồn em bay qua hành tinh khác đây ạ!',
+            timeoutMsg: 'Huhu đứng đợi 20 giây khát khô cả cổ luôn rồi! Em đẩy xe bò đi quán khác nha!'
         },
         {
             id: 'arianna_grande', img: 'arianna grande.png', name: 'Ariana Grande 🎶',
@@ -1804,7 +1947,8 @@
                 `Vừa luyện xong quãng giọng cá heo cao chót vót, làm cho Ari 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> full <b style="color:#e65100">${top}</b> cho dịu cổ họng nha cưng!`
             ],
             winMsg: 'Yuh~ So sweet! Ngon chuẩn giọng diva cá heo luôn, thank u so much! 💖',
-            loseMsg: 'Oh nooo~ Sai mất rồi! Thank u, next... làm lại ly đúng giúp Ari nha!'
+            loseMsg: 'Oh nooo~ Sai mất rồi! Thank u, next... Ari đi quán khác liền đây!',
+            timeoutMsg: '20s is too long darling! Thank u, next... Ari sang tiệm khác uống luôn nha!'
         },
         {
             id: 'truong_giang', img: 'truong_giang.png', name: 'Mười Khó 🎤',
@@ -1814,7 +1958,8 @@
                 `Người Quảng Nam nói là làm! Bán cho Mười Khó 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> chuẩn chỉnh từng milimet coi!`
             ],
             winMsg: 'Ơn giời đúng món rồi! Vị đậm đà chuẩn đầu bếp Mười Khó luôn, xuất sắc!',
-            loseMsg: 'Chết rồi, sai công thức rồi em ơi! Anh Mười Khó chưa ưng cái bụng đâu, pha lại giùm anh nha!'
+            loseMsg: 'Chết rồi, sai công thức rồi em ơi! Anh Mười Khó hổng ưng cái bụng đâu, anh về nấu cơm quê đây!',
+            timeoutMsg: 'Ơn giời đứng đợi 20 giây rụng rời chân tay luôn rồi! Thôi anh về với Nhã Phương đây!'
         },
         {
             id: 'chi_phien', img: 'chi_phien.png', name: 'Chị Phiến 💪',
@@ -1824,7 +1969,8 @@
                 `Tập gym cả buổi khát muốn xỉu! Quán múc cho chị Phiến 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nhanh gọn lẹ đi nè!`
             ],
             winMsg: 'Ngon nhức cái nách luôn mấy bà ơi! Quá đã, xứng đáng 100 điểm cơ bắp!',
-            loseMsg: 'Ủa gì vậy mấy bà?! Pha sai món của chị Phiến rồi nè, làm lại cho tới công chuyện coi!'
+            loseMsg: 'Ủa gì vậy mấy bà?! Pha sai món của chị Phiến rồi! Tới công chuyện rồi, chị bỏ đi đây!',
+            timeoutMsg: 'Đứng gồng cơ đợi 20 giây rụng cả tay rồi mấy bà ơi! Quán chậm quá, chị về đây!'
         },
 
         // --- 9 NHÂN VẬT CŨ ---
@@ -1837,7 +1983,8 @@
                 `Hoa hải đường nở rộ, Trịnh Trần Phương Tuấn gọi 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> ngập <b style="color:#e65100">${top}</b>!`
             ],
             winMsg: 'Quá cháy luôn em ơi! Chuẩn vị Đom Đóm, anh gửi tiền (còn 5 triệu từ từ tính nha 😎)!',
-            loseMsg: 'Ối dồi ôi sóng gió quá em ơi! Pha nhầm công thức rồi!'
+            loseMsg: 'Ối dồi ôi sóng gió quá em ơi! Pha nhầm công thức rồi, anh bay qua quán khác đây!',
+            timeoutMsg: 'Thiên lý ơi đợi 20 giây lâu quá rồi! Thôi anh bay về Bến Tre luôn đây!'
         },
         {
             id: 'khach1', img: 'khach1.png', name: 'Bé Na (Học Sinh)',
@@ -1846,7 +1993,8 @@
                 `Hôm nay cháu được 10 điểm toán á! Thưởng cho cháu 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ nhiều <b style="color:#e65100">${top}</b> nha!`
             ],
             winMsg: 'Dạ ngon xuất sắc luôn ạ! Mai cháu rủ cả lớp tới mua!',
-            loseMsg: 'Ơ cô chú ơi, hình như nhầm món của cháu rồi!'
+            loseMsg: 'Ơ cô chú ơi, nhầm món của cháu mất rồi! Cháu buồn cháu đi về đây!',
+            timeoutMsg: 'Huhu hết 20 giây rồi xe buýt tới mất tiêu! Cháu về luôn đây ạ!'
         },
         {
             id: 'khach4', img: 'khach4.png', name: 'Anh Ba GrabFood',
@@ -1855,7 +2003,8 @@
                 `Bác tài Grab có mặt! Quán làm giúp 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b> nhé!`
             ],
             winMsg: 'Tuyệt vời! Hàng chuẩn 5 sao, anh Ba phi xe giao liền đây!',
-            loseMsg: 'Khoan đã quán ơi! Giao nhầm ly này khách boom hàng anh luôn đó!'
+            loseMsg: 'Khoan đã quán ơi! Giao nhầm ly này khách boom hàng anh mất, anh hủy đơn chạy cuốc khác đây!',
+            timeoutMsg: 'Quán ơi trễ 20 giây khách hủy đơn GrabFood của anh mất rồi! Anh đi đây!'
         },
         {
             id: 'khach5', img: 'khach5.png', name: 'Anh Độ TFOI',
@@ -1864,7 +2013,8 @@
                 `Stream muộn khô cổ quá em ơi, cứu anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> nhiều <b style="color:#e65100">${top}</b> đi nào!`
             ],
             winMsg: 'Chuẩn chỉnh hết nước chấm! Quá uy tín luôn các bạn ơi!',
-            loseMsg: 'Ôi giời ơi pha nhầm rồi bạn tôi ơi!'
+            loseMsg: 'Ôi giời ơi pha nhầm rồi bạn tôi ơi! Hết uy tín rồi, tôi sang quán khác review đây!',
+            timeoutMsg: 'Chờ hết 20 giây tụt hết view livestream rồi bạn tôi ơi! Tôi đi về đây!'
         },
         {
             id: 'khach6', img: 'khach6.png', name: 'Chú Công An',
@@ -1873,7 +2023,8 @@
                 `Báo cáo quán, tôi cần tiếp tế gấp 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b>!`
             ],
             winMsg: 'Rất tốt! Đúng quy trình pha chế, chú biểu dương tinh thần phục vụ!',
-            loseMsg: 'Cảnh báo! Sai công thức rồi cháu ơi!'
+            loseMsg: 'Cảnh báo! Sai công thức rồi cháu ơi! Chú ghi nhận nhắc nhở rồi đi tuần tiếp đây!',
+            timeoutMsg: 'Hết 20 giây rồi đồng chí ơi, chú tới giờ đi tuần tra rồi, không chờ được nữa!'
         },
         {
             id: 'khach7', img: 'khach7.png', name: 'Bà Năm Nam Bộ',
@@ -1882,7 +2033,8 @@
                 `Ngoại ghé làm 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> uống cho mát ruột coi!`
             ],
             winMsg: 'Trời ơi ngon quá chừng luôn con ơi! Ngoại cảm ơn con nhiều nghen!',
-            loseMsg: 'Ủa lộn món của ngoại rồi con ơi!'
+            loseMsg: 'Ủa lộn món của ngoại rồi con ơi! Ngoại dắt cháu qua hàng khác mua cho lẹ đây!',
+            timeoutMsg: 'Đợi 20 giây mỏi chân quá chừng rồi con ơi! Ngoại về nghen!'
         },
         {
             id: 'khach8', img: 'khach8.png', name: 'Bé Kẹo Tóc Hồng',
@@ -1891,7 +2043,8 @@
                 `Chỉ có 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> ngập tràn <b style="color:#e65100">${top}</b> mới chữa lành được tâm hồn em thôi ạ!`
             ],
             winMsg: 'Ưng cái bụng quá đi mất! Ly nước đẹp y như mơ luôn! 💖',
-            loseMsg: 'Huhu nhầm rồi anh chị ơi, mất góc sống ảo của em mất!'
+            loseMsg: 'Huhu nhầm rồi anh chị ơi, mất góc sống ảo của em mất! Em sang tiệm khác đây!',
+            timeoutMsg: 'Huhu đợi 20 giây hết nắng đẹp chụp hình mất rồi! Em đi quán khác đây!'
         },
         {
             id: 'khach9', img: 'khach9.png', name: 'Tài Xế Xanh SM',
@@ -1900,7 +2053,8 @@
                 `Đơn Xanh SM Express! Cho anh nhận 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nào!`
             ],
             winMsg: 'Ngon lành cành đào! Xanh SM lên đường giao ngay đây!',
-            loseMsg: 'Ối quán ơi kiểm tra lại giúp anh với, nhầm món rồi!'
+            loseMsg: 'Ối quán ơi nhầm món rồi! Khách hối quá trời, anh hủy chuyến đi giao đơn khác đây!',
+            timeoutMsg: 'Quá 20 giây rồi xe cạn pin tới nơi luôn quán ơi! Anh đi chạy chuyến khác đây!'
         },
         {
             id: 'khach10', img: 'khach10.png', name: 'Anh Cam ShopeeFood',
@@ -1909,7 +2063,8 @@
                 `Shipper áo cam nhận 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nè!`
             ],
             winMsg: 'Chốt đơn mượt mà! Chúc quán hôm nay nổ đơn ầm ầm nha!',
-            loseMsg: 'Á á nhầm đơn rồi quán ơi!'
+            loseMsg: 'Á á nhầm đơn rồi quán ơi! Đền đơn chết anh luôn, anh sang quán khác lấy hàng đây!',
+            timeoutMsg: 'Quá 20 giây bị tính giao trễ đơn ShopeeFood rồi quán ơi! Anh hủy đơn đi đây!'
         }
     ];
 
@@ -1949,6 +2104,7 @@
     }
 
     // Trạng thái trong màn chơi hiện tại
+    const CUSTOMER_PATIENCE_MS = 20000;
     let combo = 0;
     let isServing = false;
     let isHoldingCup = false;
@@ -1956,6 +2112,11 @@
     let isScooping = false;
     let pourTimer = null;
     let scoopTimer = null;
+    let serveNextTimer = null;
+    let angryLeaveTimer = null;
+    let patienceRemainingMs = CUSTOMER_PATIENCE_MS;
+    let patienceInterval = null;
+    let lastPatienceTick = 0;
     let marketReturnTo = 'start';
 
     let dayPlan = null;
@@ -2278,6 +2439,63 @@
         startDay(currentDay);
     }
 
+    function clearTransitionTimers() {
+        if (serveNextTimer) { clearTimeout(serveNextTimer); serveNextTimer = null; }
+        if (angryLeaveTimer) { clearTimeout(angryLeaveTimer); angryLeaveTimer = null; }
+    }
+
+    function stopCustomerTimer() {
+        if (patienceInterval) {
+            clearInterval(patienceInterval);
+            patienceInterval = null;
+        }
+    }
+
+    function isPatiencePaused() {
+        if (isServing || !currentCustomer) return true;
+        if (document.getElementById('start-screen').classList.contains('active')) return true;
+        if (document.getElementById('day-end-modal').classList.contains('active')) return true;
+        if (document.getElementById('market-modal').classList.contains('active')) return true;
+        return false;
+    }
+
+    function updatePatienceUI() {
+        const pct = Math.max(0, Math.min(100, (patienceRemainingMs / CUSTOMER_PATIENCE_MS) * 100));
+        const secs = Math.max(0, Math.ceil(patienceRemainingMs / 1000));
+        const fill = document.getElementById('patience-fill');
+        const timeEl = document.getElementById('patience-time');
+        if (fill) {
+            fill.style.width = `${pct}%`;
+            fill.classList.remove('warn', 'danger');
+            if (secs <= 5) fill.classList.add('danger');
+            else if (secs <= 10) fill.classList.add('warn');
+        }
+        if (timeEl) {
+            timeEl.innerText = `${secs}s`;
+            timeEl.classList.remove('warn', 'danger');
+            if (secs <= 5) timeEl.classList.add('danger');
+            else if (secs <= 10) timeEl.classList.add('warn');
+        }
+    }
+
+    function startCustomerTimer() {
+        stopCustomerTimer();
+        patienceRemainingMs = CUSTOMER_PATIENCE_MS;
+        lastPatienceTick = Date.now();
+        updatePatienceUI();
+        patienceInterval = setInterval(() => {
+            const now = Date.now();
+            const dt = now - lastPatienceTick;
+            lastPatienceTick = now;
+            if (isPatiencePaused()) return;
+            patienceRemainingMs = Math.max(0, patienceRemainingMs - dt);
+            updatePatienceUI();
+            if (patienceRemainingMs <= 0 && !isPouring && !isScooping) {
+                handleCustomerTimeout();
+            }
+        }, 100);
+    }
+
     function backToMenu() {
         if (isPouring || isScooping || isServing) return;
         playSound('click');
@@ -2287,6 +2505,9 @@
 
     function resetFullGame() {
         playSound('reset');
+        stopCustomerTimer();
+        clearTransitionTimers();
+        isServing = false;
         currentDay = 1;
         money = 40000;
         totalScore = 0;
@@ -2297,6 +2518,9 @@
     }
 
     function startDay(dayNum) {
+        stopCustomerTimer();
+        clearTransitionTimers();
+        isServing = false;
         currentDay = dayNum;
         dayPlan = createDayConfig(dayNum);
         dayOrdersQueue = buildDayOrdersQueue(dayPlan);
@@ -2317,6 +2541,8 @@
     }
 
     function finishDay() {
+        stopCustomerTimer();
+        clearTransitionTimers();
         const results = dayPlan.missions.map(m => ({ mission: m, ...evaluateMission(m) }));
         const passedCount = results.filter(r => r.passed).length;
         const totalMissions = results.length;
@@ -2674,6 +2900,11 @@
         } while (nextIndex === lastCustomerIndex && customerProfiles.length > 1);
         lastCustomerIndex = nextIndex;
 
+        const customerBox = document.getElementById('customer-box');
+        const speechBubble = document.getElementById('speech-bubble');
+        if (customerBox) customerBox.classList.remove('customer-angry');
+        if (speechBubble) speechBubble.classList.remove('bubble-angry');
+
         currentCustomer = customerProfiles[nextIndex];
         const lines = currentCustomer.getOrders(currentOrder.tea, currentOrder.size, currentOrder.topping);
         document.getElementById('order-text').innerHTML = lines[Math.floor(Math.random() * lines.length)];
@@ -2681,7 +2912,7 @@
 
         const imgElement = document.getElementById('customer-img');
         const fallbackBox = document.getElementById('avatar-fallback-box');
-        imgElement.classList.remove('pop');
+        imgElement.classList.remove('pop', 'angry-leave');
         void imgElement.offsetWidth;
         imgElement.style.display = 'block';
         imgElement.src = currentCustomer.img;
@@ -2693,6 +2924,7 @@
         setMessage('', '');
         setButtonsDisabled(false);
         updateHUD();
+        startCustomerTimer();
     }
 
     // Ly mini đi theo chuột
@@ -3358,6 +3590,53 @@
         setTimeout(() => floatEl.remove(), 1200);
     }
 
+    function triggerAngryDeparture(headlineQuote, detailLabel) {
+        stopCustomerTimer();
+        isServing = true;
+        isHoldingCup = false;
+        updateHoldStateUI();
+        setButtonsDisabled(true);
+        playSound('error');
+
+        combo = 0;
+        dayStats.mistakes += 1;
+        dayCustomersDone += 1;
+        persistSave();
+        updateHUD();
+
+        const customerBox = document.getElementById('customer-box');
+        const speechBubble = document.getElementById('speech-bubble');
+        const imgEl = document.getElementById('customer-img');
+        const orderTextEl = document.getElementById('order-text');
+
+        if (customerBox) customerBox.classList.add('customer-angry');
+        if (speechBubble) speechBubble.classList.add('bubble-angry');
+        if (imgEl) {
+            imgEl.classList.remove('pop', 'angry-leave');
+            void imgEl.offsetWidth;
+            imgEl.classList.add('angry-leave');
+        }
+        if (orderTextEl) {
+            orderTextEl.innerHTML = `💢 <b>${headlineQuote}</b><br><span class="bubble-error-detail">${detailLabel}</span>`;
+        }
+        setMessage('', '');
+
+        if (angryLeaveTimer) clearTimeout(angryLeaveTimer);
+        angryLeaveTimer = setTimeout(() => {
+            angryLeaveTimer = null;
+            isServing = false;
+            generateOrder();
+        }, 1850);
+    }
+
+    function handleCustomerTimeout() {
+        if (isServing || isPouring || isScooping) return;
+        const timeoutQuote = (currentCustomer && currentCustomer.timeoutMsg)
+            ? currentCustomer.timeoutMsg
+            : 'Đợi 20 giây lâu quá rồi! Quán làm chậm quá, mình đi đây!';
+        triggerAngryDeparture(timeoutQuote, '⏰ Hết 20 giây chờ — Khách tức giận bỏ đi!');
+    }
+
     function serveOrder() {
         if (isServing || isPouring || isScooping) return;
 
@@ -3370,6 +3649,7 @@
         const isToppingCorrect = currentCup.topping === currentOrder.topping;
 
         if (isSizeCorrect && isTeaCorrect && isToppingCorrect) {
+            stopCustomerTimer();
             isServing = true;
             setButtonsDisabled(true);
             playSound('success');
@@ -3404,23 +3684,25 @@
             const winQuote = currentCustomer ? currentCustomer.winMsg : 'Đúng món rồi! Cảm ơn bạn!';
             setMessage(`✅ ${winQuote} (+${earned.toLocaleString('vi-VN')}đ${bonusText})`, 'success');
 
-            setTimeout(() => {
+            if (serveNextTimer) clearTimeout(serveNextTimer);
+            serveNextTimer = setTimeout(() => {
+                serveNextTimer = null;
                 isServing = false;
                 generateOrder();
             }, 1700);
         } else {
-            playSound('error');
-            combo = 0;
-            dayStats.mistakes += 1;
-            updateHUD();
+            // Trừ nguyên liệu của ly pha sai trước khi khách bỏ đi
+            if ((inventory['size_' + currentCup.size] || 0) > 0) inventory['size_' + currentCup.size] -= 1;
+            if ((inventory[currentCup.tea] || 0) > 0) inventory[currentCup.tea] -= 1;
+            if ((inventory[currentCup.topping] || 0) > 0) inventory[currentCup.topping] -= 1;
 
             const errors = [];
             if (!isSizeCorrect) errors.push(`cỡ ly (cần Size ${currentOrder.size})`);
             if (!isTeaCorrect) errors.push(`loại trà (cần ${currentOrder.tea})`);
             if (!isToppingCorrect) errors.push(`topping (cần ${currentOrder.topping})`);
 
-            const loseQuote = currentCustomer ? currentCustomer.loseMsg : 'Nhầm công thức rồi!';
-            setMessage(`❌ ${loseQuote} (Sai ${errors.join(', ')})`, 'error');
+            const loseQuote = currentCustomer ? currentCustomer.loseMsg : 'Nhầm công thức rồi! Mình đi quán khác đây!';
+            triggerAngryDeparture(loseQuote, `❌ Sai ${errors.join(', ')} — Khách giận bỏ đi!`);
         }
     }
 
