@@ -64,7 +64,17 @@
         }
         .overlay-screen.active {
             display: flex;
-            animation: fadeInOverlay 0.3s ease;
+            animation: fadeInOverlay 0.28s ease;
+        }
+        .overlay-screen.active .mobile-start-card,
+        .overlay-screen.active .modal-card,
+        #rotate-prompt.active .rotate-card {
+            animation: modalSpringIn 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalSpringIn {
+            0% { opacity: 0; transform: translateY(16px) scale(0.92); }
+            70% { opacity: 1; transform: translateY(-2px) scale(1.015); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .mobile-start-card, .modal-card {
             margin: auto;
@@ -417,10 +427,19 @@
             font-size: 11px;
             font-weight: 800;
             cursor: pointer;
-            transition: background 0.15s;
+            transition: transform 0.12s ease, background 0.15s ease;
         }
-        .btn-buy-stock:hover:not(:disabled) { background: #059669; }
+        .btn-buy-stock:hover:not(:disabled) { background: #059669; transform: translateY(-1px); }
+        .btn-buy-stock:active:not(:disabled) { transform: scale(0.95); }
         .btn-buy-stock:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .market-wallet.flash {
+            animation: walletPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes walletPop {
+            0% { transform: scale(1); }
+            45% { transform: scale(1.08); color: #b45309; }
+            100% { transform: scale(1); }
+        }
 
         /* =========================================================
            3. THANH HEADER NGANG & NHIỆM VỤ NGÀY
@@ -469,6 +488,15 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .stat-pill.hud-pop {
+            animation: hudStatPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes hudStatPop {
+            0% { transform: scale(1); }
+            45% { transform: scale(1.16); background: rgba(255, 255, 255, 0.42); }
+            100% { transform: scale(1); }
         }
         .stat-pill b {
             font-size: 13px;
@@ -488,9 +516,10 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
-            transition: background 0.2s;
+            transition: transform 0.12s ease, background 0.2s ease;
         }
-        .top-icon-btn:hover { background: rgba(255, 255, 255, 0.45); }
+        .top-icon-btn:hover { background: rgba(255, 255, 255, 0.45); transform: translateY(-1px); }
+        .top-icon-btn:active { transform: scale(0.93); }
 
         /* THANH NHIỆM VỤ TRONG NGÀY */
         .missions-strip {
@@ -550,11 +579,11 @@
         .left-station {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             background: #fffafa;
             border: 1.5px solid #ffe4e9;
             border-radius: 16px;
-            padding: 10px;
+            padding: 8px;
             min-width: 0;
         }
 
@@ -575,6 +604,12 @@
             border-color: #ef4444;
             border-style: solid;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.16);
+        }
+        .customer-area.customer-happy {
+            background: #f0fdf4;
+            border-color: #22c55e;
+            border-style: solid;
+            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.18);
         }
         .customer-top-row {
             display: flex;
@@ -607,7 +642,11 @@
             background: #fee2e2;
             box-shadow: 0 0 0 2px #f87171, 0 4px 10px rgba(239, 68, 68, 0.25);
         }
-        .angry-badge {
+        .customer-happy .avatar-container {
+            background: #dcfce7;
+            box-shadow: 0 0 0 2px #4ade80, 0 4px 12px rgba(34, 197, 94, 0.26);
+        }
+        .angry-badge, .happy-badge {
             position: absolute;
             top: -7px;
             right: -7px;
@@ -619,9 +658,14 @@
             animation: angryPulse 0.45s ease-in-out infinite alternate;
         }
         .customer-angry .angry-badge { display: block; }
+        .customer-happy .happy-badge { display: block; animation: happyBadgePop 0.5s ease-in-out infinite alternate; }
         @keyframes angryPulse {
             0% { transform: scale(0.9) rotate(-8deg); }
             100% { transform: scale(1.22) rotate(8deg); }
+        }
+        @keyframes happyBadgePop {
+            0% { transform: scale(0.95) translateY(0); }
+            100% { transform: scale(1.22) translateY(-3px); }
         }
         .customer-name-tag {
             background: #ff6b8b;
@@ -637,12 +681,25 @@
             transition: background 0.25s ease;
         }
         .customer-angry .customer-name-tag { background: #dc2626; }
-        .chibi-avatar { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 10px; }
+        .customer-happy .customer-name-tag { background: #16a34a; }
+        .chibi-avatar {
+            width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 10px;
+            animation: customerIdleFloat 2.8s ease-in-out infinite alternate;
+        }
+        @keyframes customerIdleFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2.5px); }
+        }
         .chibi-avatar.pop { animation: bounceIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .chibi-avatar.happy-bounce { animation: happyJump 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 2; }
         .chibi-avatar.angry-leave { animation: angryWalkOut 1.75s ease forwards; }
         @keyframes bounceIn {
             0% { transform: scale(0.5); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes happyJump {
+            0%, 100% { transform: translateY(0) scale(1); }
+            45% { transform: translateY(-7px) scale(1.07); }
         }
         @keyframes angryWalkOut {
             0% { transform: translateX(0) rotate(0deg); opacity: 1; }
@@ -670,7 +727,14 @@
             line-height: 1.4;
             color: #333;
             position: relative;
-            transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+            transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .speech-bubble.bubble-pop {
+            animation: bubblePopIn 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes bubblePopIn {
+            0% { opacity: 0; transform: translateX(-6px) scale(0.92); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
         }
         .speech-bubble::before {
             content: ''; position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
@@ -693,6 +757,18 @@
         }
         .speech-bubble.bubble-angry::after {
             border-color: transparent #ef4444 transparent transparent;
+        }
+        .speech-bubble.bubble-happy {
+            background: #f0fdf4;
+            border-color: #22c55e;
+            color: #14532d;
+            box-shadow: 0 3px 10px rgba(34, 197, 94, 0.15);
+        }
+        .speech-bubble.bubble-happy::before {
+            border-color: transparent #f0fdf4 transparent transparent;
+        }
+        .speech-bubble.bubble-happy::after {
+            border-color: transparent #22c55e transparent transparent;
         }
         .bubble-error-detail {
             display: inline-block;
@@ -857,19 +933,19 @@
             animation: ladlePourCycle 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         @keyframes ladlePourCycle {
-            0% { opacity: 0; transform: translate(55px, -20px) rotate(10deg); }
-            25% { opacity: 1; transform: translate(-18px, -12px) rotate(-10deg); }
-            55% { opacity: 1; transform: translate(-22px, -4px) rotate(-52deg); }
-            82% { opacity: 1; transform: translate(-18px, -12px) rotate(-32deg); }
-            100% { opacity: 0; transform: translate(50px, -22px) rotate(15deg); }
+            0% { opacity: 0; transform: translate(55px, -22px) rotate(12deg) scale(0.92); }
+            24% { opacity: 1; transform: translate(-18px, -13px) rotate(-8deg) scale(1); }
+            54% { opacity: 1; transform: translate(-22px, -3px) rotate(-56deg) scale(1.04); }
+            80% { opacity: 1; transform: translate(-18px, -12px) rotate(-30deg) scale(1); }
+            100% { opacity: 0; transform: translate(52px, -22px) rotate(16deg) scale(0.9); }
         }
         .falling-toppings-box {
             position: absolute;
             top: 8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 48px;
-            height: 95px;
+            width: 64px;
+            height: 98px;
             z-index: 25;
             pointer-events: none;
             overflow: hidden;
@@ -878,35 +954,73 @@
             position: absolute;
             top: 0;
             opacity: 0;
-            animation: fallIntoCup 0.52s cubic-bezier(0.45, 0, 0.85, 0.7) forwards;
+            animation: fallIntoCup 0.54s cubic-bezier(0.38, 0.02, 0.75, 0.85) forwards;
         }
         @keyframes fallIntoCup {
-            0% { opacity: 0; transform: translateY(-6px) scale(0.7); }
-            20% { opacity: 1; }
-            85% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(82px) scale(1); }
+            0% { opacity: 0; transform: translate(0, -8px) rotate(0deg) scale(0.65); }
+            18% { opacity: 1; }
+            82% { opacity: 1; }
+            100% { opacity: 0; transform: translate(var(--dx, 0px), 84px) rotate(var(--endRot, 90deg)) scale(1.04); }
+        }
+        .cup-splash-ring {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            width: 44px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0.3);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 24;
+        }
+        .cup-splash-ring.active {
+            animation: cupSplashRipple 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes cupSplashRipple {
+            0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.35); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
         }
 
         .cup-visual-box {
             position: relative;
             width: 96px;
             height: 112px;
-            transition: width 0.3s ease, height 0.3s ease, transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+            transition: width 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
             z-index: 2;
             cursor: pointer;
             transform-origin: center bottom;
         }
-        .cup-visual-box:hover:not(.cup-shrunk) { transform: scale(1.04); }
+        .cup-visual-box:hover:not(.cup-shrunk):not(.cup-served) { transform: scale(1.04); }
+        .cup-visual-box.cup-size-pop {
+            animation: cupSizeSpring 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes cupSizeSpring {
+            0% { transform: scale(0.92, 1.07); }
+            55% { transform: scale(1.06, 0.95); }
+            100% { transform: scale(1, 1); }
+        }
         .cup-visual-box.cup-shrunk {
             transform: scale(0.34) translateY(20px);
             opacity: 0.35;
             filter: saturate(0.7);
         }
-        .cup-visual-box.cup-return { animation: cupReturnPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .cup-visual-box.cup-return { animation: cupReturnPop 0.48s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes cupReturnPop {
-            0% { transform: scale(0.35); opacity: 0.4; }
-            65% { transform: scale(1.08); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(0.35) translateY(16px); opacity: 0.4; }
+            65% { transform: scale(1.08, 0.96) translateY(-3px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .cup-visual-box.cup-served {
+            animation: cupHandOver 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            pointer-events: none;
+        }
+        @keyframes cupHandOver {
+            0% { transform: scale(1) translate(0, 0); opacity: 1; }
+            22% { transform: scale(1.07) translate(0, -10px); opacity: 1; }
+            55% { transform: scale(0.94) translate(-14px, -22px) rotate(-4deg); opacity: 0.96; }
+            100% { transform: scale(0.76) translate(-26px, -38px) rotate(-8deg); opacity: 0; }
         }
         .cup-visual-box.cup-shake { animation: cupShake 0.35s ease; }
         @keyframes cupShake {
@@ -979,16 +1093,16 @@
             height: 118%;
             bottom: 10%;
             left: 58%;
-            transform: rotate(10deg);
+            transform: translateY(-24px) rotate(10deg);
             transform-origin: bottom center;
             background: repeating-linear-gradient(-45deg, #ff4757, #ff4757 7px, #ffffff 7px, #ffffff 14px);
             border-radius: 5px;
             box-shadow: inset -2px 0 3px rgba(0,0,0,0.18), 1px 1px 4px rgba(0,0,0,0.15);
             z-index: 2;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.28s ease, transform 0.44s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .cup-straw.visible { opacity: 1; }
+        .cup-straw.visible { opacity: 1; transform: translateY(0) rotate(10deg); }
         .cup-interior {
             position: absolute;
             inset: 0;
@@ -1003,8 +1117,59 @@
             left: 0;
             width: 100%;
             height: 0%;
-            transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+            transition: height 0.48s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
             z-index: 4;
+            overflow: hidden;
+            transform-origin: bottom center;
+        }
+        .cup-tea-layer.tea-slosh {
+            animation: teaLiquidSlosh 0.55s ease-out;
+        }
+        @keyframes teaLiquidSlosh {
+            0% { transform: skewX(-4deg) scaleY(1.04); }
+            35% { transform: skewX(3deg) scaleY(0.98); }
+            70% { transform: skewX(-1.5deg) scaleY(1.01); }
+            100% { transform: skewX(0deg) scaleY(1); }
+        }
+        .tea-wave-crest {
+            position: absolute;
+            top: 0;
+            left: -10%;
+            width: 120%;
+            height: 8px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.42), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 4;
+            animation: waveCrestShimmer 2.4s ease-in-out infinite alternate;
+        }
+        @keyframes waveCrestShimmer {
+            0% { transform: translateX(-4px) scaleY(0.9); opacity: 0.65; }
+            100% { transform: translateX(4px) scaleY(1.15); opacity: 0.95; }
+        }
+        .tea-micro-bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.58);
+            box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+            z-index: 4;
+            animation: microBubbleRise var(--dur, 2.6s) ease-in infinite;
+        }
+        @keyframes microBubbleRise {
+            0% { bottom: 6%; opacity: 0; transform: translateX(0) scale(0.6); }
+            20% { opacity: 0.75; }
+            80% { opacity: 0.6; }
+            100% { bottom: 92%; opacity: 0; transform: translateX(var(--sway, 4px)) scale(1.1); }
+        }
+        .cream-cap {
+            transform-origin: top center;
+            animation: creamSettle 0.46s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        }
+        @keyframes creamSettle {
+            0% { opacity: 0; transform: translateY(-16px) scaleY(0.3); }
+            65% { opacity: 1; transform: translateY(1px) scaleY(1.08); }
+            100% { opacity: 1; transform: translateY(0) scaleY(1); }
         }
         .ice-cube {
             position: absolute;
@@ -1366,19 +1531,22 @@
             background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
             color: white; border: none; padding: 10px; font-size: 13.5px; font-weight: 800;
             border-radius: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
-            transition: all 0.2s;
+            transition: transform 0.14s ease, filter 0.18s ease, box-shadow 0.18s ease;
         }
-        button.action-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.04); }
+        button.action-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.04); box-shadow: 0 6px 14px rgba(76, 175, 80, 0.36); }
+        button.action-btn:active:not(:disabled) { transform: scale(0.96); }
         button.action-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
         button.reset-btn {
             flex: 1; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1;
             padding: 10px 6px; font-size: 11.5px; font-weight: 700; border-radius: 12px; cursor: pointer;
+            transition: transform 0.14s ease, background 0.18s ease;
         }
         button.reset-btn:hover:not(:disabled) { background: #e2e8f0; color: #1e293b; }
+        button.reset-btn:active:not(:disabled) { transform: scale(0.95); }
         button.reset-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         #message {
-            text-align: center; font-weight: 700; min-height: 32px; font-size: 11.5px;
-            line-height: 1.35; padding: 5px 8px; border-radius: 10px;
+            text-align: center; font-weight: 700; min-height: 26px; font-size: 11px;
+            line-height: 1.3; padding: 3px 8px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
         }
         .msg-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
@@ -1463,6 +1631,9 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .ingredient-card:hover { border-color: #ffb6c1; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(255,107,139,0.18); }
+        .ingredient-card:active { transform: scale(0.94); }
+        .size-btn:active { transform: scale(0.94); }
+        .scroll-nav-btn:active { transform: scale(0.9); }
         .ingredient-card.selected { border-color: #e91e63; background-color: #fff0f5; color: #c2185b; box-shadow: 0 0 0 2px rgba(233,30,99,0.22); }
         .ingredient-card.selected::after { content: '✓'; position: absolute; top: 3px; right: 6px; font-size: 11px; font-weight: 900; color: #e91e63; }
         .ingredient-card.awaiting-cup { border-color: #f472b6; box-shadow: 0 0 0 2px rgba(244,114,182,0.28); }
@@ -1505,6 +1676,19 @@
             position: absolute; top: 45px; left: 50%; transform: translateX(-50%);
             width: 5px; height: 0px; border-radius: 3px; opacity: 0; z-index: 15; pointer-events: none;
             transition: height 0.14s ease, opacity 0.14s ease;
+            overflow: hidden;
+        }
+        .pour-stream::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, transparent 45%, rgba(255,255,255,0.5) 75%, transparent 100%);
+            background-size: 100% 16px;
+            animation: streamFlowDown 0.25s linear infinite;
+        }
+        @keyframes streamFlowDown {
+            from { background-position: 0 0; }
+            to { background-position: 0 16px; }
         }
         .ingredient-card.pouring-active .pour-stream { height: 19px; opacity: 0.96; animation: streamWiggle 0.12s infinite alternate; }
         @keyframes streamWiggle { from { width: 4.5px; } to { width: 6px; } }
@@ -1512,9 +1696,17 @@
             position: absolute; top: 54px; left: 50%; transform: translateX(-50%) scale(0.2);
             width: 22px; height: 24px; background: rgba(255,255,255,0.88); border: 1.5px solid #475569;
             border-top: 2px solid #64748b; border-radius: 2px 2px 7px 7px; overflow: hidden; opacity: 0; z-index: 14;
-            pointer-events: none; transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+            pointer-events: none; transition: transform 0.24s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
         }
-        .ingredient-card.pouring-active .mini-catch-cup { transform: translateX(-50%) scale(1); opacity: 1; }
+        .ingredient-card.pouring-active .mini-catch-cup {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+            animation: miniCupCatchBob 0.35s ease-in-out infinite alternate;
+        }
+        @keyframes miniCupCatchBob {
+            from { transform: translateX(-50%) scale(1) translateY(0); }
+            to { transform: translateX(-50%) scale(1.03) translateY(1.5px); }
+        }
         .mini-catch-liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.62s cubic-bezier(0.22,1,0.36,1); }
         .splash-drop { position: absolute; top: 53px; width: 4px; height: 4px; border-radius: 50%; opacity: 0; z-index: 16; pointer-events: none; }
         .ingredient-card.pouring-active .splash-drop.left { left: calc(50% - 13px); animation: splashLeft 0.45s ease-out infinite; }
@@ -1553,12 +1745,27 @@
         }
         .item-label { font-size: 10.5px; line-height: 1.2; padding: 0 2px; }
 
-        /* Floating Money Animation */
+        /* Floating Money & Coin Sparks Animation */
         .money-float {
-            position: absolute; color: #2e7d32; font-size: 20px; font-weight: 900; pointer-events: none;
-            animation: floatUp 1.2s ease-out forwards; z-index: 100; text-shadow: 0 2px 4px rgba(255,255,255,0.9);
+            position: absolute; color: #16a34a; font-size: 20px; font-weight: 900; pointer-events: none;
+            transform: translate(-50%, 0); white-space: nowrap;
+            animation: floatUp 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; z-index: 195;
+            text-shadow: 0 2px 6px rgba(255,255,255,0.96), 0 1px 2px rgba(22,163,74,0.3);
         }
-        @keyframes floatUp { 0% { opacity: 0; transform: translateY(0) scale(0.7); } 30% { opacity: 1; transform: translateY(-20px) scale(1.2); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
+        .coin-spark {
+            position: absolute; font-size: 15px; pointer-events: none; z-index: 194;
+            animation: coinSparkBurst 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translate(-50%, 8px) scale(0.6); }
+            22% { opacity: 1; transform: translate(-50%, -14px) scale(1.18); }
+            100% { opacity: 0; transform: translate(-50%, -68px) scale(0.98); }
+        }
+        @keyframes coinSparkBurst {
+            0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
+            25% { opacity: 1; transform: translate(calc(-50% + var(--cx, 0px)), -16px) scale(1.1) rotate(12deg); }
+            100% { opacity: 0; transform: translate(calc(-50% + var(--cx2, 0px)), -54px) scale(0.75) rotate(var(--crot, 40deg)); }
+        }
 
         /* RESPONSIVE ĐA THIẾT BỊ & XOAY NGANG MÀN HÌNH */
         @media (max-width: 1024px) {
@@ -1884,6 +2091,7 @@
                             <img id="customer-img" class="chibi-avatar" src="khach1.png" alt="Khách hàng" onerror="handleImageError(this)">
                             <div id="avatar-fallback-box" class="avatar-fallback">KH</div>
                             <div class="angry-badge" id="angry-badge">💢</div>
+                            <div class="happy-badge" id="happy-badge">💖</div>
                         </div>
                         <div class="customer-name-tag" id="customer-name">Khách quen</div>
                     </div>
@@ -1928,6 +2136,7 @@
                             </svg>
                         </div>
                         <div class="falling-toppings-box" id="falling-toppings-box"></div>
+                        <div class="cup-splash-ring" id="cup-splash-ring"></div>
 
                         <div class="cup-coaster"></div>
                         <div class="cup-visual-box" id="visual-cup-box" onclick="handleCupClick()" title="Ấn vào ly để thu nhỏ &amp; hứng trà">
@@ -2900,6 +3109,20 @@
         body.appendChild(topGrid);
     }
 
+    function triggerOnceAnim(el, className, cleanupMs) {
+        if (!el) return;
+        el.classList.remove(className);
+        void el.offsetWidth;
+        el.classList.add(className);
+        if (cleanupMs) {
+            setTimeout(() => el.classList.remove(className), cleanupMs);
+        }
+    }
+
+    function flashMarketWallet() {
+        triggerOnceAnim(document.querySelector('.market-wallet'), 'flash', 420);
+    }
+
     function buyMarketPack(itemKey, cost) {
         if (money < cost) {
             playSound('error');
@@ -2910,6 +3133,7 @@
         inventory[itemKey] = (inventory[itemKey] || 0) + PACK_QTY;
         persistSave();
         renderMarketItems();
+        flashMarketWallet();
         updateHUD();
     }
 
@@ -2941,6 +3165,7 @@
             playSound('success');
             persistSave();
             renderMarketItems();
+            flashMarketWallet();
             updateHUD();
         } else {
             playSound('click');
@@ -3119,8 +3344,8 @@
 
         const customerBox = document.getElementById('customer-box');
         const speechBubble = document.getElementById('speech-bubble');
-        if (customerBox) customerBox.classList.remove('customer-angry');
-        if (speechBubble) speechBubble.classList.remove('bubble-angry');
+        if (customerBox) customerBox.classList.remove('customer-angry', 'customer-happy');
+        if (speechBubble) speechBubble.classList.remove('bubble-angry', 'bubble-happy');
 
         currentCustomer = customerProfiles[nextIndex];
         const lines = currentCustomer.getOrders(currentOrder.tea, currentOrder.size, currentOrder.topping);
@@ -3129,11 +3354,12 @@
 
         const imgElement = document.getElementById('customer-img');
         const fallbackBox = document.getElementById('avatar-fallback-box');
-        imgElement.classList.remove('pop', 'angry-leave');
+        imgElement.classList.remove('pop', 'angry-leave', 'happy-bounce');
         void imgElement.offsetWidth;
         imgElement.style.display = 'block';
         imgElement.src = currentCustomer.img;
         imgElement.classList.add('pop');
+        triggerOnceAnim(speechBubble, 'bubble-pop', 420);
         fallbackBox.style.display = 'none';
         fallbackBox.innerText = currentCustomer.name.slice(0, 4);
 
@@ -3216,6 +3442,7 @@
         const cupBox = document.getElementById('visual-cup-box');
         cupBox.classList.remove('size-M', 'size-L');
         cupBox.classList.add(size === 'M' ? 'size-M' : 'size-L');
+        triggerOnceAnim(cupBox, 'cup-size-pop', 380);
 
         const sticker = document.getElementById('cup-size-sticker');
         sticker.innerText = size;
@@ -3271,6 +3498,7 @@
             cupBox.classList.add('cup-return');
 
             updateCupUI();
+            triggerOnceAnim(document.getElementById('cup-tea-layer'), 'tea-slosh', 580);
             updateHoldStateUI();
             setMessage(`✅ Đã hứng đầy ${name}! ${currentCup.topping ? 'Sẵn sàng giao cho khách!' : 'Hãy múc thêm topping vào ly!'}`, 'success');
         }, 760);
@@ -3319,11 +3547,13 @@
         const fallBox = document.getElementById('falling-toppings-box');
         fallBox.innerHTML = '';
         const fishPalette = ['#ef4444', '#0ea5e9', '#eab308', '#22c55e', '#f97316'];
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 9; i++) {
             const bit = document.createElement('div');
             bit.className = 'falling-bit';
-            bit.style.left = `${9 + (i % 4) * 8}px`;
-            bit.style.animationDelay = `${0.22 + i * 0.05}s`;
+            bit.style.left = `${14 + (i % 5) * 8}px`;
+            bit.style.setProperty('--dx', `${((i % 3) - 1) * 10}px`);
+            bit.style.setProperty('--endRot', `${(i % 2 === 0 ? 1 : -1) * (45 + i * 25)}deg`);
+            bit.style.animationDelay = `${0.20 + i * 0.04}s`;
             if (name === 'Trân châu đen' || name === 'Trân châu hoàng kim' || name === 'Trân châu trắng') {
                 bit.style.width = '9px';
                 bit.style.height = '9px';
@@ -3378,6 +3608,9 @@
         }
 
         setMessage(`🥄 Đang dùng vá múc ${name} đổ vào ly...`, 'warn');
+        setTimeout(() => {
+            if (isScooping) triggerOnceAnim(document.getElementById('cup-splash-ring'), 'active', 480);
+        }, 300);
 
         if (scoopTimer) clearTimeout(scoopTimer);
         scoopTimer = setTimeout(() => {
@@ -3730,6 +3963,28 @@
             teaLayer.style.borderTop = drinkObj ? `3px solid ${drinkObj.borderTop}` : 'none';
             teaLayer.style.height = '76%';
 
+            const waveCrest = document.createElement('div');
+            waveCrest.className = 'tea-wave-crest';
+            teaLayer.appendChild(waveCrest);
+
+            [
+                { left: '18%', size: 4, dur: '2.4s', delay: '0s', sway: '4px' },
+                { left: '34%', size: 3, dur: '2.9s', delay: '0.7s', sway: '-3px' },
+                { left: '52%', size: 5, dur: '2.2s', delay: '0.3s', sway: '5px' },
+                { left: '68%', size: 3.5, dur: '2.7s', delay: '1.1s', sway: '-4px' },
+                { left: '80%', size: 4, dur: '3.1s', delay: '0.5s', sway: '3px' }
+            ].forEach(b => {
+                const bubble = document.createElement('div');
+                bubble.className = 'tea-micro-bubble';
+                bubble.style.left = b.left;
+                bubble.style.width = `${b.size}px`;
+                bubble.style.height = `${b.size}px`;
+                bubble.style.setProperty('--dur', b.dur);
+                bubble.style.setProperty('--sway', b.sway);
+                bubble.style.animationDelay = b.delay;
+                teaLayer.appendChild(bubble);
+            });
+
             [{ left: '15%', top: '6%', rot: '-12deg' }, { left: '37%', top: '4%', rot: '15deg' }, { left: '57%', top: '8%', rot: '-6deg' }, { left: '72%', top: '5%', rot: '22deg' }].forEach(ice => {
                 const cube = document.createElement('div');
                 cube.className = 'ice-cube'; cube.style.left = ice.left; cube.style.top = ice.top; cube.style.setProperty('--rot', ice.rot);
@@ -3771,7 +4026,7 @@
             el.classList.remove('selected', 'pouring-active', 'awaiting-cup', 'scooping-active');
         });
         const cupBox = document.getElementById('visual-cup-box');
-        cupBox.classList.remove('size-M', 'size-L', 'cup-shrunk', 'cup-return', 'cup-shake');
+        cupBox.classList.remove('size-M', 'size-L', 'cup-shrunk', 'cup-return', 'cup-shake', 'cup-served', 'cup-size-pop');
         document.getElementById('cup-size-sticker').style.display = 'none';
         document.getElementById('cup-pour-ladle').classList.remove('pouring');
         document.getElementById('falling-toppings-box').innerHTML = '';
@@ -3797,15 +4052,40 @@
         document.getElementById('btn-reset').disabled = disabled;
     }
 
-    function showMoneyFloat(amountText) {
+    function showMoneyFloat(amountText, comboCount = 0) {
         const container = document.getElementById('game-container');
+        const cupEl = document.getElementById('visual-cup-box') || container;
+        const cRect = container.getBoundingClientRect();
+        const cupRect = cupEl.getBoundingClientRect();
+        const originX = cupRect.width ? (cupRect.left - cRect.left + cupRect.width / 2) : 205;
+        const originY = cupRect.height ? Math.max(40, cupRect.top - cRect.top - 10) : 260;
+
         const floatEl = document.createElement('div');
         floatEl.className = 'money-float';
-        floatEl.innerText = amountText;
-        floatEl.style.left = '205px';
-        floatEl.style.top = '280px';
+        floatEl.innerHTML = comboCount >= 3 ? `${amountText} <span style="font-size:13px;color:#ea580c;">🔥x${comboCount}</span>` : amountText;
+        floatEl.style.left = `${originX}px`;
+        floatEl.style.top = `${originY}px`;
         container.appendChild(floatEl);
-        setTimeout(() => floatEl.remove(), 1200);
+        setTimeout(() => floatEl.remove(), 1320);
+
+        [
+            { sym: '🪙', cx: '-18px', cx2: '-30px', rot: '-35deg', delay: '0s' },
+            { sym: '✨', cx: '18px', cx2: '32px', rot: '45deg', delay: '0.06s' },
+            { sym: '🪙', cx: '-6px', cx2: '-12px', rot: '25deg', delay: '0.12s' },
+            { sym: '💖', cx: '10px', cx2: '20px', rot: '-20deg', delay: '0.16s' }
+        ].forEach(sp => {
+            const spark = document.createElement('div');
+            spark.className = 'coin-spark';
+            spark.innerText = sp.sym;
+            spark.style.left = `${originX}px`;
+            spark.style.top = `${originY + 12}px`;
+            spark.style.setProperty('--cx', sp.cx);
+            spark.style.setProperty('--cx2', sp.cx2);
+            spark.style.setProperty('--crot', sp.rot);
+            spark.style.animationDelay = sp.delay;
+            container.appendChild(spark);
+            setTimeout(() => spark.remove(), 1050);
+        });
     }
 
     function triggerAngryDeparture(headlineQuote, detailLabel) {
@@ -3897,7 +4177,26 @@
 
             persistSave();
             updateHUD();
-            showMoneyFloat(`+${earned.toLocaleString('vi-VN')}đ`);
+            triggerOnceAnim(document.getElementById('money')?.closest('.stat-pill'), 'hud-pop', 450);
+            triggerOnceAnim(document.getElementById('combo')?.closest('.stat-pill'), 'hud-pop', 450);
+            showMoneyFloat(`+${earned.toLocaleString('vi-VN')}đ`, combo);
+
+            const customerBox = document.getElementById('customer-box');
+            const speechBubble = document.getElementById('speech-bubble');
+            const custImg = document.getElementById('customer-img');
+            const cupBox = document.getElementById('visual-cup-box');
+            if (customerBox) customerBox.classList.add('customer-happy');
+            if (speechBubble) speechBubble.classList.add('bubble-happy');
+            if (custImg) {
+                custImg.classList.remove('pop', 'angry-leave', 'happy-bounce');
+                void custImg.offsetWidth;
+                custImg.classList.add('happy-bounce');
+            }
+            if (cupBox) {
+                cupBox.classList.remove('cup-served');
+                void cupBox.offsetWidth;
+                cupBox.classList.add('cup-served');
+            }
 
             const winQuote = currentCustomer ? currentCustomer.winMsg : 'Đúng món rồi! Cảm ơn bạn!';
             setMessage(`✅ ${winQuote} (+${earned.toLocaleString('vi-VN')}đ${bonusText})`, 'success');
