@@ -2591,7 +2591,7 @@
     const PACK_QTY = 5;
     const SIZE_PACK_COST = 8000;
 
-    // Hồ sơ 20 nhân vật đặc trưng (11 nhân vật mới + 9 nhân vật quen thuộc)
+    // Hồ sơ 21 nhân vật đặc trưng (12 nhân vật mới + 9 nhân vật quen thuộc)
     const customerProfiles = [
         // --- 10 NHÂN VẬT MỚI SIÊU ĐẶC TRƯNG ---
         {
@@ -2808,6 +2808,17 @@
             winMsg: 'Ngon quá mợ Ba ơi! Bắp hun mợ Ba cái chụt nè! 😘',
             loseMsg: 'Hổng phải món Bắp thích! Bắp dỗi mợ Ba luôn, Bắp đi méc mẹ đây!',
             timeoutMsg: 'Mợ Ba ơi Bắp đợi mỏi chân rồi! Bắp chạy về với mẹ đây!'
+        },
+        {
+            id: 'em_ut', img: 'em_gai_chu_tiem.png', name: 'Em Út (16 Tuổi) 🎀',
+            getOrders: (tea, size, top) => [
+                `Chị hai ơi, em út mới học thêm xong mệt xỉu! Pha cho em út 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> giải khát đi mà! 🥺🎀`,
+                `Chị hai yêu dấu! Hôm nay bài tập căng quá trời, tiếp sức liền cho em út 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> múc đầy <b style="color:#e65100">${top}</b> nha! ✨`,
+                `Nè chị hai ơi, bạn cùng lớp khen quán mình ngon lắm luôn á! Làm giúp em út 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> chuẩn gu Gen Z coi nào! 😋`
+            ],
+            winMsg: 'Đỉnh nóc luôn chị hai ơi!! Ngon xỉu, em út vote quán chị hai 5 sao mãi đỉnh! 💖',
+            loseMsg: 'Ơ kìa chị hai?! Làm nhầm món của em út rồi nè! Dỗi chị hai luôn, em út đi học bài đây!',
+            timeoutMsg: 'Trời ơi chị hai để em út đợi 20 giây lỡ mất giờ học thêm rồi nè! Thôi em út chạy lẹ đây!'
         }
     ];
 
