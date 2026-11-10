@@ -1934,6 +1934,271 @@
             .horizontal-row { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
             .ingredient-card { flex: 0 0 82px; }
         }
+        /* BẢN ĐỒ MÀN CHƠI (STAGE MAP + 3 SAO + MỞ KHÓA TUẦN TỰ) */
+        .map-modal-card {
+            max-width: 960px;
+            max-height: 92vh;
+            max-height: 92dvh;
+            padding: 14px 18px;
+        }
+        .map-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .map-top-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: linear-gradient(90deg, #fff0f5, #fefce8, #ecfdf5);
+            border: 1.5px solid #ffd1dc;
+            border-radius: 12px;
+            padding: 6px 12px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .map-stat-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .map-pill {
+            background: #ffffff;
+            border: 1px solid #fbcfe8;
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #be185d;
+        }
+        .map-pill.stars { border-color: #fde047; color: #b45309; background: #fefce8; }
+        .map-pill.money { border-color: #86efac; color: #15803d; background: #f0fdf4; }
+        .map-notice {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            text-align: center;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+        .map-notice.warn {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            color: #b91c1c;
+        }
+        .stage-map-board {
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: radial-gradient(circle at 12% 18%, rgba(255, 228, 233, 0.7), transparent 40%),
+                        radial-gradient(circle at 88% 82%, rgba(220, 252, 231, 0.7), transparent 42%),
+                        linear-gradient(155deg, #fff8fa 0%, #fffbeb 52%, #f0fdf4 100%);
+            border: 2px solid #fbcfe8;
+            border-radius: 18px;
+            padding: 16px 14px;
+            box-shadow: inset 0 2px 8px rgba(244, 114, 182, 0.08);
+        }
+        .stage-map-canvas {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+        }
+        .stage-map-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .stage-map-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 28px 18px;
+            align-items: stretch;
+        }
+        .stage-node {
+            position: relative;
+            background: #ffffff;
+            border: 2.5px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 10px 8px 8px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+            transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .stage-node:hover:not(.locked) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(233, 30, 99, 0.2);
+        }
+        .stage-node:active:not(.locked) { transform: scale(0.96); }
+        .stage-node.cleared {
+            background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+            border-color: #4ade80;
+        }
+        .stage-node.perfect {
+            background: linear-gradient(180deg, #fffdf4 0%, #fef3c7 100%);
+            border-color: #f59e0b;
+            box-shadow: 0 5px 14px rgba(245, 158, 11, 0.22);
+        }
+        .stage-node.current {
+            background: linear-gradient(180deg, #ffffff 0%, #fff0f5 100%);
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.28), 0 8px 18px rgba(236, 72, 153, 0.22);
+            animation: currentStagePulse 1.8s ease-in-out infinite;
+        }
+        @keyframes currentStagePulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.28), 0 6px 14px rgba(236, 72, 153, 0.2); }
+            50% { box-shadow: 0 0 0 5px rgba(244, 114, 182, 0.45), 0 10px 22px rgba(236, 72, 153, 0.34); }
+        }
+        .stage-node.newly-unlocked {
+            animation: unlockCelebrate 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 2;
+        }
+        @keyframes unlockCelebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.07); }
+        }
+        .stage-node.locked {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            border-style: dashed;
+            opacity: 0.78;
+            filter: grayscale(0.45);
+            cursor: not-allowed;
+        }
+        .stage-node.lock-shake {
+            animation: cupShake 0.35s ease;
+        }
+        .stage-head-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .stage-num-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ff6b8b;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(233, 30, 99, 0.28);
+        }
+        .stage-node.cleared .stage-num-circle { background: #16a34a; }
+        .stage-node.perfect .stage-num-circle { background: #d97706; }
+        .stage-node.locked .stage-num-circle { background: #94a3b8; box-shadow: none; }
+        .stage-icon { font-size: 18px; line-height: 1; }
+        .stage-stars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .stage-stars .star.earned {
+            color: #fbbf24;
+            text-shadow: 0 1px 3px rgba(180, 83, 9, 0.45);
+        }
+        .stage-stars .star.empty {
+            color: #cbd5e1;
+        }
+        .stage-name {
+            font-size: 11px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.2;
+        }
+        .stage-meta {
+            font-size: 10px;
+            font-weight: 700;
+            color: #64748b;
+        }
+        .stage-cta {
+            margin-top: 2px;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #fce7f3;
+            color: #be185d;
+        }
+        .stage-node.current .stage-cta {
+            background: linear-gradient(135deg, #ff6b8b, #e91e63);
+            color: #fff;
+        }
+        .stage-node.cleared .stage-cta { background: #dcfce7; color: #166534; }
+        .stage-node.perfect .stage-cta { background: #fef3c7; color: #b45309; }
+        .stage-node.locked .stage-cta { background: #e2e8f0; color: #64748b; }
+
+        .end-best-record {
+            font-size: 12px;
+            font-weight: 800;
+            color: #b45309;
+            margin-bottom: 4px;
+        }
+        .end-unlock-banner {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #ecfdf5;
+            border: 1.5px solid #6ee7b7;
+            color: #065f46;
+        }
+        .end-unlock-banner.locked {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+        .day-badge.clickable {
+            cursor: pointer;
+            transition: transform 0.14s ease, box-shadow 0.16s ease;
+        }
+        .day-badge.clickable:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .map-modal-card { padding: 8px 12px; }
+            .map-top-stats { padding: 4px 8px; margin-bottom: 5px; }
+            .map-pill { font-size: 10.5px; padding: 1px 7px; }
+            .map-notice { font-size: 10.5px; padding: 2px 8px; margin-bottom: 5px; }
+            .stage-map-board { padding: 8px 8px; }
+            .stage-map-grid { gap: 12px 7px; }
+            .stage-node { padding: 6px 4px; border-radius: 12px; gap: 2px; }
+            .stage-num-circle { width: 20px; height: 20px; font-size: 10.5px; }
+            .stage-icon { font-size: 14px; }
+            .stage-stars { font-size: 13px; }
+            .stage-name { font-size: 9.5px; }
+            .stage-meta { font-size: 8.5px; }
+            .stage-cta { font-size: 8.5px; padding: 1px 6px; }
+        }
+        @media (max-width: 559px), ((max-width: 767px) and (orientation: portrait)) {
+            .stage-map-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; }
+        }
     </style>
 </head>
 <body>
@@ -1984,24 +2249,60 @@
 
             <div class="start-progress-box">
                 <div class="start-stat">
-                    <span>Màn hiện tại</span>
-                    <b id="start-day-val">Ngày 1</b>
+                    <span>Màn đã mở</span>
+                    <b id="start-day-val">1/10</b>
+                </div>
+                <div class="start-stat">
+                    <span>Tổng sao đạt</span>
+                    <b id="start-stars-val">0/30 ⭐</b>
                 </div>
                 <div class="start-stat">
                     <span>Tiền quỹ quán</span>
                     <b id="start-money-val">40.000đ</b>
                 </div>
-                <div class="start-stat">
-                    <span>Tổng đơn đạt</span>
-                    <b id="start-score-val">0</b>
+            </div>
+
+            <button class="btn-play-big" id="btn-open-map" onclick="openLevelMap('start')">🗺️ BẢN ĐỒ MÀN CHƠI • CHỌN MÀN</button>
+
+            <div class="start-secondary-btns">
+                <button class="btn-secondary-pill" id="btn-play-game" onclick="startFromMenu()">▶ Chơi Tiếp Màn 1</button>
+                <button class="btn-secondary-pill market" onclick="openMarketModal('start')">🛒 Đi Chợ</button>
+                <button class="btn-secondary-pill" onclick="resetFullGame()">🔄 Chơi Lại</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         BẢN ĐỒ MÀN CHƠI (#level-map-screen)
+         =================================================== -->
+    <div class="overlay-screen" id="level-map-screen">
+        <div class="modal-card map-modal-card">
+            <div class="modal-header" style="margin-bottom: 8px; padding-bottom: 8px;">
+                <div class="modal-title">🗺️ BẢN ĐỒ HÀNH TRÌNH • CHỌN MÀN CHƠI</div>
+                <div class="map-header-actions">
+                    <button class="btn-secondary-pill market" style="flex:0 0 auto; padding:5px 11px;" onclick="openMarketModal('map')">🛒 Đi Chợ</button>
+                    <button class="btn-secondary-pill" style="flex:0 0 auto; padding:5px 11px;" onclick="closeLevelMap()">🏠 Trang Chủ</button>
+                    <button class="btn-secondary-pill" id="btn-map-resume" style="flex:0 0 auto; padding:5px 11px; display:none;" onclick="resumeFromLevelMap()">✖ Tiếp tục chơi</button>
                 </div>
             </div>
 
-            <button class="btn-play-big" id="btn-play-game" onclick="startFromMenu()">▶ PLAY • BẮT ĐẦU NGÀY 1</button>
+            <div class="map-top-stats">
+                <div class="map-stat-group">
+                    <span class="map-pill stars" id="map-total-stars">⭐ Tổng sao: 0/30</span>
+                    <span class="map-pill" id="map-unlocked-count">🔓 Đã mở: 1/10 màn</span>
+                </div>
+                <span class="map-pill money" id="map-money-pill">💰 Quỹ: 40.000đ</span>
+            </div>
 
-            <div class="start-secondary-btns">
-                <button class="btn-secondary-pill market" onclick="openMarketModal('start')">🛒 Đi Chợ Nhập Hàng</button>
-                <button class="btn-secondary-pill" onclick="resetFullGame()">🔄 Chơi Lại Từ Đầu</button>
+            <div class="map-notice" id="map-notice">
+                ✨ Hoàn thành màn trước (tối thiểu 1⭐) để mở khóa màn tiếp theo! Thử sức đạt tối đa 3⭐ mỗi màn nhé.
+            </div>
+
+            <div class="stage-map-board" id="stage-map-board">
+                <div class="stage-map-canvas" id="stage-map-canvas">
+                    <svg class="stage-map-svg" id="stage-map-svg"></svg>
+                    <div class="stage-map-grid" id="stage-map-grid"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -2012,25 +2313,30 @@
     <div class="overlay-screen" id="day-end-modal">
         <div class="modal-card compact">
             <div class="modal-header" style="justify-content:center;">
-                <div class="modal-title" id="end-day-title">🎉 HOÀN THÀNH NGÀY 1!</div>
+                <div class="modal-title" id="end-day-title">🎉 HOÀN THÀNH MÀN 1!</div>
             </div>
             <div class="stars-row" id="end-day-stars">⭐⭐⭐</div>
-            <div style="font-size:13px; color:#475569; font-weight:700;" id="end-day-subtitle">
+            <div class="end-best-record" id="end-day-best-stars">🏆 Cao nhất màn này: 3/3 ⭐</div>
+            <div style="font-size:12.5px; color:#475569; font-weight:700;" id="end-day-subtitle">
                 Xuất sắc! Bạn đã hoàn thành toàn bộ nhiệm vụ hôm nay!
             </div>
 
             <div class="day-summary-list" id="end-day-summary-list"></div>
 
-            <div style="font-size:13px; font-weight:800; color:#15803d; margin-bottom:12px;" id="end-day-reward-text">
+            <div style="font-size:12.5px; font-weight:800; color:#15803d; margin-bottom:6px;" id="end-day-reward-text">
                 Thưởng hoàn thành nhiệm vụ: +20.000đ
             </div>
-
-            <div class="start-secondary-btns" style="margin-bottom:10px;">
-                <button class="btn-secondary-pill market" onclick="openMarketModal('dayend')">🛒 Đi Chợ Nhập Hàng</button>
-                <button class="btn-secondary-pill" onclick="replayCurrentDay()">🔁 Chơi Lại Ngày Này</button>
+            <div class="end-unlock-banner" id="end-unlock-banner">
+                🎉 Đã mở khóa Màn 2!
             </div>
-            <button class="btn-play-big" id="btn-next-day" onclick="goToNextDay()" style="margin-bottom:0; padding:12px; font-size:16px;">
-                ▶ SANG NGÀY TIẾP THEO
+
+            <div class="start-secondary-btns" style="margin-bottom:8px;">
+                <button class="btn-secondary-pill" onclick="openLevelMap('dayend')">🗺️ Bản Đồ Màn</button>
+                <button class="btn-secondary-pill market" onclick="openMarketModal('dayend')">🛒 Đi Chợ</button>
+                <button class="btn-secondary-pill" onclick="replayCurrentDay()">🔁 Chơi Lại</button>
+            </div>
+            <button class="btn-play-big" id="btn-next-day" onclick="goToNextDay()" style="margin-bottom:0; padding:11px; font-size:15.5px;">
+                ▶ SANG MÀN TIẾP THEO
             </button>
         </div>
     </div>
@@ -2062,12 +2368,13 @@
     <div class="top-bar">
         <div class="brand-title">
             <span>🧋 TIỆM TRÀ SỮA</span>
-            <span class="day-badge" id="hud-day-badge">📅 Ngày 1</span>
+            <span class="day-badge clickable" id="hud-day-badge" onclick="openLevelMap('game')" title="Mở bản đồ chọn màn">📅 Màn 1</span>
         </div>
         <div class="stats-bar">
             <div class="stat-pill">💰 Quỹ: <span><b id="money">0</b>đ</span></div>
             <div class="stat-pill">👥 Khách: <b id="hud-customer-progress">0/4</b></div>
             <div class="stat-pill">🔥 Combo: <b id="combo">0</b></div>
+            <button class="top-icon-btn" onclick="openLevelMap('game')" title="Mở bản đồ chọn màn">🗺️ Màn</button>
             <button class="top-icon-btn" onclick="openMarketModal('game')" title="Đi chợ mua thêm hàng">🛒 Chợ</button>
             <button class="top-icon-btn" onclick="backToMenu()" title="Về màn hình chính">🏠</button>
             <button class="top-icon-btn" id="sound-btn" onclick="toggleSound()" title="Bật/Tắt âm thanh">🔊</button>
@@ -2503,13 +2810,26 @@
         return inv;
     }
 
+    const TOTAL_STAGES = 10;
+
     let saveState = null;
     try {
         const raw = localStorage.getItem('trasua_save_v2');
         if (raw) saveState = JSON.parse(raw);
     } catch (e) {}
 
-    let currentDay = saveState ? (saveState.currentDay || 1) : 1;
+    let currentDay = saveState ? Math.min(TOTAL_STAGES, Math.max(1, saveState.currentDay || 1)) : 1;
+    let highestUnlockedStage = saveState && typeof saveState.highestUnlockedStage === 'number'
+        ? Math.min(TOTAL_STAGES, Math.max(1, saveState.highestUnlockedStage))
+        : Math.max(1, Math.min(TOTAL_STAGES, currentDay));
+    let stageProgress = (saveState && saveState.stageProgress && typeof saveState.stageProgress === 'object')
+        ? saveState.stageProgress
+        : {};
+    // Di chuyển dữ liệu lưu cũ: đánh dấu các màn trước highestUnlockedStage đã qua ít nhất 1 sao nếu chưa có chi tiết
+    for (let st = 1; st < highestUnlockedStage; st++) {
+        if (!stageProgress[st]) stageProgress[st] = { stars: 1, passed: true };
+    }
+
     let money = saveState ? (saveState.money ?? 40000) : 40000;
     let totalScore = saveState ? (saveState.totalScore || 0) : 0;
     let inventory = saveState && saveState.inventory ? saveState.inventory : getDefaultInventory();
@@ -2523,9 +2843,23 @@
     function persistSave() {
         try {
             localStorage.setItem('trasua_save_v2', JSON.stringify({
-                currentDay, money, totalScore, inventory
+                currentDay, highestUnlockedStage, stageProgress, money, totalScore, inventory
             }));
         } catch (e) {}
+    }
+
+    function isStageUnlocked(stageNum) {
+        return stageNum >= 1 && stageNum <= highestUnlockedStage;
+    }
+
+    function getStageBestStars(stageNum) {
+        return (stageProgress[stageNum] && stageProgress[stageNum].stars) ? stageProgress[stageNum].stars : 0;
+    }
+
+    function getTotalEarnedStars() {
+        let sum = 0;
+        for (let i = 1; i <= TOTAL_STAGES; i++) sum += getStageBestStars(i);
+        return sum;
     }
 
     // Trạng thái trong màn chơi hiện tại
@@ -2543,6 +2877,8 @@
     let patienceInterval = null;
     let lastPatienceTick = 0;
     let marketReturnTo = 'start';
+    let mapReturnTo = 'start';
+    let newlyUnlockedStage = 0;
 
     let dayPlan = null;
     let dayOrdersQueue = [];
@@ -2562,13 +2898,25 @@
     let currentCup = { size: '', tea: '', topping: '' };
 
     // =========================================================
-    // 3. CẤU HÌNH NHIỆM VỤ TỪNG NGÀY (1 NGÀY = 1 MÀN CHƠI)
+    // 3. CẤU HÌNH NHIỆM VỤ TỪNG MÀN (10 MÀN BẢN ĐỒ • ĐÁNH GIÁ 3 SAO)
     // =========================================================
+    const stageThemes = [
+        { stage: 1, title: 'Khai Trương Quán Nhỏ', icon: '🧋' },
+        { stage: 2, title: 'Giờ Tan Trường', icon: '🎒' },
+        { stage: 3, title: 'Cơn Sốt Kem Cheese', icon: '🧀' },
+        { stage: 4, title: 'Lễ Hội Trái Cây', icon: '🍓' },
+        { stage: 5, title: 'Thử Thách Khoai Môn', icon: '💜' },
+        { stage: 6, title: 'Shipper Nổ Đơn', icon: '🛵' },
+        { stage: 7, title: 'Tiệc Flan & Oreo', icon: '🍮' },
+        { stage: 8, title: 'Đêm Nhạc Idol', icon: '🎤' },
+        { stage: 9, title: 'Giờ Cao Điểm', icon: '⚡' },
+        { stage: 10, title: 'Vua Trà Sữa Đệ Nhất', icon: '👑' }
+    ];
+
     function createDayConfig(dayNum) {
         const configs = {
             1: {
-                customers: 4,
-                reward: 20000,
+                customers: 4, reward: 20000,
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 4, label: 'Bán cho 4 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa truyền thống', target: 2, label: 'Bán 2 ly Trà sữa truyền thống' },
@@ -2576,8 +2924,7 @@
                 ]
             },
             2: {
-                customers: 5,
-                reward: 25000,
+                customers: 5, reward: 25000,
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa matcha', target: 2, label: 'Bán 2 ly Trà sữa matcha' },
@@ -2585,8 +2932,7 @@
                 ]
             },
             3: {
-                customers: 5,
-                reward: 30000,
+                customers: 5, reward: 30000,
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà lựu đỏ', target: 2, label: 'Bán 2 ly Trà lựu đỏ' },
@@ -2594,8 +2940,7 @@
                 ]
             },
             4: {
-                customers: 6,
-                reward: 35000,
+                customers: 6, reward: 35000,
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà xoài chanh dây', target: 2, label: 'Bán 2 ly Trà xoài chanh dây' },
@@ -2604,12 +2949,55 @@
                 ]
             },
             5: {
-                customers: 6,
-                reward: 40000,
+                customers: 6, reward: 40000,
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa khoai môn', target: 2, label: 'Bán 2 ly Trà sữa khoai môn' },
                     { id: 'm_top', type: 'specific_topping', topping: 'Kem khoai môn', target: 2, label: 'Bán 2 ly có Kem khoai môn' },
+                    { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
+                ]
+            },
+            6: {
+                customers: 6, reward: 45000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa thái đỏ', target: 2, label: 'Bán 2 ly Trà sữa thái đỏ' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Trân châu hoàng kim', target: 2, label: 'Bán 2 ly Trân châu hoàng kim' }
+                ]
+            },
+            7: {
+                customers: 7, reward: 50000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 7, label: 'Bán cho 7 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa socola', target: 2, label: 'Bán 2 ly Trà sữa socola' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Vụn Oreo', target: 2, label: 'Bán 2 ly có Vụn Oreo' },
+                    { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
+                ]
+            },
+            8: {
+                customers: 7, reward: 55000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 7, label: 'Bán cho 7 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà vải thiều', target: 2, label: 'Bán 2 ly Trà vải thiều' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Thạch cá', target: 2, label: 'Bán 2 ly có Thạch cá' },
+                    { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
+                ]
+            },
+            9: {
+                customers: 8, reward: 60000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 8, label: 'Bán cho 8 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà táo bạc hà', target: 3, label: 'Bán 3 ly Trà táo bạc hà' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Bánh flan', target: 2, label: 'Bán 2 ly có Bánh flan' },
+                    { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
+                ]
+            },
+            10: {
+                customers: 9, reward: 75000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 9, label: 'Bán cho 9 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà Đài Loan nguyên lá', target: 3, label: 'Bán 3 ly Trà Đài Loan nguyên lá' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Nho sấy giòn', target: 3, label: 'Bán 3 ly Nho sấy giòn' },
                     { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
                 ]
             }
@@ -2617,7 +3005,6 @@
 
         if (configs[dayNum]) return configs[dayNum];
 
-        // Ngày 6+ tự động sinh nhiệm vụ đa dạng
         const totalCust = Math.min(5 + Math.floor(dayNum / 2), 9);
         const randDrink = drinksCatalog[(dayNum * 3) % drinksCatalog.length].name;
         const randTop = toppingsCatalog[(dayNum * 2) % toppingsCatalog.length].name;
@@ -2626,11 +3013,8 @@
             { id: 'm_drink', type: 'specific_drink', drink: randDrink, target: 2, label: `Bán 2 ly ${randDrink}` },
             { id: 'm_top', type: 'specific_topping', topping: randTop, target: 2, label: `Bán 2 ly có ${randTop}` }
         ];
-        if (dayNum % 2 === 0) {
-            missions.push({ id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' });
-        } else {
-            missions.push({ id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' });
-        }
+        if (dayNum % 2 === 0) missions.push({ id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' });
+        else missions.push({ id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' });
         return { customers: totalCust, reward: 30000 + dayNum * 3000, missions };
     }
 
@@ -2838,7 +3222,7 @@
     }
 
     function updateHUD() {
-        document.getElementById('hud-day-badge').innerText = `📅 Ngày ${currentDay}`;
+        document.getElementById('hud-day-badge').innerText = `📅 Màn ${currentDay}`;
         document.getElementById('money').innerText = money.toLocaleString('vi-VN');
         document.getElementById('combo').innerText = combo;
         if (dayPlan) {
@@ -2849,19 +3233,196 @@
     }
 
     // =========================================================
-    // 6. LUỒNG MÀN CHƠI: START MENU, NGÀY MỚI, TỔNG KẾT, ĐI CHỢ
+    // 6. LUỒNG MÀN CHƠI: START MENU, BẢN ĐỒ MÀN, TỔNG KẾT, ĐI CHỢ
     // =========================================================
     function refreshStartScreen() {
-        document.getElementById('start-day-val').innerText = `Ngày ${currentDay}`;
+        document.getElementById('start-day-val').innerText = `${highestUnlockedStage}/${TOTAL_STAGES}`;
+        const starsEl = document.getElementById('start-stars-val');
+        if (starsEl) starsEl.innerText = `${getTotalEarnedStars()}/${TOTAL_STAGES * 3} ⭐`;
         document.getElementById('start-money-val').innerText = `${money.toLocaleString('vi-VN')}đ`;
-        document.getElementById('start-score-val').innerText = totalScore;
-        document.getElementById('btn-play-game').innerText = `▶ PLAY • BẮT ĐẦU NGÀY ${currentDay}`;
+        const quickStage = Math.min(highestUnlockedStage, Math.max(1, currentDay));
+        document.getElementById('btn-play-game').innerText = `▶ Chơi Tiếp Màn ${quickStage}`;
     }
 
     function startFromMenu() {
         playSound('click');
         document.getElementById('start-screen').classList.remove('active');
-        startDay(currentDay);
+        document.getElementById('level-map-screen').classList.remove('active');
+        const targetStage = isStageUnlocked(currentDay) ? currentDay : highestUnlockedStage;
+        startDay(targetStage);
+    }
+
+    function openLevelMap(fromWhere = 'start') {
+        if (fromWhere === 'game' && (isPouring || isScooping || isServing)) return;
+        playSound('click');
+        mapReturnTo = fromWhere;
+        const noticeEl = document.getElementById('map-notice');
+        if (noticeEl) {
+            noticeEl.classList.remove('warn');
+            noticeEl.innerText = '✨ Hoàn thành màn trước (tối thiểu 1⭐) để mở khóa màn tiếp theo! Thử sức đạt tối đa 3⭐ mỗi màn nhé.';
+        }
+        document.getElementById('day-end-modal').classList.remove('active');
+        renderLevelMap();
+        document.getElementById('level-map-screen').classList.add('active');
+        requestAnimationFrame(drawStageMapRoadSvg);
+    }
+
+    function closeLevelMap() {
+        playSound('click');
+        document.getElementById('level-map-screen').classList.remove('active');
+        refreshStartScreen();
+        document.getElementById('start-screen').classList.add('active');
+    }
+
+    function resumeFromLevelMap() {
+        playSound('click');
+        document.getElementById('level-map-screen').classList.remove('active');
+        updateHUD();
+    }
+
+    function renderLevelMap() {
+        const totalStars = getTotalEarnedStars();
+        const starsPill = document.getElementById('map-total-stars');
+        const unlockedPill = document.getElementById('map-unlocked-count');
+        const moneyPill = document.getElementById('map-money-pill');
+        const resumeBtn = document.getElementById('btn-map-resume');
+
+        if (starsPill) starsPill.innerText = `⭐ Tổng sao: ${totalStars}/${TOTAL_STAGES * 3}`;
+        if (unlockedPill) unlockedPill.innerText = `🔓 Đã mở: ${highestUnlockedStage}/${TOTAL_STAGES} màn`;
+        if (moneyPill) moneyPill.innerText = `💰 Quỹ: ${money.toLocaleString('vi-VN')}đ`;
+        if (resumeBtn) resumeBtn.style.display = mapReturnTo === 'game' && dayPlan ? 'inline-block' : 'none';
+
+        const grid = document.getElementById('stage-map-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        const isPortraitTwoCol = window.innerWidth <= 559 || (window.innerWidth <= 767 && window.innerHeight > window.innerWidth);
+        const order = isPortraitTwoCol
+            ? [1, 2, 4, 3, 5, 6, 8, 7, 9, 10]
+            : [1, 2, 3, 4, 5, 10, 9, 8, 7, 6];
+
+        order.forEach(stageNum => {
+            const theme = stageThemes.find(s => s.stage === stageNum) || { stage: stageNum, title: `Màn ${stageNum}`, icon: '🧋' };
+            const cfg = createDayConfig(stageNum);
+            const unlocked = isStageUnlocked(stageNum);
+            const bestStars = getStageBestStars(stageNum);
+            const isPassed = Boolean(stageProgress[stageNum] && stageProgress[stageNum].passed);
+            const isFrontier = unlocked && stageNum === highestUnlockedStage && !isPassed;
+
+            const card = document.createElement('div');
+            card.className = 'stage-node';
+            card.setAttribute('data-stage', String(stageNum));
+            if (!unlocked) card.classList.add('locked');
+            else if (bestStars === 3) card.classList.add('perfect');
+            else if (isPassed) card.classList.add('cleared');
+            if (isFrontier) card.classList.add('current');
+            if (newlyUnlockedStage === stageNum) card.classList.add('newly-unlocked');
+
+            card.onclick = () => selectStageFromMap(stageNum, card);
+
+            const starsHtml = [1, 2, 3].map(idx => (
+                `<span class="star ${idx <= bestStars ? 'earned' : 'empty'}">${idx <= bestStars ? '★' : '☆'}</span>`
+            )).join('');
+
+            const ctaText = !unlocked
+                ? '🔒 Chưa mở'
+                : (isFrontier ? '▶ CHƠI NGAY' : (bestStars < 3 ? '🔁 Đạt 3⭐' : '🏆 Hoàn hảo'));
+
+            card.innerHTML = `
+                <div class="stage-head-row">
+                    <span class="stage-num-circle">${stageNum}</span>
+                    <span class="stage-icon">${theme.icon}</span>
+                </div>
+                <div class="stage-stars">${starsHtml}</div>
+                <div class="stage-name">${theme.title}</div>
+                <div class="stage-meta">👥 ${cfg.customers} khách • +${(cfg.reward / 1000)}k</div>
+                <div class="stage-cta">${ctaText}</div>
+            `;
+            grid.appendChild(card);
+        });
+
+        requestAnimationFrame(drawStageMapRoadSvg);
+    }
+
+    function drawStageMapRoadSvg() {
+        const svg = document.getElementById('stage-map-svg');
+        const canvasEl = document.getElementById('stage-map-canvas');
+        if (!svg || !canvasEl) return;
+
+        const box = canvasEl.getBoundingClientRect();
+        if (!box.width || !box.height) return;
+        svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+        svg.innerHTML = '';
+
+        const pts = [];
+        for (let i = 1; i <= TOTAL_STAGES; i++) {
+            const node = canvasEl.querySelector(`.stage-node[data-stage="${i}"]`);
+            if (!node) continue;
+            const r = node.getBoundingClientRect();
+            pts.push({
+                stage: i,
+                x: r.left - box.left + r.width / 2,
+                y: r.top - box.top + r.height / 2
+            });
+        }
+
+        for (let i = 0; i < pts.length - 1; i++) {
+            const a = pts[i];
+            const b = pts[i + 1];
+            const unlockedEdge = isStageUnlocked(b.stage);
+            const dx = Math.abs(b.x - a.x);
+            const dy = Math.abs(b.y - a.y);
+
+            let dPath;
+            if (dy > 20 && dx < 30) {
+                // Đoạn cua U đi xuống từ hàng trên xuống hàng dưới (Màn 5 -> Màn 6)
+                const bend = Math.min(48, Math.max(26, dy * 0.45));
+                const dir = a.x > box.width / 2 ? 1 : -1;
+                dPath = `M ${a.x} ${a.y} C ${a.x + dir * bend} ${a.y + dy * 0.25}, ${b.x + dir * bend} ${b.y - dy * 0.25}, ${b.x} ${b.y}`;
+            } else {
+                const mx = (a.x + b.x) / 2;
+                dPath = `M ${a.x} ${a.y} C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`;
+            }
+
+            const basePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            basePath.setAttribute('d', dPath);
+            basePath.setAttribute('fill', 'none');
+            basePath.setAttribute('stroke', unlockedEdge ? '#f9a8d4' : '#cbd5e1');
+            basePath.setAttribute('stroke-width', '8');
+            basePath.setAttribute('stroke-linecap', 'round');
+            if (!unlockedEdge) basePath.setAttribute('stroke-dasharray', '8 7');
+            svg.appendChild(basePath);
+
+            if (unlockedEdge) {
+                const centerDash = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                centerDash.setAttribute('d', dPath);
+                centerDash.setAttribute('fill', 'none');
+                centerDash.setAttribute('stroke', '#ffffff');
+                centerDash.setAttribute('stroke-width', '2.5');
+                centerDash.setAttribute('stroke-linecap', 'round');
+                centerDash.setAttribute('stroke-dasharray', '6 6');
+                svg.appendChild(centerDash);
+            }
+        }
+    }
+
+    function selectStageFromMap(stageNum, cardEl) {
+        if (!isStageUnlocked(stageNum)) {
+            playSound('error');
+            triggerOnceAnim(cardEl, 'lock-shake', 380);
+            const noticeEl = document.getElementById('map-notice');
+            if (noticeEl) {
+                noticeEl.classList.add('warn');
+                noticeEl.innerText = `🔒 Bạn cần hoàn thành Màn ${stageNum - 1} (đạt ít nhất 1⭐) để mở khóa Màn ${stageNum}!`;
+            }
+            return;
+        }
+        playSound('click');
+        newlyUnlockedStage = 0;
+        document.getElementById('level-map-screen').classList.remove('active');
+        document.getElementById('start-screen').classList.remove('active');
+        document.getElementById('day-end-modal').classList.remove('active');
+        startDay(stageNum);
     }
 
     function clearTransitionTimers() {
@@ -2880,6 +3441,7 @@
         if (isServing || !currentCustomer) return true;
         if (document.getElementById('rotate-prompt')?.classList.contains('active')) return true;
         if (document.getElementById('start-screen').classList.contains('active')) return true;
+        if (document.getElementById('level-map-screen')?.classList.contains('active')) return true;
         if (document.getElementById('day-end-modal').classList.contains('active')) return true;
         if (document.getElementById('market-modal').classList.contains('active')) return true;
         return false;
@@ -2935,6 +3497,9 @@
         clearTransitionTimers();
         isServing = false;
         currentDay = 1;
+        highestUnlockedStage = 1;
+        stageProgress = {};
+        newlyUnlockedStage = 0;
         money = 40000;
         totalScore = 0;
         combo = 0;
@@ -2947,8 +3512,8 @@
         stopCustomerTimer();
         clearTransitionTimers();
         isServing = false;
-        currentDay = dayNum;
-        dayPlan = createDayConfig(dayNum);
+        currentDay = Math.max(1, Math.min(TOTAL_STAGES, dayNum));
+        dayPlan = createDayConfig(currentDay);
         dayOrdersQueue = buildDayOrdersQueue(dayPlan);
         dayCustomersDone = 0;
         combo = 0;
@@ -2961,6 +3526,7 @@
             toppingsSold: {}
         };
         document.getElementById('day-end-modal').classList.remove('active');
+        document.getElementById('level-map-screen').classList.remove('active');
         updateHUD();
         generateOrder();
         persistSave();
@@ -2974,19 +3540,47 @@
         const totalMissions = results.length;
         const allPassed = passedCount === totalMissions;
 
-        const stars = passedCount === totalMissions ? '⭐⭐⭐' : (passedCount >= Math.ceil(totalMissions / 2) ? '⭐⭐☆' : '⭐☆☆');
-        const bonusEarned = allPassed ? dayPlan.reward : Math.round(dayPlan.reward * (passedCount / totalMissions) * 0.5);
+        // Quy tắc đánh giá 3 sao tối đa & mở khóa tuần tự: cần qua >= 1 nhiệm vụ và bán >= 1 ly để đạt >= 1 sao & mở khóa màn sau
+        const passedStage = passedCount >= 1 && dayStats.served >= 1;
+        const earnedStars = !passedStage
+            ? 0
+            : (allPassed ? 3 : (passedCount >= Math.ceil(totalMissions / 2) ? 2 : 1));
+
+        const prevRecord = stageProgress[currentDay] || { stars: 0, passed: false };
+        const isNewRecord = earnedStars > (prevRecord.stars || 0);
+        const bestStars = Math.max(prevRecord.stars || 0, earnedStars);
+        stageProgress[currentDay] = {
+            stars: bestStars,
+            passed: Boolean(prevRecord.passed || passedStage)
+        };
+
+        let justUnlockedNext = false;
+        if (passedStage && currentDay < TOTAL_STAGES && currentDay + 1 > highestUnlockedStage) {
+            highestUnlockedStage = currentDay + 1;
+            newlyUnlockedStage = currentDay + 1;
+            justUnlockedNext = true;
+        }
+
+        const starsStr = '⭐'.repeat(earnedStars) + '☆'.repeat(3 - earnedStars);
+        const bonusEarned = !passedStage
+            ? 0
+            : (allPassed ? dayPlan.reward : Math.round((dayPlan.reward * (passedCount / totalMissions) * 0.5) / 1000) * 1000);
 
         money += bonusEarned;
         persistSave();
 
-        document.getElementById('end-day-title').innerText = allPassed
-            ? `🎉 HOÀN THÀNH XUẤT SẮC NGÀY ${currentDay}!`
-            : `📋 TỔNG KẾT NGÀY ${currentDay}`;
-        document.getElementById('end-day-stars').innerText = stars;
+        const theme = stageThemes.find(s => s.stage === currentDay) || { title: `Màn ${currentDay}` };
+        document.getElementById('end-day-title').innerText = passedStage
+            ? `🎉 HOÀN THÀNH MÀN ${currentDay}: ${theme.title.toUpperCase()}!`
+            : `📋 CHƯA QUA MÀN ${currentDay}`;
+        document.getElementById('end-day-stars').innerText = starsStr;
+        document.getElementById('end-day-best-stars').innerText =
+            `🏆 Cao nhất màn này: ${'★'.repeat(bestStars)}${'☆'.repeat(3 - bestStars)} (${bestStars}/3 ⭐)${isNewRecord ? ' • Kỷ lục mới! 🌟' : ''}`;
         document.getElementById('end-day-subtitle').innerText = allPassed
-            ? `Quá đỉnh! Bạn đã đạt ${passedCount}/${totalMissions} nhiệm vụ và kiếm được ${dayStats.earnedToday.toLocaleString('vi-VN')}đ tiền bán hàng!`
-            : `Bạn đạt ${passedCount}/${totalMissions} nhiệm vụ. Hãy ghé chợ nhập thêm hàng chuẩn bị cho ngày tiếp theo nhé!`;
+            ? `Quá đỉnh 3/3 ⭐! Bạn hoàn thành hết ${totalMissions} nhiệm vụ và kiếm ${dayStats.earnedToday.toLocaleString('vi-VN')}đ tiền bán hàng!`
+            : (passedStage
+                ? `Bạn đạt ${passedCount}/${totalMissions} nhiệm vụ (${earnedStars}⭐). Có thể chơi lại bất cứ lúc nào để săn đủ 3⭐!`
+                : `Bạn chưa đạt nhiệm vụ nào trong Màn ${currentDay}. Hãy pha chuẩn hơn để mở khóa Màn ${Math.min(TOTAL_STAGES, currentDay + 1)} nhé!`);
 
         const listEl = document.getElementById('end-day-summary-list');
         listEl.innerHTML = '';
@@ -3002,11 +3596,36 @@
 
         document.getElementById('end-day-reward-text').innerText =
             `🎁 Thưởng nhiệm vụ: +${bonusEarned.toLocaleString('vi-VN')}đ (Quỹ hiện tại: ${money.toLocaleString('vi-VN')}đ)`;
-        document.getElementById('btn-next-day').innerText = `▶ SANG NGÀY ${currentDay + 1}`;
 
-        if (allPassed) {
+        const unlockBanner = document.getElementById('end-unlock-banner');
+        const nextBtn = document.getElementById('btn-next-day');
+        const nextStage = currentDay + 1;
+
+        if (currentDay >= TOTAL_STAGES && passedStage) {
+            unlockBanner.classList.remove('locked');
+            unlockBanner.innerText = '👑 CHÚC MỪNG! Bạn đã hoàn thành tất cả 10 màn của Tiệm Trà Sữa Học Đường!';
+            nextBtn.disabled = false;
+            nextBtn.innerText = '🗺️ XEM BẢN ĐỒ VINH DANH';
+            nextBtn.onclick = () => openLevelMap('dayend');
+        } else if (isStageUnlocked(nextStage)) {
+            unlockBanner.classList.remove('locked');
+            unlockBanner.innerText = justUnlockedNext
+                ? `🔓 ĐÃ MỞ KHÓA MÀN ${nextStage} TRÊN BẢN ĐỒ!`
+                : `🔓 Màn ${nextStage} đã sẵn sàng trên bản đồ!`;
+            nextBtn.disabled = false;
+            nextBtn.innerText = `▶ SANG MÀN ${nextStage}`;
+            nextBtn.onclick = goToNextDay;
+        } else {
+            unlockBanner.classList.add('locked');
+            unlockBanner.innerText = `🔒 Cần vượt qua Màn ${currentDay} (tối thiểu 1⭐) để mở khóa Màn ${nextStage}!`;
+            nextBtn.disabled = true;
+            nextBtn.innerText = `🔒 CHƯA MỞ KHÓA MÀN ${nextStage}`;
+            nextBtn.onclick = goToNextDay;
+        }
+
+        if (passedStage) {
             playSound('success');
-            launchConfetti();
+            if (allPassed) launchConfetti();
         }
         updateHUD();
         document.getElementById('day-end-modal').classList.add('active');
@@ -3018,8 +3637,13 @@
     }
 
     function goToNextDay() {
+        const nextStage = currentDay + 1;
+        if (!isStageUnlocked(nextStage) || nextStage > TOTAL_STAGES) {
+            playSound('error');
+            return;
+        }
         playSound('click');
-        startDay(currentDay + 1);
+        startDay(nextStage);
     }
 
     // =========================================================
@@ -3037,6 +3661,8 @@
         document.getElementById('market-modal').classList.remove('active');
         if (marketReturnTo === 'start') {
             refreshStartScreen();
+        } else if (marketReturnTo === 'map') {
+            renderLevelMap();
         } else {
             updateHUD();
         }
@@ -4239,6 +4865,9 @@
             if (hintEl) hintEl.innerText = '';
         }
         if (promptEl) promptEl.classList.toggle('active', shouldAskRotate);
+        if (document.getElementById('level-map-screen')?.classList.contains('active')) {
+            renderLevelMap();
+        }
         if (typeof resizeCanvas === 'function') resizeCanvas();
     }
 
