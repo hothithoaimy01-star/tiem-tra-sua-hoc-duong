@@ -477,7 +477,7 @@
            ========================================================= */
         .main-workspace {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 350px minmax(0, 1fr);
             gap: 14px;
             align-items: stretch;
         }
@@ -489,6 +489,7 @@
             border: 1.5px solid #ffe4e9;
             border-radius: 16px;
             padding: 10px;
+            min-width: 0;
         }
 
         /* KHÁCH HÀNG */
@@ -852,6 +853,124 @@
         .flan-piece { position: absolute; width: 34px; height: 21px; z-index: 7; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); animation: dropFlan 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
         .flan-caramel { width: 78%; height: 7px; margin: 0 auto; background: linear-gradient(180deg, #4e1f00 0%, #8d4004 100%); border-radius: 6px 6px 2px 2px; }
         .flan-custard { width: 100%; height: 14px; background: linear-gradient(180deg, #ffe082 0%, #ffca28 65%, #f5a623 100%); border-radius: 3px 3px 6px 6px; border-bottom: 1.5px solid #e69500; }
+
+        /* 8 TOPPING MỚI CHÂN THẬT TRONG LY */
+        .pearl-white { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 28%, #ffffff 0%, #e2e8f0 45%, #cbd5e1 85%, #94a3b8 100%); box-shadow: 0 1px 2px rgba(100,116,139,0.35); border: 0.5px solid rgba(255,255,255,0.9); z-index: 2; animation: dropPearl 0.35s cubic-bezier(0.34,1.56,0.64,1) backwards; }
+        .syrup-white { background: linear-gradient(to top, rgba(241,245,249,0.7) 0%, transparent 100%); }
+
+        /* Thạch cá đủ màu */
+        .jelly-fish {
+            position: absolute;
+            width: 18px;
+            height: 11px;
+            border-radius: 60% 50% 50% 60%;
+            z-index: 2;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.22), inset 0 2px 3px rgba(255,255,255,0.5);
+            animation: dropPearl 0.38s cubic-bezier(0.34,1.56,0.64,1) backwards;
+        }
+        .jelly-fish::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 1px;
+            width: 0;
+            height: 0;
+            border-top: 4.5px solid transparent;
+            border-bottom: 4.5px solid transparent;
+            border-right: 6px solid currentColor;
+        }
+        .jelly-fish::before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.65);
+        }
+
+        /* Kem cheese & Kem khoai môn & Vụn Oreo phủ mặt ly */
+        .cream-cap {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px 4px 12px 12px;
+            animation: dropFlan 0.4s ease backwards;
+            overflow: visible;
+        }
+        .cream-cheese-cap {
+            background: linear-gradient(180deg, #fffdf9 0%, #fef3c7 75%, #fde68a 100%);
+            border-bottom: 2px solid #f59e0b44;
+            box-shadow: inset 0 3px 5px rgba(255,255,255,0.9), 0 3px 6px rgba(0,0,0,0.08);
+        }
+        .cream-taro-cap {
+            background: linear-gradient(135deg, #f3e8ff 0%, #d8b4fe 45%, #a855f7 100%);
+            border-bottom: 2px solid #9333ea55;
+            box-shadow: inset 0 3px 5px rgba(255,255,255,0.6), 0 3px 6px rgba(107,33,168,0.18);
+        }
+        .taro-chunk {
+            position: absolute;
+            width: 9px;
+            height: 8px;
+            border-radius: 2px;
+            background: #9333ea;
+            border: 1px solid #f3e8ff;
+        }
+        .oreo-cap {
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+            border-bottom: 2px solid #33415555;
+        }
+        .oreo-crumb {
+            position: absolute;
+            border-radius: 2px;
+            background: #1e1b18;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.35);
+        }
+
+        /* Trái cây sấy giòn */
+        .strawberry-chip {
+            position: absolute;
+            width: 17px;
+            height: 19px;
+            background: radial-gradient(circle at 50% 42%, #ffccd5 0%, #ff758f 38%, #c9184a 85%);
+            border: 1.5px solid #a4133c;
+            border-radius: 50% 50% 45% 45% / 40% 40% 65% 65%;
+            z-index: 7;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+            animation: dropFlan 0.38s cubic-bezier(0.34,1.56,0.64,1) backwards;
+        }
+        .grape-chip {
+            position: absolute;
+            width: 15px;
+            height: 11px;
+            border-radius: 50%;
+            z-index: 7;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+            animation: dropFlan 0.38s cubic-bezier(0.34,1.56,0.64,1) backwards;
+        }
+        .grape-chip.purple { background: radial-gradient(circle, #9333ea 25%, #581c87 90%); border: 1px solid #3b0764; }
+        .grape-chip.green { background: radial-gradient(circle, #fef08a 30%, #a3e635 75%, #4d7c0f 100%); border: 1px solid #3f6212; }
+        .apple-chip {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fef9c3 35%, #fde68a 75%, #b45309 100%);
+            border: 1.5px solid #9a3412;
+            z-index: 7;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: dropFlan 0.38s cubic-bezier(0.34,1.56,0.64,1) backwards;
+        }
+        .apple-chip::after {
+            content: '✿';
+            font-size: 9px;
+            color: #78350f;
+            line-height: 1;
+        }
         @keyframes dropPearl { 0% { opacity: 0; transform: translateY(-45px) scale(0.7); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes dropFlan { 0% { opacity: 0; transform: translateY(-40px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
@@ -895,6 +1014,7 @@
             flex-direction: column;
             gap: 6px;
             justify-content: space-between;
+            min-width: 0;
         }
         .shelf-box {
             background: #f8fafc;
@@ -927,6 +1047,35 @@
         .topping-shelf .shelf-title { border-left-color: #475569; color: #1e293b; }
 
         .horizontal-row { display: flex; flex-direction: row; gap: 7px; align-items: stretch; }
+        .topping-scroll-row {
+            display: flex;
+            flex-direction: row;
+            gap: 7px;
+            align-items: stretch;
+            overflow-x: auto;
+            padding: 16px 2px 6px 2px;
+            margin-top: -12px;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #ff8da1 #e2e8f0;
+        }
+        .topping-scroll-row::-webkit-scrollbar { height: 6px; }
+        .topping-scroll-row::-webkit-scrollbar-track { background: rgba(255,255,255,0.5); border-radius: 4px; }
+        .topping-scroll-row::-webkit-scrollbar-thumb { background: #ff8da1; border-radius: 4px; }
+        .topping-scroll-row .topping-card { flex: 0 0 84px; }
+        .scroll-nav-group { display: flex; align-items: center; gap: 4px; }
+        .scroll-nav-btn {
+            background: rgba(255,255,255,0.88);
+            border: 1px solid #94a3b8;
+            color: #334155;
+            border-radius: 8px;
+            padding: 1px 7px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .scroll-nav-btn:hover { background: #ffffff; border-color: #e91e63; color: #e91e63; }
         .ingredient-card {
             flex: 1; min-width: 0; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;
             padding: 5px 4px; text-align: center; cursor: pointer; font-size: 11px; font-weight: 700;
@@ -1089,9 +1238,11 @@
     <div class="overlay-screen active" id="start-screen">
         <div class="mobile-start-card">
             <div class="start-mascot-row">
-                <img src="khach1.png" alt="Bé Na" class="start-mascot">
+                <img src="den_vau.png" alt="Đen Vâu" class="start-mascot" style="border-radius:14px;">
+                <img src="hieu_thu_hai.png" alt="HIEUTHUHAI" class="start-mascot" style="border-radius:14px;">
                 <div class="start-mascot center-cup">🧋</div>
                 <img src="khach3.png" alt="J97" class="start-mascot">
+                <img src="le_duong_bao_lam.png" alt="Lê Dương Bảo Lâm" class="start-mascot" style="border-radius:14px;">
             </div>
             <div class="start-title">TIỆM TRÀ SỮA HỌC ĐƯỜNG</div>
             <div class="start-subtitle">Quản lý quán theo từng ngày • Hoàn thành nhiệm vụ &amp; Đi chợ nhập hàng</div>
@@ -1293,8 +1444,14 @@
             </div>
 
             <div class="shelf-box topping-shelf">
-                <div class="shelf-title"><span>🥣 Khay Topping Thẳng Hàng (4 món — Múc bằng vá)</span></div>
-                <div class="horizontal-row" id="row-topping"></div>
+                <div class="shelf-title">
+                    <span>🥣 Khay Topping Thẳng Hàng (12 món — Múc bằng vá)</span>
+                    <div class="scroll-nav-group">
+                        <button type="button" class="scroll-nav-btn" onclick="scrollToppings(-1)" title="Trượt sang trái">◀</button>
+                        <button type="button" class="scroll-nav-btn" onclick="scrollToppings(1)" title="Trượt sang phải">▶</button>
+                    </div>
+                </div>
+                <div class="topping-scroll-row" id="row-topping"></div>
             </div>
         </div>
     </div>
@@ -1324,16 +1481,127 @@
     const toppingsCatalog = [
         { name: 'Trân châu hoàng kim', shortName: 'Trân Châu Hoàng Kim', img: 'tranchau.png', ladleColor: '#f59e0b', packCost: 10000 },
         { name: 'Trân châu đen', shortName: 'Trân Châu Đen', img: 'tran_chau_den.png', ladleColor: '#291712', packCost: 10000 },
+        { name: 'Trân châu trắng', shortName: 'Trân Châu Trắng', img: 'tran_chau_trang.png', ladleColor: '#e2e8f0', packCost: 11000 },
         { name: 'Thạch dừa', shortName: 'Thạch Dừa', img: 'thach_dua.png', ladleColor: '#f1f5f9', packCost: 10000 },
-        { name: 'Bánh flan', shortName: 'Bánh Flan', img: 'banh_flan.png', ladleColor: '#fbbf24', packCost: 12000 }
+        { name: 'Thạch cá', shortName: 'Thạch Cá', img: 'thach_ca.png', ladleColor: '#0ea5e9', packCost: 12000 },
+        { name: 'Bánh flan', shortName: 'Bánh Flan', img: 'banh_flan.png', ladleColor: '#fbbf24', packCost: 12000 },
+        { name: 'Kem cheese', shortName: 'Kem Cheese', img: 'kem_chese.png', ladleColor: '#fef3c7', packCost: 14000 },
+        { name: 'Kem khoai môn', shortName: 'Kem Khoai Môn', img: 'kem_khoai_mon.png', ladleColor: '#c084fc', packCost: 14000 },
+        { name: 'Vụn Oreo', shortName: 'Vụn Oreo', img: 'vun_oreo.png', ladleColor: '#292524', packCost: 13000 },
+        { name: 'Dâu tây sấy giòn', shortName: 'Dâu Tây Sấy Giòn', img: 'dau_tay_say_gion.png', ladleColor: '#e11d48', packCost: 15000 },
+        { name: 'Nho sấy giòn', shortName: 'Nho Sấy Giòn', img: 'nho_say_gion.png', ladleColor: '#7e22ce', packCost: 15000 },
+        { name: 'Táo sấy giòn', shortName: 'Táo Sấy Giòn', img: 'tao_say_gion.png', ladleColor: '#fde68a', packCost: 15000 }
     ];
 
     const sizes = ['M', 'L'];
     const PACK_QTY = 5;
     const SIZE_PACK_COST = 8000;
 
-    // Hồ sơ 9 nhân vật
+    // Hồ sơ 19 nhân vật đặc trưng (10 nhân vật mới + 9 nhân vật quen thuộc)
     const customerProfiles = [
+        // --- 10 NHÂN VẬT MỚI SIÊU ĐẶC TRƯNG ---
+        {
+            id: 'den_vau', img: 'den_vau.png', name: 'Đen Vâu 🧢',
+            getOrders: (tea, size, top) => [
+                `Hôm nay anh không uống đen đá không đường nữa, mang cho anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> để anh viết nhạc gửi Đồng Âm nhé! 🎶`,
+                `Làm lụng vất vả cũng chỉ để mang tiền về cho mẹ! Nhưng ghé đây xin trước 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> có <b style="color:#e65100">${top}</b> cho đời nó chill em ơi!`,
+                `Đưa nhau đi trốn khỏi phố thị ồn ào, nhớ cầm theo 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> múc đầy <b style="color:#e65100">${top}</b> lên đồi ngắm mây nha!`
+            ],
+            winMsg: 'Quá chill luôn người anh em! Uống ly này xong là có cảm hứng viết ngay bài rap mới gửi Đồng Âm!',
+            loseMsg: 'Ơ kìa Đồng Âm ơi, pha nhầm nhịp rồi! Sửa lại hộ anh chút cho đúng điệu nào!'
+        },
+        {
+            id: 'hieu_thu_hai', img: 'hieu_thu_hai.png', name: 'HIEUTHUHAI 😎',
+            getOrders: (tea, size, top) => [
+                `Em ơi đừng ngủ một mình nữa, dậy pha cho anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> đi! Không uống là anh... Không Thể Say luôn đó! 😎`,
+                `Trình là gì mà là trình ai chấm! Chấm quán này 10 điểm nếu làm chuẩn cho Hiếu Thứ Hai 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nha!`,
+                `Vừa quay xong 2 Ngày 1 Đêm mệt rã rời, cho anh chàng GERDNANG 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> full <b style="color:#e65100">${top}</b> giải khát coi!`
+            ],
+            winMsg: 'Uầy quá đỉnh, trình pha chế 10/10 không có nhưng! Cảm ơn người đẹp nha!',
+            loseMsg: 'Khoan đã ơi! Sai vị rồi nè, làm lại cho Hiếu ly đúng bài đi!'
+        },
+        {
+            id: 'phap_kieu', img: 'phap_kieu.png', name: 'Pháp Kiều 💅',
+            getOrders: (tea, size, top) => [
+                `Xà nữ xuất hiện đây mấy cưng ơi! Làm cho chị Kiều 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> thật keo lì, thật slay coi nào! 💅`,
+                `Đừng nhìn nữa mấy cưng, pha ngay cho Pháp Kiều 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ đẫm <b style="color:#e65100">${top}</b> đi! Hôm nay Kiều phải cháy hết mình!`,
+                `Bắn cung tên tình yêu trúng tim quán luôn nè! Cho Kiều xin 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> chuẩn gu nha cưng!`
+            ],
+            winMsg: 'Ối giời ơi keo lì tái châu luôn cưng ơi! 10 điểm thanh lịch, quá slay!',
+            loseMsg: 'Ủa alo mấy cưng ơi?! Sao pha nhầm món của Xà nữ rồi, sửa lẹ không Kiều giận tím người à nha!'
+        },
+        {
+            id: 'truc_nhan', img: 'truc_nhan.png', name: 'Trúc Nhân 😜',
+            getOrders: (tea, size, top) => [
+                `Thật bất ngờ! Tự nhiên đi ngang lại thèm 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> quá trời luôn á! Làm lẹ cho Nhân nha!`,
+                `Có không giữ mất đừng tìm nha quán! Nhanh tay pha cho Trúc Nhân 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ nhiều <b style="color:#e65100">${top}</b> coi, không là Nhân hát "Sáng mắt chưa" giờ đó! 😜`,
+                `Thương lắm, nhớ lắm mà... khát bốn chữ lắm luôn! Cho Nhân 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> giải nhiệt đi!`
+            ],
+            winMsg: 'Sáng mắt chưa!! Ngon xỉu luôn á trời, bất ngờ thật sự luôn đó!',
+            loseMsg: 'Úi chà thật bất ngờ... nhầm món của Nhân mất rồi! Pha lại giùm Nhân đi mà!'
+        },
+        {
+            id: 'le_duong_bao_lam', img: 'le_duong_bao_lam.png', name: 'Lâm Đồng Nai 😂',
+            getOrders: (tea, size, top) => [
+                `Chào cả nhà yêu của Lee Min Ho Đồng Nai! Trời nắng quá mấy bà ơi, làm cho Lâm 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> uống cho đẹp da coi! 😂`,
+                `Diễm ơi Diễm à! Quán làm gấp cho anh Lâm Đồng Nai 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> múc đầy <b style="color:#e65100">${top}</b> đi, không là anh la làng lên đây giờ á!`,
+                `Trời ơi tin được hông! Vừa đi quay về ghé quán chốt liền 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b>, múc nhiều nhiều vô nha bà nội!`
+            ],
+            winMsg: 'Trời ơi ngon chấn động Đồng Nai luôn mấy bà ơi! 10 điểm không nói nhiều!',
+            loseMsg: 'Ủa Diễm ơi?! Cái gì zậy Diễm, pha nhầm công thức của anh Lâm rồi nè! Sửa lại lẹ đi bà nội!'
+        },
+        {
+            id: 'cardi_B', img: 'cardi_B.png', name: 'Cardi B 💄',
+            getOrders: (tea, size, top) => [
+                `Okurrr! Bardi is here baby! Pha ngay cho chị 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> thật xịn xò coi nào, I like it like that! 💅`,
+                `Hey bestie! Quán này nhìn sang chảnh đấy, cho Cardi B 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> extra <b style="color:#e65100">${top}</b> nhé! Tiền không thành vấn đề, okurrr!`,
+                `Từ New York bay thẳng qua đây chỉ để uống 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> thôi đó cưng! Đừng làm chị mất mood nha!`
+            ],
+            winMsg: 'OKURRR! I like it like that! Ngon đỉnh nóc luôn cưng ơi!',
+            loseMsg: 'What was that?! Nhầm order của chị rồi cưng ơi! Fix it right now không là chị rap diss luôn á!'
+        },
+        {
+            id: 'phuong_my_chi', img: 'phuong_my_chi.png', name: 'Phương Mỹ Chi 🇻🇳',
+            getOrders: (tea, size, top) => [
+                `Dạ chào quán! Chị Bảy vừa bay từ "Vũ trụ có anh" xuống nè, cho em xin 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> ngọt ngào nha! 🇻🇳✨`,
+                `Hát dân ca muốn khô cả cổ luôn á! Quán làm giúp Phương Mỹ Chi 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ nhiều <b style="color:#e65100">${top}</b> cho thanh giọng hát tiếp nè!`,
+                `Đẩy xe bò ngang qua thấy quán đông vui quá! Bán cho Chi 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nha, cảm ơn quán nhiều ạ!`
+            ],
+            winMsg: 'Dạ ngon ngọt như câu hò quê hương luôn ạ! Em cảm ơn quán nhiều lắm!',
+            loseMsg: 'Ới quán ơi, hình như nhầm món của Chi mất rồi, làm lại giúp em nha!'
+        },
+        {
+            id: 'arianna_grande', img: 'arianna grande.png', name: 'Ariana Grande 🎶',
+            getOrders: (tea, size, top) => [
+                `Yuh~ Hello darling! I want it, I got it! Cho Ariana 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> thật ngọt ngào nhé! ✨🎶`,
+                `7 rings thì mua hết rồi, giờ chỉ muốn mua đúng 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> của quán thôi á! Thank u, next... làm nhanh nha!`,
+                `Vừa luyện xong quãng giọng cá heo cao chót vót, làm cho Ari 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> full <b style="color:#e65100">${top}</b> cho dịu cổ họng nha cưng!`
+            ],
+            winMsg: 'Yuh~ So sweet! Ngon chuẩn giọng diva cá heo luôn, thank u so much! 💖',
+            loseMsg: 'Oh nooo~ Sai mất rồi! Thank u, next... làm lại ly đúng giúp Ari nha!'
+        },
+        {
+            id: 'truong_giang', img: 'truong_giang.png', name: 'Mười Khó 🎤',
+            getOrders: (tea, size, top) => [
+                `Chào bà con! Anh Mười Khó mới nấu cơm quê xong ghé làm 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> cho mát lòng mát dạ nè! 🎤`,
+                `Ơn giời quán đây rồi! Làm cho Giang 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b> nha, ngon là anh dắt chị Nhã Phương qua uống mỗi ngày luôn!`,
+                `Người Quảng Nam nói là làm! Bán cho Mười Khó 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> chuẩn chỉnh từng milimet coi!`
+            ],
+            winMsg: 'Ơn giời đúng món rồi! Vị đậm đà chuẩn đầu bếp Mười Khó luôn, xuất sắc!',
+            loseMsg: 'Chết rồi, sai công thức rồi em ơi! Anh Mười Khó chưa ưng cái bụng đâu, pha lại giùm anh nha!'
+        },
+        {
+            id: 'chi_phien', img: 'chi_phien.png', name: 'Chị Phiến 💪',
+            getOrders: (tea, size, top) => [
+                `Tới công chuyện luôn mấy bà ơi! Chị Phiến vừa đẩy tạ xong cần nạp ngay 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> cho lên cơ nào! 💪😂`,
+                `Nè mấy cưng, hôm nay cho chị Phiến xả cơ bữa nha! Làm liền 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ ngập <b style="color:#e65100">${top}</b> coi, không ngon là tới công chuyện với chị!`,
+                `Tập gym cả buổi khát muốn xỉu! Quán múc cho chị Phiến 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nhanh gọn lẹ đi nè!`
+            ],
+            winMsg: 'Ngon nhức cái nách luôn mấy bà ơi! Quá đã, xứng đáng 100 điểm cơ bắp!',
+            loseMsg: 'Ủa gì vậy mấy bà?! Pha sai món của chị Phiến rồi nè, làm lại cho tới công chuyện coi!'
+        },
+
+        // --- 9 NHÂN VẬT CŨ ---
         {
             id: 'khach3', img: 'khach3.png', name: 'J97 Đom Đóm ✨',
             getOrders: (tea, size, top) => [
@@ -1349,8 +1617,7 @@
             id: 'khach1', img: 'khach1.png', name: 'Bé Na (Học Sinh)',
             getOrders: (tea, size, top) => [
                 `Cô chú ơi cháu mới tan học nè! Cho cháu 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> nhé ạ! 🎒`,
-                `Hôm nay cháu được 10 điểm toán á! Thưởng cho cháu 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ nhiều <b style="color:#e65100">${top}</b> nha!`,
-                `Cháu sắp vào lớp học thêm rồi, làm giúp cháu 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> có <b style="color:#e65100">${top}</b> với ạ!`
+                `Hôm nay cháu được 10 điểm toán á! Thưởng cho cháu 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ nhiều <b style="color:#e65100">${top}</b> nha!`
             ],
             winMsg: 'Dạ ngon xuất sắc luôn ạ! Mai cháu rủ cả lớp tới mua!',
             loseMsg: 'Ơ cô chú ơi, hình như nhầm món của cháu rồi!'
@@ -1359,7 +1626,6 @@
             id: 'khach4', img: 'khach4.png', name: 'Anh Ba GrabFood',
             getOrders: (tea, size, top) => [
                 `Alo quán ơi! Đơn GrabFood nổ gấp 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, thêm <b style="color:#e65100">${top}</b>! 🛵`,
-                `Khách đặt 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nè em ơi!`,
                 `Bác tài Grab có mặt! Quán làm giúp 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b> nhé!`
             ],
             winMsg: 'Tuyệt vời! Hàng chuẩn 5 sao, anh Ba phi xe giao liền đây!',
@@ -1369,8 +1635,7 @@
             id: 'khach5', img: 'khach5.png', name: 'Anh Độ TFOI',
             getOrders: (tea, size, top) => [
                 `Hôm nay mình review quán, làm ngay 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> lên sóng nhé! 😎`,
-                `Stream muộn khô cổ quá em ơi, cứu anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> nhiều <b style="color:#e65100">${top}</b> đi nào!`,
-                `Ê chủ quán, làm cho anh 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nha!`
+                `Stream muộn khô cổ quá em ơi, cứu anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> nhiều <b style="color:#e65100">${top}</b> đi nào!`
             ],
             winMsg: 'Chuẩn chỉnh hết nước chấm! Quá uy tín luôn các bạn ơi!',
             loseMsg: 'Ôi giời ơi pha nhầm rồi bạn tôi ơi!'
@@ -1379,8 +1644,7 @@
             id: 'khach6', img: 'khach6.png', name: 'Chú Công An',
             getOrders: (tea, size, top) => [
                 `Chào đồng chí chủ quán! Cho tôi 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, thêm <b style="color:#e65100">${top}</b> trực ca chiều nhé! 🫡`,
-                `Báo cáo quán, tôi cần tiếp tế gấp 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b>!`,
-                `Đi tuần tra ngang thấy quán thơm quá, làm cho chú 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> có <b style="color:#e65100">${top}</b> nha!`
+                `Báo cáo quán, tôi cần tiếp tế gấp 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b>!`
             ],
             winMsg: 'Rất tốt! Đúng quy trình pha chế, chú biểu dương tinh thần phục vụ!',
             loseMsg: 'Cảnh báo! Sai công thức rồi cháu ơi!'
@@ -1389,7 +1653,6 @@
             id: 'khach7', img: 'khach7.png', name: 'Bà Năm Nam Bộ',
             getOrders: (tea, size, top) => [
                 `Con ơi, mua cho đứa cháu 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> bỏ thêm <b style="color:#e65100">${top}</b> nghen con! 👵`,
-                `Bán cho ngoại 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> với <b style="color:#e65100">${top}</b> đi con!`,
                 `Ngoại ghé làm 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> uống cho mát ruột coi!`
             ],
             winMsg: 'Trời ơi ngon quá chừng luôn con ơi! Ngoại cảm ơn con nhiều nghen!',
@@ -1399,7 +1662,6 @@
             id: 'khach8', img: 'khach8.png', name: 'Bé Kẹo Tóc Hồng',
             getOrders: (tea, size, top) => [
                 `Cho em 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> thêm thật nhiều <b style="color:#e65100">${top}</b> để chụp hình nhé! 🎀`,
-                `Làm liền cho em 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> full <b style="color:#e65100">${top}</b> đi ạ!`,
                 `Chỉ có 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> ngập tràn <b style="color:#e65100">${top}</b> mới chữa lành được tâm hồn em thôi ạ!`
             ],
             winMsg: 'Ưng cái bụng quá đi mất! Ly nước đẹp y như mơ luôn! 💖',
@@ -1409,7 +1671,6 @@
             id: 'khach9', img: 'khach9.png', name: 'Tài Xế Xanh SM',
             getOrders: (tea, size, top) => [
                 `Khách đặt 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, topping là <b style="color:#e65100">${top}</b> nha quán ơi! ⚡`,
-                `Xanh SM giao nhanh! Pha giúp mình 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> nhé!`,
                 `Đơn Xanh SM Express! Cho anh nhận 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nào!`
             ],
             winMsg: 'Ngon lành cành đào! Xanh SM lên đường giao ngay đây!',
@@ -1419,7 +1680,6 @@
             id: 'khach10', img: 'khach10.png', name: 'Anh Cam ShopeeFood',
             getOrders: (tea, size, top) => [
                 `Ting ting! Đơn ShopeeFood: 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, thêm <b style="color:#e65100">${top}</b> nha! 🧡`,
-                `Đơn hỏa tốc ShopeeFood! Cho em lấy 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b>!`,
                 `Shipper áo cam nhận 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nè!`
             ],
             winMsg: 'Chốt đơn mượt mà! Chúc quán hôm nay nổ đơn ầm ầm nha!',
@@ -1447,6 +1707,11 @@
     let money = saveState ? (saveState.money ?? 40000) : 40000;
     let totalScore = saveState ? (saveState.totalScore || 0) : 0;
     let inventory = saveState && saveState.inventory ? saveState.inventory : getDefaultInventory();
+    // Đồng bộ bổ sung các món mới vào kho nếu người chơi đang có bản lưu cũ
+    const defaultInvCheck = getDefaultInventory();
+    Object.keys(defaultInvCheck).forEach(k => {
+        if (typeof inventory[k] !== 'number') inventory[k] = defaultInvCheck[k];
+    });
     let soundEnabled = localStorage.getItem('trasua_sound') !== 'false';
 
     function persistSave() {
@@ -1513,7 +1778,7 @@
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà lựu đỏ', target: 2, label: 'Bán 2 ly Trà lựu đỏ' },
-                    { id: 'm_top', type: 'specific_topping', topping: 'Trân châu hoàng kim', target: 2, label: 'Bán 2 ly có Trân châu hoàng kim' }
+                    { id: 'm_top', type: 'specific_topping', topping: 'Kem cheese', target: 2, label: 'Bán 2 ly có Kem cheese' }
                 ]
             },
             4: {
@@ -1522,7 +1787,7 @@
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà xoài chanh dây', target: 2, label: 'Bán 2 ly Trà xoài chanh dây' },
-                    { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Dâu tây sấy giòn', target: 2, label: 'Bán 2 ly Dâu tây sấy giòn' },
                     { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
                 ]
             },
@@ -1531,8 +1796,9 @@
                 reward: 40000,
                 missions: [
                     { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà Đài Loan nguyên lá', target: 2, label: 'Bán 2 ly Trà Đài Loan nguyên lá' },
-                    { id: 'm_top', type: 'specific_topping', topping: 'Bánh flan', target: 2, label: 'Bán 2 ly có Bánh flan' }
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa khoai môn', target: 2, label: 'Bán 2 ly Trà sữa khoai môn' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Kem khoai môn', target: 2, label: 'Bán 2 ly có Kem khoai môn' },
+                    { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
                 ]
             }
         };
@@ -2333,6 +2599,11 @@
         }, 760);
     }
 
+    function scrollToppings(dir) {
+        const row = document.getElementById('row-topping');
+        if (row) row.scrollBy({ left: dir * 240, behavior: 'smooth' });
+    }
+
     // MÚC TOPPING VỚI HIỆU ỨNG CÁI VÁ XÚC VÀ ĐỔ VÀO LY
     function selectTopping(name) {
         if (isServing || isPouring || isScooping) return;
@@ -2366,25 +2637,58 @@
         void cupLadle.offsetWidth;
         cupLadle.classList.add('pouring');
 
-        // Tạo các hạt topping rơi từ vá vào ly
+        // Tạo các hạt topping rơi từ vá vào ly khớp với từng loại
         const fallBox = document.getElementById('falling-toppings-box');
         fallBox.innerHTML = '';
+        const fishPalette = ['#ef4444', '#0ea5e9', '#eab308', '#22c55e', '#f97316'];
         for (let i = 0; i < 6; i++) {
             const bit = document.createElement('div');
             bit.className = 'falling-bit';
-            bit.style.left = `${10 + (i % 4) * 8}px`;
+            bit.style.left = `${9 + (i % 4) * 8}px`;
             bit.style.animationDelay = `${0.22 + i * 0.05}s`;
-            if (name === 'Trân châu đen' || name === 'Trân châu hoàng kim') {
+            if (name === 'Trân châu đen' || name === 'Trân châu hoàng kim' || name === 'Trân châu trắng') {
                 bit.style.width = '9px';
                 bit.style.height = '9px';
                 bit.style.borderRadius = '50%';
-                bit.style.background = name === 'Trân châu đen' ? '#291712' : '#f59e0b';
+                bit.style.background = name === 'Trân châu đen' ? '#291712' : (name === 'Trân châu hoàng kim' ? '#f59e0b' : '#f1f5f9');
+                if (name === 'Trân châu trắng') bit.style.border = '1px solid #cbd5e1';
             } else if (name === 'Thạch dừa') {
                 bit.style.width = '10px';
                 bit.style.height = '10px';
                 bit.style.borderRadius = '2px';
                 bit.style.background = '#f8fafc';
                 bit.style.border = '1px solid #cbd5e1';
+            } else if (name === 'Thạch cá') {
+                bit.style.width = '13px';
+                bit.style.height = '8px';
+                bit.style.borderRadius = '50%';
+                bit.style.background = fishPalette[i % fishPalette.length];
+            } else if (name === 'Kem cheese' || name === 'Kem khoai môn') {
+                bit.style.width = '13px';
+                bit.style.height = '11px';
+                bit.style.borderRadius = '50% 50% 45% 45%';
+                bit.style.background = name === 'Kem cheese' ? '#fef3c7' : '#d8b4fe';
+            } else if (name === 'Vụn Oreo') {
+                bit.style.width = '8px';
+                bit.style.height = '7px';
+                bit.style.borderRadius = '2px';
+                bit.style.background = i % 3 === 0 ? '#f8fafc' : '#1c1917';
+            } else if (name === 'Dâu tây sấy giòn') {
+                bit.style.width = '11px';
+                bit.style.height = '12px';
+                bit.style.borderRadius = '50%';
+                bit.style.background = '#e11d48';
+            } else if (name === 'Nho sấy giòn') {
+                bit.style.width = '10px';
+                bit.style.height = '7px';
+                bit.style.borderRadius = '50%';
+                bit.style.background = i % 2 === 0 ? '#7e22ce' : '#a3e635';
+            } else if (name === 'Táo sấy giòn') {
+                bit.style.width = '13px';
+                bit.style.height = '13px';
+                bit.style.borderRadius = '50%';
+                bit.style.background = '#fde68a';
+                bit.style.border = '1px solid #b45309';
             } else {
                 bit.style.width = '16px';
                 bit.style.height = '10px';
@@ -2443,12 +2747,13 @@
 
     function renderToppingInsideCup(container, toppingName, hasTea) {
         container.innerHTML = '';
+        container.style.transition = 'bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
         if (!toppingName) { container.style.height = '0%'; return; }
 
+        // 1. Nhóm topping nằm trên bề mặt trà (Bánh flan, Kem cheese, Kem khoai môn, Vụn Oreo, Trái cây sấy giòn)
         if (toppingName === 'Bánh flan') {
             container.style.height = '32px';
             container.style.bottom = hasTea ? '56%' : '4%';
-            container.style.transition = 'bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
             [{ left: '16%', top: '2px', rot: '-8deg', delay: '0s' }, { left: '48%', top: '5px', rot: '7deg', delay: '0.07s' }].forEach(pos => {
                 const flan = document.createElement('div');
                 flan.className = 'flan-piece'; flan.style.left = pos.left; flan.style.top = pos.top;
@@ -2460,12 +2765,91 @@
             return;
         }
 
+        if (toppingName === 'Kem cheese' || toppingName === 'Kem khoai môn' || toppingName === 'Vụn Oreo') {
+            container.style.height = '26%';
+            container.style.bottom = hasTea ? '58%' : '3%';
+            const cap = document.createElement('div');
+            cap.className = 'cream-cap';
+            if (toppingName === 'Kem cheese') {
+                cap.classList.add('cream-cheese-cap');
+            } else if (toppingName === 'Kem khoai môn') {
+                cap.classList.add('cream-taro-cap');
+                [{ x: 20, y: 6 }, { x: 45, y: 12 }, { x: 68, y: 7 }, { x: 34, y: 18 }].forEach(c => {
+                    const chunk = document.createElement('div');
+                    chunk.className = 'taro-chunk';
+                    chunk.style.left = `${c.x}%`; chunk.style.top = `${c.y}px`;
+                    cap.appendChild(chunk);
+                });
+            } else {
+                cap.classList.add('oreo-cap');
+                for (let i = 0; i < 16; i++) {
+                    const crumb = document.createElement('div');
+                    crumb.className = 'oreo-crumb';
+                    crumb.style.width = `${4 + (i % 3) * 2}px`;
+                    crumb.style.height = `${3 + (i % 2) * 2}px`;
+                    crumb.style.left = `${12 + (i * 19) % 76}%`;
+                    crumb.style.top = `${2 + (i * 7) % 18}px`;
+                    crumb.style.transform = `rotate(${(i * 41) % 60}deg)`;
+                    cap.appendChild(crumb);
+                }
+            }
+            container.appendChild(cap);
+            return;
+        }
+
+        if (toppingName === 'Dâu tây sấy giòn' || toppingName === 'Nho sấy giòn' || toppingName === 'Táo sấy giòn') {
+            container.style.height = '32px';
+            container.style.bottom = hasTea ? '58%' : '4%';
+            const spots = [
+                { left: '14%', top: '4px', rot: '-18deg' },
+                { left: '34%', top: '9px', rot: '14deg' },
+                { left: '54%', top: '3px', rot: '-8deg' },
+                { left: '68%', top: '10px', rot: '22deg' }
+            ];
+            spots.forEach((pt, idx) => {
+                const chip = document.createElement('div');
+                if (toppingName === 'Dâu tây sấy giòn') chip.className = 'strawberry-chip';
+                else if (toppingName === 'Nho sấy giòn') chip.className = `grape-chip ${idx % 2 === 0 ? 'purple' : 'green'}`;
+                else chip.className = 'apple-chip';
+                chip.style.left = pt.left;
+                chip.style.top = pt.top;
+                chip.style.transform = `rotate(${pt.rot})`;
+                chip.style.animationDelay = `${idx * 0.05}s`;
+                container.appendChild(chip);
+            });
+            return;
+        }
+
+        // 2. Nhóm topping nằm ở đáy ly (Trân châu đen, Trân châu hoàng kim, Trân châu trắng, Thạch dừa, Thạch cá)
         container.style.bottom = '0'; container.style.height = '38%';
         const syrup = document.createElement('div'); syrup.className = 'syrup-puddle';
         if (toppingName === 'Trân châu đen') syrup.classList.add('syrup-black');
         else if (toppingName === 'Trân châu hoàng kim') syrup.classList.add('syrup-gold');
+        else if (toppingName === 'Trân châu trắng') syrup.classList.add('syrup-white');
         else syrup.classList.add('syrup-coconut');
         container.appendChild(syrup);
+
+        if (toppingName === 'Thạch cá') {
+            const fishColors = ['#ef4444', '#0ea5e9', '#eab308', '#22c55e', '#f97316'];
+            const fishSpots = [
+                { x: 22, y: 6, rot: '-8deg' }, { x: 46, y: 4, rot: '10deg' }, { x: 64, y: 8, rot: '-15deg' },
+                { x: 18, y: 18, rot: '12deg' }, { x: 42, y: 16, rot: '-6deg' }, { x: 62, y: 19, rot: '8deg' },
+                { x: 28, y: 29, rot: '-12deg' }, { x: 54, y: 28, rot: '14deg' }
+            ];
+            fishSpots.forEach((pt, idx) => {
+                const fish = document.createElement('div');
+                fish.className = 'jelly-fish';
+                const col = fishColors[idx % fishColors.length];
+                fish.style.background = col;
+                fish.style.color = col;
+                fish.style.left = `${pt.x}%`;
+                fish.style.bottom = `${pt.y}px`;
+                fish.style.transform = `rotate(${pt.rot})`;
+                fish.style.animationDelay = `${idx * 0.04}s`;
+                container.appendChild(fish);
+            });
+            return;
+        }
 
         const itemsLayout = [
             { x: 24, y: 4, s: 10 }, { x: 35, y: 3, s: 11 }, { x: 47, y: 4, s: 10 }, { x: 58, y: 3, s: 11 }, { x: 69, y: 5, s: 10 },
@@ -2477,6 +2861,7 @@
             const el = document.createElement('div');
             if (toppingName === 'Trân châu đen') { el.className = 'pearl-black'; el.style.width = `${pt.s}px`; el.style.height = `${pt.s}px`; }
             else if (toppingName === 'Trân châu hoàng kim') { el.className = 'pearl-gold'; el.style.width = `${pt.s}px`; el.style.height = `${pt.s}px`; }
+            else if (toppingName === 'Trân châu trắng') { el.className = 'pearl-white'; el.style.width = `${pt.s}px`; el.style.height = `${pt.s}px`; }
             else {
                 el.className = 'coconut-cube'; const cubeSize = pt.s + 2;
                 el.style.width = `${cubeSize}px`; el.style.height = `${cubeSize}px`;
