@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiệm Trà Sữa Học Đường - Game Pha Chế &amp; Quản Lý Theo Ngày</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f7ebe1 50%, #e8f5e9 100%);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #game-container {
+            width: 100%;
+            max-width: 1240px;
+            min-height: 670px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.14);
+            padding: 12px 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 199;
+        }
+
+        /* =========================================================
+           1. MÀN HÌNH BẮT ĐẦU KIỂU GAME MOBILE (#start-screen)
+           ========================================================= */
+        .overlay-screen {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 244, 247, 0.96);
+            backdrop-filter: blur(8px);
+            z-index: 150;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+        .overlay-screen.active {
+            display: flex;
+            animation: fadeInOverlay 0.3s ease;
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .mobile-start-card {
+            width: 100%;
+            max-width: 460px;
+            background: linear-gradient(180deg, #ffffff 0%, #fff6f8 100%);
+            border: 3px solid #ffb6c1;
+            border-radius: 28px;
+            padding: 24px 22px;
+            text-align: center;
+            box-shadow: 0 18px 45px rgba(255, 107, 139, 0.25);
+            position: relative;
+        }
+        .start-mascot-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .start-mascot {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            animation: gentleFloat 2.4s ease-in-out infinite alternate;
+        }
+        .start-mascot.center-cup {
+            font-size: 56px;
+            width: auto;
+            height: auto;
+            line-height: 1;
+            animation-delay: 0.3s;
+        }
+        @keyframes gentleFloat {
+            from { transform: translateY(0); }
+            to { transform: translateY(-7px); }
+        }
+        .start-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #e91e63;
+            margin: 4px 0;
+            text-shadow: 0 2px 0 #ffd1dc;
+        }
+        .start-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .start-progress-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            background: #fff0f5;
+            border: 1.5px solid #ffd1dc;
+            border-radius: 16px;
+            padding: 10px;
+            margin-bottom: 18px;
+        }
+        .start-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 700;
+        }
+        .start-stat b {
+            font-size: 16px;
+            color: #d81b60;
+            font-weight: 900;
+        }
+        .btn-play-big {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b8b 0%, #e91e63 100%);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 15px 20px;
+            font-size: 19px;
+            font-weight: 900;
+            letter-spacing: 0.6px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #ad1457, 0 12px 24px rgba(233, 30, 99, 0.35);
+            transition: all 0.15s ease;
+            margin-bottom: 14px;
+            animation: playPulse 1.8s ease-in-out infinite;
+        }
+        .btn-play-big:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+        .btn-play-big:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #ad1457, 0 4px 10px rgba(233, 30, 99, 0.3);
+        }
+        @keyframes playPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.025); }
+        }
+        .start-secondary-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-secondary-pill {
+            flex: 1;
+            background: #ffffff;
+            color: #334155;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 10px 8px;
+            font-size: 12.5px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-secondary-pill:hover {
+            border-color: #ff6b8b;
+            color: #e91e63;
+            background: #fff8fa;
+        }
+        .btn-secondary-pill.market {
+            border-color: #fbbf24;
+            background: #fffbeb;
+            color: #b45309;
+        }
+        .btn-secondary-pill.market:hover {
+            background: #fef3c7;
+        }
+
+        /* =========================================================
+           2. MODAL TỔNG KẾT NGÀY & CỬA HÀNG ĐI CHỢ
+           ========================================================= */
+        .modal-card {
+            width: 100%;
+            max-width: 780px;
+            max-height: 92vh;
+            background: #ffffff;
+            border: 3px solid #ffb6c1;
+            border-radius: 22px;
+            padding: 18px 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .modal-card.compact {
+            max-width: 480px;
+            text-align: center;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffe4e9;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .modal-title {
+            font-size: 19px;
+            font-weight: 900;
+            color: #d81b60;
+        }
+        .stars-row {
+            font-size: 32px;
+            margin: 4px 0 8px 0;
+            letter-spacing: 6px;
+        }
+        .day-summary-list {
+            text-align: left;
+            background: #fff8fa;
+            border: 1.5px solid #ffd1dc;
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin: 10px 0 14px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .summary-mission-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+        .summary-mission-item.pass { color: #15803d; }
+        .summary-mission-item.fail { color: #b91c1c; }
+
+        /* CỬA HÀNG ĐI CHỢ */
+        .market-top-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: #fffbeb;
+            border: 1.5px solid #fde68a;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .market-wallet {
+            font-size: 14px;
+            font-weight: 800;
+            color: #92400e;
+        }
+        .market-wallet b {
+            color: #d97706;
+            font-size: 16px;
+        }
+        .btn-quick-restock {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(217, 119, 6, 0.25);
+        }
+        .btn-quick-restock:hover { filter: brightness(1.06); }
+
+        .market-grid-scroll {
+            overflow-y: auto;
+            padding-right: 4px;
+            flex: 1;
+        }
+        .market-section-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+            margin: 8px 0 6px 0;
+            padding-left: 6px;
+            border-left: 4px solid #f59e0b;
+        }
+        .market-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .market-item-card {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+        }
+        .market-item-card.low-stock {
+            border-color: #fca5a5;
+            background: #fef2f2;
+        }
+        .market-item-img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+        .market-item-name {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.2;
+        }
+        .market-item-stock {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0369a1;
+        }
+        .market-item-card.low-stock .market-item-stock {
+            color: #dc2626;
+        }
+        .btn-buy-stock {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 6px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-buy-stock:hover:not(:disabled) { background: #059669; }
+        .btn-buy-stock:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        /* =========================================================
+           3. THANH HEADER NGANG & NHIỆM VỤ NGÀY
+           ========================================================= */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: linear-gradient(135deg, #ff8da1 0%, #ff6b8b 100%);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(255, 107, 139, 0.28);
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .brand-title {
+            font-weight: 800;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .day-badge {
+            background: #ffffff;
+            color: #d81b60;
+            font-size: 12px;
+            font-weight: 900;
+            padding: 3px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.22);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .stat-pill b {
+            font-size: 13px;
+            color: #fffde7;
+        }
+        .top-icon-btn {
+            background: rgba(255, 255, 255, 0.28);
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            border-radius: 20px;
+            height: 30px;
+            padding: 0 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: background 0.2s;
+        }
+        .top-icon-btn:hover { background: rgba(255, 255, 255, 0.45); }
+
+        /* THANH NHIỆM VỤ TRONG NGÀY */
+        .missions-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff8e1;
+            border: 1.5px solid #ffe082;
+            border-radius: 12px;
+            padding: 5px 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .missions-label {
+            font-size: 12px;
+            font-weight: 900;
+            color: #b45309;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-right: 4px;
+        }
+        .mission-chip {
+            background: #ffffff;
+            border: 1.5px solid #fcd34d;
+            border-radius: 16px;
+            padding: 3px 10px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .mission-chip.done {
+            background: #dcfce7;
+            border-color: #4ade80;
+            color: #166534;
+        }
+        .mission-chip.failed {
+            background: #fee2e2;
+            border-color: #f87171;
+            color: #991b1b;
+            text-decoration: line-through;
+        }
+
+        /* =========================================================
+           4. BỐ CỤC CHÍNH 2 CỘT MÀN HÌNH NGANG
+           ========================================================= */
+        .main-workspace {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 14px;
+            align-items: stretch;
+        }
+        .left-station {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #fffafa;
+            border: 1.5px solid #ffe4e9;
+            border-radius: 16px;
+            padding: 10px;
+        }
+
+        /* KHÁCH HÀNG */
+        .customer-area {
+            background: #fff;
+            border: 2px dashed #ffb6c1;
+            border-radius: 14px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 100px;
+        }
+        .avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .avatar-container {
+            width: 72px;
+            height: 72px;
+            position: relative;
+            background: #fff8fa;
+            border-radius: 14px;
+            padding: 4px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .customer-name-tag {
+            background: #ff6b8b;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            white-space: nowrap;
+            max-width: 114px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chibi-avatar { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .chibi-avatar.pop { animation: bounceIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .avatar-fallback {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: linear-gradient(135deg, #ff8da1, #ff6b8b);
+            display: none; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 13px;
+        }
+        .speech-bubble {
+            background: #fff8fa;
+            border: 1.5px solid #ffd1dc;
+            border-radius: 12px;
+            padding: 8px 10px;
+            flex: 1;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #333;
+            position: relative;
+        }
+        .speech-bubble::before {
+            content: ''; position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
+            border-width: 6px 8px 6px 0; border-style: solid;
+            border-color: transparent #fff8fa transparent transparent; z-index: 2;
+        }
+        .speech-bubble::after {
+            content: ''; position: absolute; left: -10px; top: 50%; transform: translateY(-50%);
+            border-width: 7px 9px 7px 0; border-style: solid;
+            border-color: transparent #ffd1dc transparent transparent; z-index: 1;
+        }
+
+        /* QUẦY PHA CHẾ LY + CÁI VÁ ĐỔ TOPPING */
+        .cup-area {
+            text-align: center;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 72%, #e6ccb2 72%, #ddb892 100%);
+            padding: 10px 8px 8px 8px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .cup-and-size-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .size-vertical-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 106px;
+        }
+        .size-btn {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            transition: all 0.18s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .size-btn:hover { border-color: #ffb6c1; transform: translateY(-1px); }
+        .size-btn.selected {
+            border-color: #e91e63;
+            background: #fff0f5;
+            color: #c2185b;
+            box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.2);
+        }
+        .stock-mini {
+            font-size: 10px;
+            font-weight: 800;
+            color: #0284c7;
+            background: #e0f2fe;
+            padding: 1px 6px;
+            border-radius: 8px;
+        }
+        .stock-mini.empty {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .cup-stage {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 152px;
+            width: 132px;
+            margin-top: 8px;
+        }
+        .cup-coaster {
+            position: absolute;
+            bottom: -4px;
+            width: 96px;
+            height: 14px;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 75%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* HIỆU ỨNG CÁI VÁ ĐỔ TOPPING VÀO LY */
+        .cup-pour-ladle {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translate(45px, -16px) rotate(12deg);
+            width: 78px;
+            height: 36px;
+            z-index: 30;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .cup-pour-ladle.pouring {
+            animation: ladlePourCycle 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes ladlePourCycle {
+            0% { opacity: 0; transform: translate(55px, -20px) rotate(10deg); }
+            25% { opacity: 1; transform: translate(-18px, -12px) rotate(-10deg); }
+            55% { opacity: 1; transform: translate(-22px, -4px) rotate(-52deg); }
+            82% { opacity: 1; transform: translate(-18px, -12px) rotate(-32deg); }
+            100% { opacity: 0; transform: translate(50px, -22px) rotate(15deg); }
+        }
+        .falling-toppings-box {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 95px;
+            z-index: 25;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .falling-bit {
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            animation: fallIntoCup 0.52s cubic-bezier(0.45, 0, 0.85, 0.7) forwards;
+        }
+        @keyframes fallIntoCup {
+            0% { opacity: 0; transform: translateY(-6px) scale(0.7); }
+            20% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(82px) scale(1); }
+        }
+
+        .cup-visual-box {
+            position: relative;
+            width: 96px;
+            height: 112px;
+            transition: width 0.3s ease, height 0.3s ease, transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+            z-index: 2;
+            cursor: pointer;
+            transform-origin: center bottom;
+        }
+        .cup-visual-box:hover:not(.cup-shrunk) { transform: scale(1.04); }
+        .cup-visual-box.cup-shrunk {
+            transform: scale(0.34) translateY(20px);
+            opacity: 0.35;
+            filter: saturate(0.7);
+        }
+        .cup-visual-box.cup-return { animation: cupReturnPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes cupReturnPop {
+            0% { transform: scale(0.35); opacity: 0.4; }
+            65% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .cup-visual-box.cup-shake { animation: cupShake 0.35s ease; }
+        @keyframes cupShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .cup-visual-box.size-M { width: 94px; height: 112px; }
+        .cup-visual-box.size-L { width: 114px; height: 138px; }
+
+        .cup-hint-pill {
+            display: inline-block;
+            margin-top: 3px;
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-size: 10.5px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.88);
+            color: #d81b60;
+            border: 1px solid #f8bbd0;
+        }
+        .cup-hint-pill.holding {
+            background: #e91e63;
+            color: #fff;
+            border-color: #c2185b;
+            animation: pulseBadge 1s infinite alternate;
+        }
+        @keyframes pulseBadge {
+            from { transform: scale(1); }
+            to { transform: scale(1.04); }
+        }
+
+        /* LY MINI ĐI THEO CON TRỎ */
+        #floating-mini-cup {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.22));
+        }
+        .mini-cup-body {
+            position: relative;
+            width: 34px;
+            height: 42px;
+            background: rgba(255,255,255,0.85);
+            border: 2px solid #475569;
+            border-top: 3px solid #64748b;
+            border-radius: 4px 4px 10px 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mini-cup-size-txt { font-size: 10px; font-weight: 900; color: #e91e63; }
+        .mini-cup-straw {
+            position: absolute;
+            width: 5px;
+            height: 16px;
+            background: repeating-linear-gradient(-45deg, #ff4757, #ff4757 3px, #fff 3px, #fff 6px);
+            top: -12px;
+            right: 6px;
+            transform: rotate(12deg);
+            border-radius: 2px;
+        }
+
+        .cup-straw {
+            position: absolute;
+            width: 11px;
+            height: 118%;
+            bottom: 10%;
+            left: 58%;
+            transform: rotate(10deg);
+            transform-origin: bottom center;
+            background: repeating-linear-gradient(-45deg, #ff4757, #ff4757 7px, #ffffff 7px, #ffffff 14px);
+            border-radius: 5px;
+            box-shadow: inset -2px 0 3px rgba(0,0,0,0.18), 1px 1px 4px rgba(0,0,0,0.15);
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .cup-straw.visible { opacity: 1; }
+        .cup-interior {
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(5% 5%, 95% 5%, 84% 90%, 81% 96%, 73% 98.5%, 27% 98.5%, 19% 96%, 16% 90%);
+            background: rgba(255, 255, 255, 0.55);
+            overflow: hidden;
+            z-index: 3;
+        }
+        .cup-tea-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+            z-index: 4;
+        }
+        .ice-cube {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(225,245,254,0.35) 100%);
+            border: 1px solid rgba(255,255,255,0.88);
+            border-radius: 4px;
+            animation: floatIce 2.5s ease-in-out infinite alternate;
+            z-index: 5;
+        }
+        @keyframes floatIce {
+            from { transform: translateY(0) rotate(var(--rot)); }
+            to { transform: translateY(3px) rotate(calc(var(--rot) + 6deg)); }
+        }
+        .drink-garnish { position: absolute; pointer-events: none; z-index: 5; }
+        .tea-leaf-float { width: 13px; height: 7px; background: linear-gradient(135deg, #558b2f, #2e4c17); border-radius: 0 100% 0 100%; opacity: 0.85; }
+        .melon-slice { width: 17px; height: 17px; border-radius: 50%; background: radial-gradient(circle, #f1f8e9 25%, #aed581 75%, #558b2f 100%); border: 1.5px solid #689f38; opacity: 0.85; }
+        .lychee-orb { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f5ece6 60%, #e0c8bc 100%); box-shadow: 0 1px 3px rgba(0,0,0,0.2); opacity: 0.9; }
+        .pom-seed { width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ff8a80, #b71c1c); opacity: 0.9; }
+        .passion-seed { width: 4px; height: 5px; border-radius: 50%; background: #2c1e16; opacity: 0.78; }
+        .mint-leaf { width: 13px; height: 8px; background: linear-gradient(135deg, #43a047, #1b5e20); border-radius: 100% 0 100% 0; opacity: 0.9; }
+
+        /* TOPPING TRONG LY */
+        .cup-topping-layer { position: absolute; left: 0; width: 100%; z-index: 6; pointer-events: none; }
+        .syrup-puddle { position: absolute; bottom: 0; left: 0; width: 100%; height: 75%; z-index: 1; }
+        .syrup-black { background: linear-gradient(to top, rgba(45, 22, 12, 0.88) 0%, rgba(78, 42, 24, 0.42) 60%, transparent 100%); }
+        .syrup-gold { background: linear-gradient(to top, rgba(212, 136, 6, 0.72) 0%, rgba(250, 173, 20, 0.28) 65%, transparent 100%); }
+        .syrup-coconut { background: linear-gradient(to top, rgba(255, 255, 255, 0.45) 0%, transparent 100%); }
+        .pearl-black { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 28%, #8d6e63 0%, #3e2723 32%, #1b0f0c 80%, #000 100%); box-shadow: 0 1px 2px rgba(0,0,0,0.45); z-index: 2; animation: dropPearl 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+        .pearl-black::after { content: ''; position: absolute; top: 2px; left: 2.5px; width: 3px; height: 2px; background: rgba(255,255,255,0.75); border-radius: 50%; }
+        .pearl-gold { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 28%, #fff9c4 0%, #ffca28 32%, #f57c00 80%, #bf360c 100%); box-shadow: 0 1px 2px rgba(153,88,0,0.4); z-index: 2; animation: dropPearl 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+        .pearl-gold::after { content: ''; position: absolute; top: 2px; left: 2.5px; width: 3px; height: 2px; background: rgba(255,255,255,0.9); border-radius: 50%; }
+        .coconut-cube { position: absolute; border-radius: 3px; background: linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(236,240,241,0.88) 65%, rgba(207,216,220,0.85) 100%); border: 1px solid rgba(255,255,255,0.95); box-shadow: 0 1px 2px rgba(0,0,0,0.18); z-index: 2; animation: dropPearl 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+        .flan-piece { position: absolute; width: 34px; height: 21px; z-index: 7; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); animation: dropFlan 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+        .flan-caramel { width: 78%; height: 7px; margin: 0 auto; background: linear-gradient(180deg, #4e1f00 0%, #8d4004 100%); border-radius: 6px 6px 2px 2px; }
+        .flan-custard { width: 100%; height: 14px; background: linear-gradient(180deg, #ffe082 0%, #ffca28 65%, #f5a623 100%); border-radius: 3px 3px 6px 6px; border-bottom: 1.5px solid #e69500; }
+        @keyframes dropPearl { 0% { opacity: 0; transform: translateY(-45px) scale(0.7); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes dropFlan { 0% { opacity: 0; transform: translateY(-40px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .cup-glass-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .cup-size-sticker { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.88); color: #e91e63; font-size: 11px; font-weight: 900; padding: 2px 7px; border-radius: 10px; border: 1px solid #ffb6c1; z-index: 11; pointer-events: none; }
+        .cup-empty-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; color: #94a3b8; font-weight: 700; text-align: center; pointer-events: none; width: 82%; z-index: 8; }
+        .cup-status-text { margin-top: 6px; font-size: 11px; color: #475569; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+        .cup-tag { display: inline-block; background: #fff; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 8px; font-weight: 700; color: #e91e63; }
+
+        /* NÚT HÀNH ĐỘNG & THÔNG BÁO */
+        .actions-group { display: flex; gap: 8px; }
+        button.action-btn {
+            flex: 2;
+            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
+            color: white; border: none; padding: 10px; font-size: 13.5px; font-weight: 800;
+            border-radius: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+            transition: all 0.2s;
+        }
+        button.action-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.04); }
+        button.action-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+        button.reset-btn {
+            flex: 1; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1;
+            padding: 10px 6px; font-size: 11.5px; font-weight: 700; border-radius: 12px; cursor: pointer;
+        }
+        button.reset-btn:hover:not(:disabled) { background: #e2e8f0; color: #1e293b; }
+        button.reset-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        #message {
+            text-align: center; font-weight: 700; min-height: 32px; font-size: 11.5px;
+            line-height: 1.35; padding: 5px 8px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .msg-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .msg-error { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+        .msg-warn { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+
+        /* =========================================================
+           5. CỘT PHẢI: 4 HÀNG NGANG NGUYÊN LIỆU + VÒI RÓT + VÁ MÚC
+           ========================================================= */
+        .right-station {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            justify-content: space-between;
+        }
+        .shelf-box {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 6px 10px;
+        }
+        .shelf-box.milk-tea-shelf { background: #fff9f2; border-color: #f3d5b5; }
+        .shelf-box.pure-tea-shelf { background: #f4fbf5; border-color: #c8e6c9; }
+        .shelf-box.fruit-tea-shelf { background: #fff5f7; border-color: #fecdd3; }
+        .shelf-box.topping-shelf {
+            background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+            border: 2px solid #94a3b8;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+        .shelf-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #334155;
+            margin: 0 0 5px 0;
+            padding-left: 7px;
+            border-left: 4px solid #ff6b8b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .milk-tea-shelf .shelf-title { border-left-color: #d97706; color: #92400e; }
+        .pure-tea-shelf .shelf-title { border-left-color: #16a34a; color: #166534; }
+        .fruit-tea-shelf .shelf-title { border-left-color: #e11d48; color: #9f1239; }
+        .topping-shelf .shelf-title { border-left-color: #475569; color: #1e293b; }
+
+        .horizontal-row { display: flex; flex-direction: row; gap: 7px; align-items: stretch; }
+        .ingredient-card {
+            flex: 1; min-width: 0; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;
+            padding: 5px 4px; text-align: center; cursor: pointer; font-size: 11px; font-weight: 700;
+            color: #334155; transition: all 0.16s ease; position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .ingredient-card:hover { border-color: #ffb6c1; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(255,107,139,0.18); }
+        .ingredient-card.selected { border-color: #e91e63; background-color: #fff0f5; color: #c2185b; box-shadow: 0 0 0 2px rgba(233,30,99,0.22); }
+        .ingredient-card.selected::after { content: '✓'; position: absolute; top: 3px; right: 6px; font-size: 11px; font-weight: 900; color: #e91e63; }
+        .ingredient-card.awaiting-cup { border-color: #f472b6; box-shadow: 0 0 0 2px rgba(244,114,182,0.28); }
+        .ingredient-card.pouring-active { border-color: #e91e63; background-color: #fff5f8; box-shadow: 0 0 0 3px rgba(233,30,99,0.25); }
+        .ingredient-card.out-of-stock { opacity: 0.72; border-style: dashed; border-color: #ef4444; background: #fff5f5; }
+
+        .card-stock-badge {
+            position: absolute;
+            top: 3px;
+            left: 5px;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 7px;
+            background: #e0f2fe;
+            color: #0369a1;
+            z-index: 18;
+        }
+        .card-stock-badge.low { background: #fef3c7; color: #b45309; }
+        .card-stock-badge.empty { background: #fee2e2; color: #dc2626; }
+
+        /* KHUNG BÌNH Ủ TRÀ & VÒI RÓT */
+        .drink-img-wrap {
+            position: relative; width: 74px; height: 74px;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-bottom: 2px;
+        }
+        .img-crop-box { width: 100%; height: 56px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .drink-thumb { width: 100%; height: 100%; object-fit: cover; object-position: center; mix-blend-mode: multiply; transition: transform 0.2s ease; }
+        .tap-target-glow {
+            position: absolute; top: 45px; left: 50%; transform: translate(-50%, -50%);
+            width: 17px; height: 17px; border-radius: 50%; border: 2px solid #e91e63;
+            background: rgba(233,30,99,0.22); opacity: 0; pointer-events: none; z-index: 11;
+        }
+        .ingredient-card.awaiting-cup .tap-target-glow { opacity: 1; animation: tapPulse 0.9s ease-in-out infinite alternate; }
+        @keyframes tapPulse {
+            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0.55; }
+            to { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
+        }
+        .pour-stream {
+            position: absolute; top: 45px; left: 50%; transform: translateX(-50%);
+            width: 5px; height: 0px; border-radius: 3px; opacity: 0; z-index: 15; pointer-events: none;
+            transition: height 0.14s ease, opacity 0.14s ease;
+        }
+        .ingredient-card.pouring-active .pour-stream { height: 19px; opacity: 0.96; animation: streamWiggle 0.12s infinite alternate; }
+        @keyframes streamWiggle { from { width: 4.5px; } to { width: 6px; } }
+        .mini-catch-cup {
+            position: absolute; top: 54px; left: 50%; transform: translateX(-50%) scale(0.2);
+            width: 22px; height: 24px; background: rgba(255,255,255,0.88); border: 1.5px solid #475569;
+            border-top: 2px solid #64748b; border-radius: 2px 2px 7px 7px; overflow: hidden; opacity: 0; z-index: 14;
+            pointer-events: none; transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+        }
+        .ingredient-card.pouring-active .mini-catch-cup { transform: translateX(-50%) scale(1); opacity: 1; }
+        .mini-catch-liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.62s cubic-bezier(0.22,1,0.36,1); }
+        .splash-drop { position: absolute; top: 53px; width: 4px; height: 4px; border-radius: 50%; opacity: 0; z-index: 16; pointer-events: none; }
+        .ingredient-card.pouring-active .splash-drop.left { left: calc(50% - 13px); animation: splashLeft 0.45s ease-out infinite; }
+        .ingredient-card.pouring-active .splash-drop.right { left: calc(50% + 9px); animation: splashRight 0.45s ease-out 0.15s infinite; }
+        @keyframes splashLeft { 0% { opacity: 1; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(-7px,-9px) scale(0.4); } }
+        @keyframes splashRight { 0% { opacity: 1; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(7px,-9px) scale(0.4); } }
+
+        /* KHAY TOPPING + HIỆU ỨNG MÚC BẰNG VÁ */
+        .topping-img-wrap {
+            position: relative; width: 72px; height: 46px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 3px;
+        }
+        .topping-thumb {
+            width: 100%; height: 100%; object-fit: contain;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.14)); transition: transform 0.2s ease;
+        }
+        .tray-scoop-ladle {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translate(-50%, 6px) scale(0.7);
+            width: 44px;
+            height: 28px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 18;
+        }
+        .ingredient-card.scooping-active .tray-scoop-ladle {
+            animation: trayScoopUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes trayScoopUp {
+            0% { opacity: 0; transform: translate(-50%, 10px) rotate(10deg) scale(0.8); }
+            35% { opacity: 1; transform: translate(-40%, 0px) rotate(-18deg) scale(1); }
+            75% { opacity: 1; transform: translate(-65%, -20px) rotate(-12deg) scale(1.06); }
+            100% { opacity: 0; transform: translate(-85%, -34px) rotate(-25deg) scale(0.7); }
+        }
+        .item-label { font-size: 10.5px; line-height: 1.2; padding: 0 2px; }
+
+        /* Floating Money Animation */
+        .money-float {
+            position: absolute; color: #2e7d32; font-size: 20px; font-weight: 900; pointer-events: none;
+            animation: floatUp 1.2s ease-out forwards; z-index: 100; text-shadow: 0 2px 4px rgba(255,255,255,0.9);
+        }
+        @keyframes floatUp { 0% { opacity: 0; transform: translateY(0) scale(0.7); } 30% { opacity: 1; transform: translateY(-20px) scale(1.2); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 920px) {
+            .main-workspace { grid-template-columns: 300px 1fr; gap: 10px; }
+            .drink-img-wrap { width: 58px; height: 64px; }
+            .img-crop-box { height: 50px; }
+            .tap-target-glow { top: 40px; }
+            .pour-stream { top: 40px; }
+            .mini-catch-cup { top: 44px; width: 20px; height: 22px; }
+            .topping-img-wrap { width: 60px; height: 40px; }
+            .item-label { font-size: 9.5px; }
+        }
+        @media (max-height: 540px) and (min-width: 720px) {
+            body { padding: 5px; }
+            #game-container { padding: 8px 10px; min-height: auto; }
+            .top-bar { padding: 4px 10px; margin-bottom: 5px; }
+            .missions-strip { padding: 3px 10px; margin-bottom: 5px; }
+            .left-station { padding: 6px; gap: 5px; }
+            .customer-area { min-height: 76px; padding: 5px; }
+            .avatar-container { width: 54px; height: 54px; }
+            .cup-stage { height: 112px; }
+            .cup-visual-box.size-M { width: 74px; height: 86px; }
+            .cup-visual-box.size-L { width: 88px; height: 106px; }
+            .right-station { gap: 4px; }
+            .shelf-box { padding: 4px 8px; }
+            .drink-img-wrap { width: 50px; height: 54px; }
+            .img-crop-box { height: 42px; }
+            .tap-target-glow { top: 34px; }
+            .pour-stream { top: 34px; }
+            .mini-catch-cup { top: 38px; width: 18px; height: 20px; }
+            .topping-img-wrap { width: 50px; height: 34px; }
+        }
+        @media (max-width: 719px) {
+            .main-workspace { grid-template-columns: 1fr; }
+            .horizontal-row { overflow-x: auto; padding-bottom: 4px; }
+            .ingredient-card { min-width: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LY MINI ĐI THEO CON TRỎ -->
+<div id="floating-mini-cup">
+    <div class="mini-cup-straw"></div>
+    <div class="mini-cup-body">
+        <span class="mini-cup-size-txt" id="floating-cup-size">M</span>
+    </div>
+</div>
+
+<div id="game-container">
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ===================================================
+         MÀN HÌNH BẮT ĐẦU KIỂU GAME MOBILE (#start-screen)
+         =================================================== -->
+    <div class="overlay-screen active" id="start-screen">
+        <div class="mobile-start-card">
+            <div class="start-mascot-row">
+                <img src="khach1.png" alt="Bé Na" class="start-mascot">
+                <div class="start-mascot center-cup">🧋</div>
+                <img src="khach3.png" alt="J97" class="start-mascot">
+            </div>
+            <div class="start-title">TIỆM TRÀ SỮA HỌC ĐƯỜNG</div>
+            <div class="start-subtitle">Quản lý quán theo từng ngày • Hoàn thành nhiệm vụ &amp; Đi chợ nhập hàng</div>
+
+            <div class="start-progress-box">
+                <div class="start-stat">
+                    <span>Màn hiện tại</span>
+                    <b id="start-day-val">Ngày 1</b>
+                </div>
+                <div class="start-stat">
+                    <span>Tiền quỹ quán</span>
+                    <b id="start-money-val">40.000đ</b>
+                </div>
+                <div class="start-stat">
+                    <span>Tổng đơn đạt</span>
+                    <b id="start-score-val">0</b>
+                </div>
+            </div>
+
+            <button class="btn-play-big" id="btn-play-game" onclick="startFromMenu()">▶ PLAY • BẮT ĐẦU NGÀY 1</button>
+
+            <div class="start-secondary-btns">
+                <button class="btn-secondary-pill market" onclick="openMarketModal('start')">🛒 Đi Chợ Nhập Hàng</button>
+                <button class="btn-secondary-pill" onclick="resetFullGame()">🔄 Chơi Lại Từ Đầu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         MODAL TỔNG KẾT CUỐI NGÀY (#day-end-modal)
+         =================================================== -->
+    <div class="overlay-screen" id="day-end-modal">
+        <div class="modal-card compact">
+            <div class="modal-header" style="justify-content:center;">
+                <div class="modal-title" id="end-day-title">🎉 HOÀN THÀNH NGÀY 1!</div>
+            </div>
+            <div class="stars-row" id="end-day-stars">⭐⭐⭐</div>
+            <div style="font-size:13px; color:#475569; font-weight:700;" id="end-day-subtitle">
+                Xuất sắc! Bạn đã hoàn thành toàn bộ nhiệm vụ hôm nay!
+            </div>
+
+            <div class="day-summary-list" id="end-day-summary-list"></div>
+
+            <div style="font-size:13px; font-weight:800; color:#15803d; margin-bottom:12px;" id="end-day-reward-text">
+                Thưởng hoàn thành nhiệm vụ: +20.000đ
+            </div>
+
+            <div class="start-secondary-btns" style="margin-bottom:10px;">
+                <button class="btn-secondary-pill market" onclick="openMarketModal('dayend')">🛒 Đi Chợ Nhập Hàng</button>
+                <button class="btn-secondary-pill" onclick="replayCurrentDay()">🔁 Chơi Lại Ngày Này</button>
+            </div>
+            <button class="btn-play-big" id="btn-next-day" onclick="goToNextDay()" style="margin-bottom:0; padding:12px; font-size:16px;">
+                ▶ SANG NGÀY TIẾP THEO
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         MODAL CỬA HÀNG ĐI CHỢ NHẬP HÀNG (#market-modal)
+         =================================================== -->
+    <div class="overlay-screen" id="market-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">🛒 CHỢ ĐẦU MỐI NGUYÊN LIỆU</div>
+                <button class="btn-secondary-pill" style="flex:0 0 auto; padding:6px 14px;" onclick="closeMarketModal()">✖ Đóng</button>
+            </div>
+
+            <div class="market-top-info">
+                <div class="market-wallet">💰 Tiền quỹ đang có: <b id="market-money">0</b>đ</div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-quick-restock" onclick="quickRestockLow()">⚡ Nhập nhanh các món sắp hết (&lt; 4)</button>
+                </div>
+            </div>
+
+            <div class="market-grid-scroll" id="market-grid-body"></div>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         MÀN HÌNH CHƠI CHÍNH (MÀN HÌNH NGANG)
+         =================================================== -->
+    <div class="top-bar">
+        <div class="brand-title">
+            <span>🧋 TIỆM TRÀ SỮA</span>
+            <span class="day-badge" id="hud-day-badge">📅 Ngày 1</span>
+        </div>
+        <div class="stats-bar">
+            <div class="stat-pill">💰 Quỹ: <span><b id="money">0</b>đ</span></div>
+            <div class="stat-pill">👥 Khách: <b id="hud-customer-progress">0/4</b></div>
+            <div class="stat-pill">🔥 Combo: <b id="combo">0</b></div>
+            <button class="top-icon-btn" onclick="openMarketModal('game')" title="Đi chợ mua thêm hàng">🛒 Chợ</button>
+            <button class="top-icon-btn" onclick="backToMenu()" title="Về màn hình chính">🏠</button>
+            <button class="top-icon-btn" id="sound-btn" onclick="toggleSound()" title="Bật/Tắt âm thanh">🔊</button>
+        </div>
+    </div>
+
+    <!-- THANH NHIỆM VỤ NGÀY -->
+    <div class="missions-strip" id="missions-strip">
+        <span class="missions-label">🎯 Nhiệm vụ hôm nay:</span>
+        <div id="missions-list" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+    </div>
+
+    <!-- BỐ CỤC MÀN HÌNH NGANG 2 CỘT -->
+    <div class="main-workspace">
+        <!-- CỘT TRÁI -->
+        <div class="left-station">
+            <div class="customer-area" id="customer-box">
+                <div class="avatar-wrapper">
+                    <div class="avatar-container">
+                        <img id="customer-img" class="chibi-avatar" src="khach1.png" alt="Khách hàng" onerror="handleImageError(this)">
+                        <div id="avatar-fallback-box" class="avatar-fallback">KH</div>
+                    </div>
+                    <div class="customer-name-tag" id="customer-name">Khách quen</div>
+                </div>
+                <div class="speech-bubble">
+                    <div id="order-text">Đang mở cửa đón khách...</div>
+                </div>
+            </div>
+
+            <div class="cup-area">
+                <div class="cup-and-size-row">
+                    <!-- Chọn Cỡ Ly -->
+                    <div class="size-vertical-group">
+                        <div class="size-btn" id="btn-size-M" onclick="selectSize('M')">
+                            <span>🥤 Size M</span>
+                            <span class="stock-mini" id="stock-size-M">Kho: 10</span>
+                        </div>
+                        <div class="size-btn" id="btn-size-L" onclick="selectSize('L')">
+                            <span>🥤✨ Size L</span>
+                            <span class="stock-mini" id="stock-size-L">Kho: 10</span>
+                        </div>
+                    </div>
+
+                    <!-- Ly Trà Sữa Chân Thật + Vá đổ topping -->
+                    <div class="cup-stage">
+                        <!-- Cái vá nghiêng đổ topping vào ly -->
+                        <div class="cup-pour-ladle" id="cup-pour-ladle">
+                            <svg viewBox="0 0 80 36" width="78" height="36">
+                                <!-- Cán vá inox -->
+                                <rect x="30" y="6" width="46" height="5" rx="2.5" fill="#94a3b8" stroke="#475569" stroke-width="1.2"/>
+                                <!-- Lòng vá -->
+                                <path d="M 4 12 Q 4 30 18 30 Q 32 30 32 12 Z" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/>
+                                <!-- Đống topping bên trong vá (đổi màu bằng JS) -->
+                                <ellipse id="ladle-fill-shape" cx="18" cy="13" rx="11" ry="5" fill="#3e2723"/>
+                            </svg>
+                        </div>
+                        <div class="falling-toppings-box" id="falling-toppings-box"></div>
+
+                        <div class="cup-coaster"></div>
+                        <div class="cup-visual-box" id="visual-cup-box" onclick="handleCupClick()" title="Ấn vào ly để thu nhỏ &amp; hứng trà">
+                            <div class="cup-straw" id="cup-straw"></div>
+                            <div class="cup-interior" id="cup-interior">
+                                <div class="cup-empty-hint" id="empty-hint">Chọn size &amp; pha chế</div>
+                                <div class="cup-tea-layer" id="cup-tea-layer"></div>
+                                <div class="cup-topping-layer" id="cup-topping-layer"></div>
+                            </div>
+                            <div class="cup-size-sticker" id="cup-size-sticker" style="display: none;">M</div>
+                            <svg class="cup-glass-overlay" viewBox="0 0 100 120" preserveAspectRatio="none">
+                                <ellipse cx="50" cy="6" rx="46" ry="3.5" fill="rgba(255,255,255,0.65)" stroke="#64748b" stroke-width="2"/>
+                                <path d="M 5 6 L 16 108 Q 18 118 30 118 L 70 118 Q 82 118 84 108 L 95 6" fill="none" stroke="#475569" stroke-width="2.5" stroke-linejoin="round"/>
+                                <path d="M 12 12 L 21 106" stroke="rgba(255,255,255,0.65)" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M 86 14 L 78 102" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div><span class="cup-hint-pill" id="cup-hint-pill" style="display:none;">👆 Ấn vào ly để hóa nhỏ &amp; đi hứng trà!</span></div>
+
+                <div class="cup-status-text">
+                    <span id="status-size" class="cup-tag">Chưa chọn size</span>
+                    <span id="status-tea" class="cup-tag">Chưa rót trà</span>
+                    <span id="status-topping" class="cup-tag">Chưa múc topping</span>
+                </div>
+            </div>
+
+            <div class="actions-group">
+                <button class="reset-btn" id="btn-reset" onclick="resetCup(true)">🗑️ Đổ bỏ / Pha lại</button>
+                <button class="action-btn" id="btn-serve" onclick="serveOrder()">🧋 GIAO LY CHO KHÁCH</button>
+            </div>
+            <div id="message"></div>
+        </div>
+
+        <!-- CỘT PHẢI: 4 HÀNG NGANG NGUYÊN LIỆU -->
+        <div class="right-station">
+            <div class="shelf-box milk-tea-shelf">
+                <div class="shelf-title"><span>🧋 Quầy Trà Sữa Béo Ngậy (5 vị)</span></div>
+                <div class="horizontal-row" id="row-milk-tea"></div>
+            </div>
+
+            <div class="shelf-box pure-tea-shelf">
+                <div class="shelf-title"><span>🍃 Quầy Trà Thuần Nguyên Vị (2 vị)</span></div>
+                <div class="horizontal-row" id="row-pure-tea"></div>
+            </div>
+
+            <div class="shelf-box fruit-tea-shelf">
+                <div class="shelf-title"><span>🍓 Quầy Trà Trái Cây Tươi Mát (4 vị)</span></div>
+                <div class="horizontal-row" id="row-fruit-tea"></div>
+            </div>
+
+            <div class="shelf-box topping-shelf">
+                <div class="shelf-title"><span>🥣 Khay Topping Thẳng Hàng (4 món — Múc bằng vá)</span></div>
+                <div class="horizontal-row" id="row-topping"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // =========================================================
+    // 1. DANH MỤC MẶT HÀNG & GIÁ NHẬP CHỢ
+    // =========================================================
+    const drinksCatalog = [
+        // Trà Sữa (5 món)
+        { id: 'ts_truyen_thong', name: 'Trà sữa truyền thống', shortName: 'Trà Sữa Truyền Thống', category: 'milk', img: 'tra_sua_truyen_thong.png', streamColor: '#d7ae82', gradient: 'linear-gradient(180deg, #f3dfc8 0%, #dcb589 55%, #bf8c5a 100%)', borderTop: 'rgba(255,245,235,0.75)', garnish: null, packCost: 15000 },
+        { id: 'ts_thai_do', name: 'Trà sữa thái đỏ', shortName: 'Trà Sữa Thái Đỏ', category: 'milk', img: 'tra_sua_thai_do.png', streamColor: '#ef6c35', gradient: 'linear-gradient(180deg, #ffab76 0%, #eb6b38 55%, #c74118 100%)', borderTop: 'rgba(255,224,200,0.75)', garnish: null, packCost: 18000 },
+        { id: 'ts_matcha', name: 'Trà sữa matcha', shortName: 'Trà Sữa Matcha', category: 'milk', img: 'tra_sua_matcha.png', streamColor: '#8bc34a', gradient: 'linear-gradient(180deg, #cbe68d 0%, #8bc34a 55%, #558b2f 100%)', borderTop: 'rgba(235,250,210,0.75)', garnish: null, packCost: 18000 },
+        { id: 'ts_khoai_mon', name: 'Trà sữa khoai môn', shortName: 'Trà Sữa Khoai Môn', category: 'milk', img: 'tra_sua_khoai_mon.png', streamColor: '#be8de0', gradient: 'linear-gradient(180deg, #e8cef7 0%, #c08de0 55%, #8f5ec2 100%)', borderTop: 'rgba(248,235,255,0.75)', garnish: null, packCost: 18000 },
+        { id: 'ts_scla', name: 'Trà sữa socola', shortName: 'Trà Sữa Socola', category: 'milk', img: 'tra_sua_scla.png', streamColor: '#794727', gradient: 'linear-gradient(180deg, #a6714d 0%, #7d4a29 55%, #4e2913 100%)', borderTop: 'rgba(220,190,170,0.7)', garnish: null, packCost: 18000 },
+        // Trà Thuần (2 món)
+        { id: 'thuan_dai_loan', name: 'Trà Đài Loan nguyên lá', shortName: 'Trà Đài Loan Nguyên Lá', category: 'pure', img: 'tra_dai_loan_nguyen_la.png', streamColor: '#b8611e', gradient: 'linear-gradient(180deg, rgba(218,138,62,0.85) 0%, rgba(168,86,26,0.92) 55%, rgba(118,52,12,0.96) 100%)', borderTop: 'rgba(255,230,195,0.65)', garnish: 'tea-leaf', packCost: 14000 },
+        { id: 'thuan_bi_dao', name: 'Trà bí đao', shortName: 'Trà Bí Đao', category: 'pure', img: 'tra_bi_dao.png', streamColor: '#c97e2a', gradient: 'linear-gradient(180deg, rgba(224,165,86,0.85) 0%, rgba(186,118,42,0.92) 55%, rgba(138,76,18,0.96) 100%)', borderTop: 'rgba(255,238,205,0.65)', garnish: 'melon', packCost: 14000 },
+        // Trà Trái Cây (4 món)
+        { id: 'tc_vai_thieu', name: 'Trà vải thiều', shortName: 'Trà Vải Thiều', category: 'fruit', img: 'tra_vai_thieu.png', streamColor: '#d67442', gradient: 'linear-gradient(180deg, rgba(232,148,92,0.84) 0%, rgba(196,98,52,0.92) 55%, rgba(154,62,26,0.96) 100%)', borderTop: 'rgba(255,232,215,0.68)', garnish: 'lychee', packCost: 16000 },
+        { id: 'tc_luu_do', name: 'Trà lựu đỏ', shortName: 'Trà Lựu Đỏ', category: 'fruit', img: 'tra_luu_do.png', streamColor: '#d32f2f', gradient: 'linear-gradient(180deg, rgba(239,83,80,0.85) 0%, rgba(198,40,40,0.93) 55%, rgba(142,18,28,0.97) 100%)', borderTop: 'rgba(255,205,210,0.68)', garnish: 'pomegranate', packCost: 16000 },
+        { id: 'tc_xoai_chanh_day', name: 'Trà xoài chanh dây', shortName: 'Trà Xoài Chanh Dây', category: 'fruit', img: 'tra_xoai_chanh_day.png', streamColor: '#f59e0b', gradient: 'linear-gradient(180deg, rgba(255,213,79,0.86) 0%, rgba(245,166,35,0.93) 55%, rgba(216,112,12,0.97) 100%)', borderTop: 'rgba(255,248,205,0.72)', garnish: 'passion', packCost: 16000 },
+        { id: 'tc_tao_bac_ha', name: 'Trà táo bạc hà', shortName: 'Trà Táo Bạc Hà', category: 'fruit', img: 'tra_tao_bac_ha.png', streamColor: '#8db635', gradient: 'linear-gradient(180deg, rgba(212,225,87,0.85) 0%, rgba(156,188,60,0.92) 55%, rgba(104,144,38,0.96) 100%)', borderTop: 'rgba(240,250,205,0.72)', garnish: 'mint', packCost: 16000 }
+    ];
+
+    const toppingsCatalog = [
+        { name: 'Trân châu hoàng kim', shortName: 'Trân Châu Hoàng Kim', img: 'tranchau.png', ladleColor: '#f59e0b', packCost: 10000 },
+        { name: 'Trân châu đen', shortName: 'Trân Châu Đen', img: 'tran_chau_den.png', ladleColor: '#291712', packCost: 10000 },
+        { name: 'Thạch dừa', shortName: 'Thạch Dừa', img: 'thach_dua.png', ladleColor: '#f1f5f9', packCost: 10000 },
+        { name: 'Bánh flan', shortName: 'Bánh Flan', img: 'banh_flan.png', ladleColor: '#fbbf24', packCost: 12000 }
+    ];
+
+    const sizes = ['M', 'L'];
+    const PACK_QTY = 5;
+    const SIZE_PACK_COST = 8000;
+
+    // Hồ sơ 9 nhân vật
+    const customerProfiles = [
+        {
+            id: 'khach3', img: 'khach3.png', name: 'J97 Đom Đóm ✨',
+            getOrders: (tea, size, top) => [
+                `Hồng nhan bạc phận chứ trà sữa thì phải đúng gu! Cho anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> nha em ơi! Đom đóm bay lên! ✨`,
+                `Thiên lý ơi! Anh bay từ Bến Tre lên đây thèm 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> múc đầy <b style="color:#e65100">${top}</b>! Chốt đơn lẹ anh gửi... 5 triệu nha! 😎`,
+                `Sóng gió phủ đời trai, tương lai nhờ ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> của quán đó!`,
+                `Hoa hải đường nở rộ, Trịnh Trần Phương Tuấn gọi 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> ngập <b style="color:#e65100">${top}</b>!`
+            ],
+            winMsg: 'Quá cháy luôn em ơi! Chuẩn vị Đom Đóm, anh gửi tiền (còn 5 triệu từ từ tính nha 😎)!',
+            loseMsg: 'Ối dồi ôi sóng gió quá em ơi! Pha nhầm công thức rồi!'
+        },
+        {
+            id: 'khach1', img: 'khach1.png', name: 'Bé Na (Học Sinh)',
+            getOrders: (tea, size, top) => [
+                `Cô chú ơi cháu mới tan học nè! Cho cháu 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> nhé ạ! 🎒`,
+                `Hôm nay cháu được 10 điểm toán á! Thưởng cho cháu 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ nhiều <b style="color:#e65100">${top}</b> nha!`,
+                `Cháu sắp vào lớp học thêm rồi, làm giúp cháu 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> có <b style="color:#e65100">${top}</b> với ạ!`
+            ],
+            winMsg: 'Dạ ngon xuất sắc luôn ạ! Mai cháu rủ cả lớp tới mua!',
+            loseMsg: 'Ơ cô chú ơi, hình như nhầm món của cháu rồi!'
+        },
+        {
+            id: 'khach4', img: 'khach4.png', name: 'Anh Ba GrabFood',
+            getOrders: (tea, size, top) => [
+                `Alo quán ơi! Đơn GrabFood nổ gấp 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, thêm <b style="color:#e65100">${top}</b>! 🛵`,
+                `Khách đặt 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nè em ơi!`,
+                `Bác tài Grab có mặt! Quán làm giúp 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b> nhé!`
+            ],
+            winMsg: 'Tuyệt vời! Hàng chuẩn 5 sao, anh Ba phi xe giao liền đây!',
+            loseMsg: 'Khoan đã quán ơi! Giao nhầm ly này khách boom hàng anh luôn đó!'
+        },
+        {
+            id: 'khach5', img: 'khach5.png', name: 'Anh Độ TFOI',
+            getOrders: (tea, size, top) => [
+                `Hôm nay mình review quán, làm ngay 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> lên sóng nhé! 😎`,
+                `Stream muộn khô cổ quá em ơi, cứu anh 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> nhiều <b style="color:#e65100">${top}</b> đi nào!`,
+                `Ê chủ quán, làm cho anh 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nha!`
+            ],
+            winMsg: 'Chuẩn chỉnh hết nước chấm! Quá uy tín luôn các bạn ơi!',
+            loseMsg: 'Ôi giời ơi pha nhầm rồi bạn tôi ơi!'
+        },
+        {
+            id: 'khach6', img: 'khach6.png', name: 'Chú Công An',
+            getOrders: (tea, size, top) => [
+                `Chào đồng chí chủ quán! Cho tôi 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, thêm <b style="color:#e65100">${top}</b> trực ca chiều nhé! 🫡`,
+                `Báo cáo quán, tôi cần tiếp tế gấp 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b>!`,
+                `Đi tuần tra ngang thấy quán thơm quá, làm cho chú 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> có <b style="color:#e65100">${top}</b> nha!`
+            ],
+            winMsg: 'Rất tốt! Đúng quy trình pha chế, chú biểu dương tinh thần phục vụ!',
+            loseMsg: 'Cảnh báo! Sai công thức rồi cháu ơi!'
+        },
+        {
+            id: 'khach7', img: 'khach7.png', name: 'Bà Năm Nam Bộ',
+            getOrders: (tea, size, top) => [
+                `Con ơi, mua cho đứa cháu 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> bỏ thêm <b style="color:#e65100">${top}</b> nghen con! 👵`,
+                `Bán cho ngoại 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> với <b style="color:#e65100">${top}</b> đi con!`,
+                `Ngoại ghé làm 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> uống cho mát ruột coi!`
+            ],
+            winMsg: 'Trời ơi ngon quá chừng luôn con ơi! Ngoại cảm ơn con nhiều nghen!',
+            loseMsg: 'Ủa lộn món của ngoại rồi con ơi!'
+        },
+        {
+            id: 'khach8', img: 'khach8.png', name: 'Bé Kẹo Tóc Hồng',
+            getOrders: (tea, size, top) => [
+                `Cho em 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> thêm thật nhiều <b style="color:#e65100">${top}</b> để chụp hình nhé! 🎀`,
+                `Làm liền cho em 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> full <b style="color:#e65100">${top}</b> đi ạ!`,
+                `Chỉ có 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> ngập tràn <b style="color:#e65100">${top}</b> mới chữa lành được tâm hồn em thôi ạ!`
+            ],
+            winMsg: 'Ưng cái bụng quá đi mất! Ly nước đẹp y như mơ luôn! 💖',
+            loseMsg: 'Huhu nhầm rồi anh chị ơi, mất góc sống ảo của em mất!'
+        },
+        {
+            id: 'khach9', img: 'khach9.png', name: 'Tài Xế Xanh SM',
+            getOrders: (tea, size, top) => [
+                `Khách đặt 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, topping là <b style="color:#e65100">${top}</b> nha quán ơi! ⚡`,
+                `Xanh SM giao nhanh! Pha giúp mình 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> thêm <b style="color:#e65100">${top}</b> nhé!`,
+                `Đơn Xanh SM Express! Cho anh nhận 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nào!`
+            ],
+            winMsg: 'Ngon lành cành đào! Xanh SM lên đường giao ngay đây!',
+            loseMsg: 'Ối quán ơi kiểm tra lại giúp anh với, nhầm món rồi!'
+        },
+        {
+            id: 'khach10', img: 'khach10.png', name: 'Anh Cam ShopeeFood',
+            getOrders: (tea, size, top) => [
+                `Ting ting! Đơn ShopeeFood: 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b>, thêm <b style="color:#e65100">${top}</b> nha! 🧡`,
+                `Đơn hỏa tốc ShopeeFood! Cho em lấy 1 ly <b style="color:#d81b60">${tea}</b> size <b style="color:#1565c0">${size}</b> bỏ <b style="color:#e65100">${top}</b>!`,
+                `Shipper áo cam nhận 1 ly <b style="color:#d81b60">${tea}</b> cỡ <b style="color:#1565c0">${size}</b> kèm <b style="color:#e65100">${top}</b> nè!`
+            ],
+            winMsg: 'Chốt đơn mượt mà! Chúc quán hôm nay nổ đơn ầm ầm nha!',
+            loseMsg: 'Á á nhầm đơn rồi quán ơi!'
+        }
+    ];
+
+    // =========================================================
+    // 2. KHO NGUYÊN LIỆU & TIẾN TRÌNH THEO NGÀY (LOCALSTORAGE)
+    // =========================================================
+    function getDefaultInventory() {
+        const inv = { 'size_M': 8, 'size_L': 8 };
+        drinksCatalog.forEach(d => inv[d.name] = 5);
+        toppingsCatalog.forEach(t => inv[t.name] = 6);
+        return inv;
+    }
+
+    let saveState = null;
+    try {
+        const raw = localStorage.getItem('trasua_save_v2');
+        if (raw) saveState = JSON.parse(raw);
+    } catch (e) {}
+
+    let currentDay = saveState ? (saveState.currentDay || 1) : 1;
+    let money = saveState ? (saveState.money ?? 40000) : 40000;
+    let totalScore = saveState ? (saveState.totalScore || 0) : 0;
+    let inventory = saveState && saveState.inventory ? saveState.inventory : getDefaultInventory();
+    let soundEnabled = localStorage.getItem('trasua_sound') !== 'false';
+
+    function persistSave() {
+        try {
+            localStorage.setItem('trasua_save_v2', JSON.stringify({
+                currentDay, money, totalScore, inventory
+            }));
+        } catch (e) {}
+    }
+
+    // Trạng thái trong màn chơi hiện tại
+    let combo = 0;
+    let isServing = false;
+    let isHoldingCup = false;
+    let isPouring = false;
+    let isScooping = false;
+    let pourTimer = null;
+    let scoopTimer = null;
+    let marketReturnTo = 'start';
+
+    let dayPlan = null;
+    let dayOrdersQueue = [];
+    let dayCustomersDone = 0;
+    let dayStats = {
+        served: 0,
+        mistakes: 0,
+        resets: 0,
+        earnedToday: 0,
+        drinksSold: {},
+        toppingsSold: {}
+    };
+
+    let currentCustomer = null;
+    let lastCustomerIndex = -1;
+    let currentOrder = { size: '', tea: '', topping: '' };
+    let currentCup = { size: '', tea: '', topping: '' };
+
+    // =========================================================
+    // 3. CẤU HÌNH NHIỆM VỤ TỪNG NGÀY (1 NGÀY = 1 MÀN CHƠI)
+    // =========================================================
+    function createDayConfig(dayNum) {
+        const configs = {
+            1: {
+                customers: 4,
+                reward: 20000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 4, label: 'Bán cho 4 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa truyền thống', target: 2, label: 'Bán 2 ly Trà sữa truyền thống' },
+                    { id: 'm_noerr', type: 'no_mistake', label: 'Không pha sai đơn nào' }
+                ]
+            },
+            2: {
+                customers: 5,
+                reward: 25000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa matcha', target: 2, label: 'Bán 2 ly Trà sữa matcha' },
+                    { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
+                ]
+            },
+            3: {
+                customers: 5,
+                reward: 30000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà lựu đỏ', target: 2, label: 'Bán 2 ly Trà lựu đỏ' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Trân châu hoàng kim', target: 2, label: 'Bán 2 ly có Trân châu hoàng kim' }
+                ]
+            },
+            4: {
+                customers: 6,
+                reward: 35000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà xoài chanh dây', target: 2, label: 'Bán 2 ly Trà xoài chanh dây' },
+                    { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' },
+                    { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
+                ]
+            },
+            5: {
+                customers: 6,
+                reward: 40000,
+                missions: [
+                    { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà Đài Loan nguyên lá', target: 2, label: 'Bán 2 ly Trà Đài Loan nguyên lá' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Bánh flan', target: 2, label: 'Bán 2 ly có Bánh flan' }
+                ]
+            }
+        };
+
+        if (configs[dayNum]) return configs[dayNum];
+
+        // Ngày 6+ tự động sinh nhiệm vụ đa dạng
+        const totalCust = Math.min(5 + Math.floor(dayNum / 2), 9);
+        const randDrink = drinksCatalog[(dayNum * 3) % drinksCatalog.length].name;
+        const randTop = toppingsCatalog[(dayNum * 2) % toppingsCatalog.length].name;
+        const missions = [
+            { id: 'm_serve', type: 'serve_count', target: totalCust, label: `Bán cho ${totalCust} khách` },
+            { id: 'm_drink', type: 'specific_drink', drink: randDrink, target: 2, label: `Bán 2 ly ${randDrink}` },
+            { id: 'm_top', type: 'specific_topping', topping: randTop, target: 2, label: `Bán 2 ly có ${randTop}` }
+        ];
+        if (dayNum % 2 === 0) {
+            missions.push({ id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' });
+        } else {
+            missions.push({ id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' });
+        }
+        return { customers: totalCust, reward: 30000 + dayNum * 3000, missions };
+    }
+
+    function buildDayOrdersQueue(config) {
+        const queue = [];
+        const drinkMission = config.missions.find(m => m.type === 'specific_drink');
+        const topMission = config.missions.find(m => m.type === 'specific_topping');
+
+        for (let i = 0; i < config.customers; i++) {
+            const size = sizes[Math.floor(Math.random() * sizes.length)];
+            let tea = drinksCatalog[Math.floor(Math.random() * drinksCatalog.length)].name;
+            let topping = toppingsCatalog[Math.floor(Math.random() * toppingsCatalog.length)].name;
+
+            // Đảm bảo có đủ đơn hàng đúng loại nhiệm vụ trong ngày
+            if (drinkMission && i < drinkMission.target) {
+                tea = drinkMission.drink;
+            }
+            if (topMission && i >= config.customers - topMission.target) {
+                topping = topMission.topping;
+            }
+            queue.push({ size, tea, topping });
+        }
+
+        // Xáo trộn thứ tự khách
+        for (let i = queue.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [queue[i], queue[j]] = [queue[j], queue[i]];
+        }
+        return queue;
+    }
+
+    // =========================================================
+    // 4. DỰNG GIAO DIỆN QUẦY HÀNG & KHO
+    // =========================================================
+    function buildShelves() {
+        const milkRow = document.getElementById('row-milk-tea');
+        const pureRow = document.getElementById('row-pure-tea');
+        const fruitRow = document.getElementById('row-fruit-tea');
+        const toppingRow = document.getElementById('row-topping');
+
+        milkRow.innerHTML = '';
+        pureRow.innerHTML = '';
+        fruitRow.innerHTML = '';
+        toppingRow.innerHTML = '';
+
+        drinksCatalog.forEach(drink => {
+            const card = document.createElement('div');
+            card.className = 'ingredient-card drink-card';
+            card.setAttribute('data-drink', drink.name);
+            card.onclick = () => selectTea(drink.name);
+
+            card.innerHTML = `
+                <span class="card-stock-badge" id="stock-badge-${drink.id}">x5</span>
+                <div class="drink-img-wrap">
+                    <div class="img-crop-box">
+                        <img src="${drink.img}" alt="${drink.name}" class="drink-thumb">
+                    </div>
+                    <div class="tap-target-glow"></div>
+                    <div class="pour-stream" style="background: ${drink.streamColor};"></div>
+                    <div class="splash-drop left" style="background: ${drink.streamColor};"></div>
+                    <div class="splash-drop right" style="background: ${drink.streamColor};"></div>
+                    <div class="mini-catch-cup">
+                        <div class="mini-catch-liquid" style="background: ${drink.gradient};"></div>
+                    </div>
+                </div>
+                <span class="item-label">${drink.shortName}</span>
+            `;
+
+            if (drink.category === 'milk') milkRow.appendChild(card);
+            else if (drink.category === 'pure') pureRow.appendChild(card);
+            else fruitRow.appendChild(card);
+        });
+
+        toppingsCatalog.forEach((top, idx) => {
+            const card = document.createElement('div');
+            card.className = 'ingredient-card topping-card';
+            card.setAttribute('data-topping', top.name);
+            card.onclick = () => selectTopping(top.name);
+
+            card.innerHTML = `
+                <span class="card-stock-badge" id="stock-top-${idx}">x6</span>
+                <div class="topping-img-wrap">
+                    <img src="${top.img}" alt="${top.name}" class="topping-thumb">
+                    <div class="tray-scoop-ladle">
+                        <svg viewBox="0 0 50 30" width="44" height="28">
+                            <rect x="22" y="4" width="25" height="4" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+                            <path d="M 3 10 Q 3 25 14 25 Q 25 25 25 10 Z" fill="#cbd5e1" stroke="#475569" stroke-width="1.3"/>
+                            <ellipse cx="14" cy="11" rx="8" ry="4" fill="${top.ladleColor}"/>
+                        </svg>
+                    </div>
+                </div>
+                <span class="item-label">${top.shortName}</span>
+            `;
+            toppingRow.appendChild(card);
+        });
+    }
+
+    function updateInventoryUI() {
+        // Cập nhật tồn kho Size M / L
+        ['M', 'L'].forEach(sz => {
+            const qty = inventory['size_' + sz] || 0;
+            const badge = document.getElementById('stock-size-' + sz);
+            if (badge) {
+                badge.innerText = qty > 0 ? `Kho: ${qty}` : 'Hết (+Mua)';
+                badge.classList.toggle('empty', qty <= 0);
+            }
+        });
+
+        // Cập nhật tồn kho 11 loại trà
+        drinksCatalog.forEach(d => {
+            const qty = inventory[d.name] || 0;
+            const badge = document.getElementById('stock-badge-' + d.id);
+            const card = document.querySelector(`.drink-card[data-drink="${d.name}"]`);
+            if (badge) {
+                badge.innerText = qty > 0 ? `x${qty}` : 'Hết';
+                badge.classList.remove('low', 'empty');
+                if (qty <= 0) badge.classList.add('empty');
+                else if (qty <= 2) badge.classList.add('low');
+            }
+            if (card) card.classList.toggle('out-of-stock', qty <= 0);
+        });
+
+        // Cập nhật tồn kho 4 topping
+        toppingsCatalog.forEach((t, idx) => {
+            const qty = inventory[t.name] || 0;
+            const badge = document.getElementById('stock-top-' + idx);
+            const card = document.querySelector(`.topping-card[data-topping="${t.name}"]`);
+            if (badge) {
+                badge.innerText = qty > 0 ? `x${qty}` : 'Hết';
+                badge.classList.remove('low', 'empty');
+                if (qty <= 0) badge.classList.add('empty');
+                else if (qty <= 2) badge.classList.add('low');
+            }
+            if (card) card.classList.toggle('out-of-stock', qty <= 0);
+        });
+    }
+
+    // =========================================================
+    // 5. ĐÁNH GIÁ & HIỂN THỊ NHIỆM VỤ NGÀY
+    // =========================================================
+    function evaluateMission(m) {
+        if (m.type === 'serve_count') {
+            return {
+                passed: dayStats.served >= m.target,
+                failedNow: false,
+                progressText: `${Math.min(dayStats.served, m.target)}/${m.target}`
+            };
+        }
+        if (m.type === 'specific_drink') {
+            const count = dayStats.drinksSold[m.drink] || 0;
+            return {
+                passed: count >= m.target,
+                failedNow: false,
+                progressText: `${Math.min(count, m.target)}/${m.target}`
+            };
+        }
+        if (m.type === 'specific_topping') {
+            const count = dayStats.toppingsSold[m.topping] || 0;
+            return {
+                passed: count >= m.target,
+                failedNow: false,
+                progressText: `${Math.min(count, m.target)}/${m.target}`
+            };
+        }
+        if (m.type === 'no_reset') {
+            return {
+                passed: dayStats.resets === 0,
+                failedNow: dayStats.resets > 0,
+                progressText: dayStats.resets === 0 ? 'Đạt' : 'Đã đổ bỏ'
+            };
+        }
+        if (m.type === 'no_mistake') {
+            return {
+                passed: dayStats.mistakes === 0,
+                failedNow: dayStats.mistakes > 0,
+                progressText: dayStats.mistakes === 0 ? 'Đạt' : `Sai ${dayStats.mistakes} lần`
+            };
+        }
+        return { passed: true, failedNow: false, progressText: '' };
+    }
+
+    function updateMissionsUI() {
+        if (!dayPlan) return;
+        const container = document.getElementById('missions-list');
+        container.innerHTML = '';
+
+        dayPlan.missions.forEach(m => {
+            const res = evaluateMission(m);
+            const chip = document.createElement('div');
+            chip.className = 'mission-chip';
+            if (res.failedNow) {
+                chip.classList.add('failed');
+                chip.innerHTML = `❌ ${m.label} (${res.progressText})`;
+            } else if (res.passed && (m.type !== 'no_reset' && m.type !== 'no_mistake')) {
+                chip.classList.add('done');
+                chip.innerHTML = `✅ ${m.label} (${res.progressText})`;
+            } else if (res.passed) {
+                chip.classList.add('done');
+                chip.innerHTML = `🛡️ ${m.label}`;
+            } else {
+                chip.innerHTML = `🎯 ${m.label} <b>(${res.progressText})</b>`;
+            }
+            container.appendChild(chip);
+        });
+    }
+
+    function updateHUD() {
+        document.getElementById('hud-day-badge').innerText = `📅 Ngày ${currentDay}`;
+        document.getElementById('money').innerText = money.toLocaleString('vi-VN');
+        document.getElementById('combo').innerText = combo;
+        if (dayPlan) {
+            document.getElementById('hud-customer-progress').innerText = `${dayCustomersDone}/${dayPlan.customers}`;
+        }
+        updateMissionsUI();
+        updateInventoryUI();
+    }
+
+    // =========================================================
+    // 6. LUỒNG MÀN CHƠI: START MENU, NGÀY MỚI, TỔNG KẾT, ĐI CHỢ
+    // =========================================================
+    function refreshStartScreen() {
+        document.getElementById('start-day-val').innerText = `Ngày ${currentDay}`;
+        document.getElementById('start-money-val').innerText = `${money.toLocaleString('vi-VN')}đ`;
+        document.getElementById('start-score-val').innerText = totalScore;
+        document.getElementById('btn-play-game').innerText = `▶ PLAY • BẮT ĐẦU NGÀY ${currentDay}`;
+    }
+
+    function startFromMenu() {
+        playSound('click');
+        document.getElementById('start-screen').classList.remove('active');
+        startDay(currentDay);
+    }
+
+    function backToMenu() {
+        if (isPouring || isScooping || isServing) return;
+        playSound('click');
+        refreshStartScreen();
+        document.getElementById('start-screen').classList.add('active');
+    }
+
+    function resetFullGame() {
+        playSound('reset');
+        currentDay = 1;
+        money = 40000;
+        totalScore = 0;
+        combo = 0;
+        inventory = getDefaultInventory();
+        persistSave();
+        refreshStartScreen();
+    }
+
+    function startDay(dayNum) {
+        currentDay = dayNum;
+        dayPlan = createDayConfig(dayNum);
+        dayOrdersQueue = buildDayOrdersQueue(dayPlan);
+        dayCustomersDone = 0;
+        combo = 0;
+        dayStats = {
+            served: 0,
+            mistakes: 0,
+            resets: 0,
+            earnedToday: 0,
+            drinksSold: {},
+            toppingsSold: {}
+        };
+        document.getElementById('day-end-modal').classList.remove('active');
+        updateHUD();
+        generateOrder();
+        persistSave();
+    }
+
+    function finishDay() {
+        const results = dayPlan.missions.map(m => ({ mission: m, ...evaluateMission(m) }));
+        const passedCount = results.filter(r => r.passed).length;
+        const totalMissions = results.length;
+        const allPassed = passedCount === totalMissions;
+
+        const stars = passedCount === totalMissions ? '⭐⭐⭐' : (passedCount >= Math.ceil(totalMissions / 2) ? '⭐⭐☆' : '⭐☆☆');
+        const bonusEarned = allPassed ? dayPlan.reward : Math.round(dayPlan.reward * (passedCount / totalMissions) * 0.5);
+
+        money += bonusEarned;
+        persistSave();
+
+        document.getElementById('end-day-title').innerText = allPassed
+            ? `🎉 HOÀN THÀNH XUẤT SẮC NGÀY ${currentDay}!`
+            : `📋 TỔNG KẾT NGÀY ${currentDay}`;
+        document.getElementById('end-day-stars').innerText = stars;
+        document.getElementById('end-day-subtitle').innerText = allPassed
+            ? `Quá đỉnh! Bạn đã đạt ${passedCount}/${totalMissions} nhiệm vụ và kiếm được ${dayStats.earnedToday.toLocaleString('vi-VN')}đ tiền bán hàng!`
+            : `Bạn đạt ${passedCount}/${totalMissions} nhiệm vụ. Hãy ghé chợ nhập thêm hàng chuẩn bị cho ngày tiếp theo nhé!`;
+
+        const listEl = document.getElementById('end-day-summary-list');
+        listEl.innerHTML = '';
+        results.forEach(r => {
+            const row = document.createElement('div');
+            row.className = `summary-mission-item ${r.passed ? 'pass' : 'fail'}`;
+            row.innerHTML = `
+                <span>${r.passed ? '✅' : '❌'} ${r.mission.label}</span>
+                <span>${r.progressText}</span>
+            `;
+            listEl.appendChild(row);
+        });
+
+        document.getElementById('end-day-reward-text').innerText =
+            `🎁 Thưởng nhiệm vụ: +${bonusEarned.toLocaleString('vi-VN')}đ (Quỹ hiện tại: ${money.toLocaleString('vi-VN')}đ)`;
+        document.getElementById('btn-next-day').innerText = `▶ SANG NGÀY ${currentDay + 1}`;
+
+        if (allPassed) {
+            playSound('success');
+            launchConfetti();
+        }
+        updateHUD();
+        document.getElementById('day-end-modal').classList.add('active');
+    }
+
+    function replayCurrentDay() {
+        playSound('click');
+        startDay(currentDay);
+    }
+
+    function goToNextDay() {
+        playSound('click');
+        startDay(currentDay + 1);
+    }
+
+    // =========================================================
+    // 7. CỬA HÀNG ĐI CHỢ NHẬP HÀNG (#market-modal)
+    // =========================================================
+    function openMarketModal(fromWhere) {
+        playSound('click');
+        marketReturnTo = fromWhere;
+        renderMarketItems();
+        document.getElementById('market-modal').classList.add('active');
+    }
+
+    function closeMarketModal() {
+        playSound('click');
+        document.getElementById('market-modal').classList.remove('active');
+        if (marketReturnTo === 'start') {
+            refreshStartScreen();
+        } else {
+            updateHUD();
+        }
+    }
+
+    function renderMarketItems() {
+        document.getElementById('market-money').innerText = money.toLocaleString('vi-VN');
+        const body = document.getElementById('market-grid-body');
+        body.innerHTML = '';
+
+        // 1. Ly nhựa
+        body.innerHTML += `<div class="market-section-label">🥤 Nhập Ly Nhựa (+${PACK_QTY} cái / gói)</div>`;
+        const cupGrid = document.createElement('div');
+        cupGrid.className = 'market-items-grid';
+        ['M', 'L'].forEach(sz => {
+            const key = 'size_' + sz;
+            const qty = inventory[key] || 0;
+            const card = document.createElement('div');
+            card.className = `market-item-card ${qty < 4 ? 'low-stock' : ''}`;
+            card.innerHTML = `
+                <div style="font-size:28px;">${sz === 'M' ? '🥤' : '🧋'}</div>
+                <div class="market-item-name">Ly Nhựa Size ${sz}</div>
+                <div class="market-item-stock">Còn trong kho: <b>${qty}</b></div>
+                <button class="btn-buy-stock" ${money < SIZE_PACK_COST ? 'disabled' : ''} onclick="buyMarketPack('${key}', ${SIZE_PACK_COST})">
+                    +5 cái • ${SIZE_PACK_COST.toLocaleString('vi-VN')}đ
+                </button>
+            `;
+            cupGrid.appendChild(card);
+        });
+        body.appendChild(cupGrid);
+
+        // 2. Cốt trà (11 món)
+        body.innerHTML += `<div class="market-section-label">🧋 Nhập Cốt Trà Sữa, Trà Thuần &amp; Trái Cây (+${PACK_QTY} ly / bình)</div>`;
+        const drinkGrid = document.createElement('div');
+        drinkGrid.className = 'market-items-grid';
+        drinksCatalog.forEach(d => {
+            const qty = inventory[d.name] || 0;
+            const card = document.createElement('div');
+            card.className = `market-item-card ${qty < 4 ? 'low-stock' : ''}`;
+            card.innerHTML = `
+                <img src="${d.img}" class="market-item-img" alt="${d.name}">
+                <div class="market-item-name">${d.shortName}</div>
+                <div class="market-item-stock">Còn trong kho: <b>${qty}</b></div>
+                <button class="btn-buy-stock" ${money < d.packCost ? 'disabled' : ''} onclick="buyMarketPack('${d.name.replace(/'/g, "\\'")}', ${d.packCost})">
+                    +5 phần • ${d.packCost.toLocaleString('vi-VN')}đ
+                </button>
+            `;
+            drinkGrid.appendChild(card);
+        });
+        body.appendChild(drinkGrid);
+
+        // 3. Topping (4 món)
+        body.innerHTML += `<div class="market-section-label">🥣 Nhập Khay Topping Tươi (+${PACK_QTY} muỗng / khay)</div>`;
+        const topGrid = document.createElement('div');
+        topGrid.className = 'market-items-grid';
+        toppingsCatalog.forEach(t => {
+            const qty = inventory[t.name] || 0;
+            const card = document.createElement('div');
+            card.className = `market-item-card ${qty < 4 ? 'low-stock' : ''}`;
+            card.innerHTML = `
+                <img src="${t.img}" class="market-item-img" alt="${t.name}">
+                <div class="market-item-name">${t.shortName}</div>
+                <div class="market-item-stock">Còn trong kho: <b>${qty}</b></div>
+                <button class="btn-buy-stock" ${money < t.packCost ? 'disabled' : ''} onclick="buyMarketPack('${t.name.replace(/'/g, "\\'")}', ${t.packCost})">
+                    +5 phần • ${t.packCost.toLocaleString('vi-VN')}đ
+                </button>
+            `;
+            topGrid.appendChild(card);
+        });
+        body.appendChild(topGrid);
+    }
+
+    function buyMarketPack(itemKey, cost) {
+        if (money < cost) {
+            playSound('error');
+            return;
+        }
+        playSound('success');
+        money -= cost;
+        inventory[itemKey] = (inventory[itemKey] || 0) + PACK_QTY;
+        persistSave();
+        renderMarketItems();
+        updateHUD();
+    }
+
+    function quickRestockLow() {
+        let bought = 0;
+        ['M', 'L'].forEach(sz => {
+            const key = 'size_' + sz;
+            if ((inventory[key] || 0) < 4 && money >= SIZE_PACK_COST) {
+                money -= SIZE_PACK_COST;
+                inventory[key] = (inventory[key] || 0) + PACK_QTY;
+                bought++;
+            }
+        });
+        drinksCatalog.forEach(d => {
+            if ((inventory[d.name] || 0) < 4 && money >= d.packCost) {
+                money -= d.packCost;
+                inventory[d.name] = (inventory[d.name] || 0) + PACK_QTY;
+                bought++;
+            }
+        });
+        toppingsCatalog.forEach(t => {
+            if ((inventory[t.name] || 0) < 4 && money >= t.packCost) {
+                money -= t.packCost;
+                inventory[t.name] = (inventory[t.name] || 0) + PACK_QTY;
+                bought++;
+            }
+        });
+        if (bought > 0) {
+            playSound('success');
+            persistSave();
+            renderMarketItems();
+            updateHUD();
+        } else {
+            playSound('click');
+        }
+    }
+
+    // Hỗ trợ mua khẩn cấp khi đang bán giữa ngày mà lỡ cạn 1 món trong kho
+    function ensureStockOrEmergencyBuy(itemKey, label, emergencyCost) {
+        if ((inventory[itemKey] || 0) > 0) return true;
+        if (money >= emergencyCost) {
+            money -= emergencyCost;
+            inventory[itemKey] = 3;
+            persistSave();
+            updateHUD();
+            setMessage(`🛒 Kho vừa hết ${label}! Đã gọi giao hàng hỏa tốc +3 phần (-${emergencyCost.toLocaleString('vi-VN')}đ)!`, 'warn');
+            return true;
+        } else {
+            // Trợ giá khởi nghiệp nếu hết cả tiền lẫn hàng để không bao giờ bị kẹt game
+            inventory[itemKey] = 2;
+            persistSave();
+            updateHUD();
+            setMessage(`🆘 Kho hết ${label}! Quán được hỗ trợ ứng trước +2 phần để tiếp tục bán!`, 'warn');
+            return true;
+        }
+    }
+
+    // =========================================================
+    // 8. ÂM THANH & CONFETTI
+    // =========================================================
+    let audioCtx = null;
+    function getAudioContext() {
+        if (!soundEnabled) return null;
+        if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) audioCtx = new AudioContextClass();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+    }
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem('trasua_sound', soundEnabled ? 'true' : 'false');
+        document.getElementById('sound-btn').innerText = soundEnabled ? '🔊' : '🔇';
+        if (soundEnabled) playSound('click');
+    }
+
+    function playSound(type) {
+        if (!soundEnabled) return;
+        try {
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            if (type === 'click') {
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(480, now); osc.frequency.exponentialRampToValueAtTime(760, now + 0.07);
+                gain.gain.setValueAtTime(0.11, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
+                osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.07);
+            } else if (type === 'pour_stream') {
+                const duration = 0.72;
+                const bufferSize = Math.floor(ctx.sampleRate * duration);
+                const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.45;
+                const noise = ctx.createBufferSource(); noise.buffer = noiseBuffer;
+                const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.Q.value = 3.2;
+                filter.frequency.setValueAtTime(420, now); filter.frequency.exponentialRampToValueAtTime(1250, now + duration);
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0.01, now); gain.gain.linearRampToValueAtTime(0.22, now + 0.08);
+                gain.gain.setValueAtTime(0.2, now + duration - 0.12); gain.gain.exponentialRampToValueAtTime(0.005, now + duration);
+                noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+                noise.start(now); noise.stop(now + duration);
+            } else if (type === 'scoop_pour') {
+                // Tiếng cái vá múc & trút topping rơi tõm vào ly
+                [0, 0.24, 0.34, 0.44].forEach((offset, idx) => {
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = idx === 0 ? 'triangle' : 'sine';
+                    const baseFreq = idx === 0 ? 320 : (420 + idx * 90);
+                    osc.frequency.setValueAtTime(baseFreq, now + offset);
+                    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.65, now + offset + 0.07);
+                    gain.gain.setValueAtTime(0.14, now + offset);
+                    gain.gain.exponentialRampToValueAtTime(0.008, now + offset + 0.09);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(now + offset); osc.stop(now + offset + 0.09);
+                });
+            } else if (type === 'success') {
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, now + i * 0.07);
+                    gain.gain.setValueAtTime(0.18, now + i * 0.07); gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.07 + 0.22);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(now + i * 0.07); osc.stop(now + i * 0.07 + 0.22);
+                });
+            } else if (type === 'error') {
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(190, now); osc.frequency.linearRampToValueAtTime(115, now + 0.24);
+                gain.gain.setValueAtTime(0.16, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.24);
+                osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.24);
+            } else if (type === 'reset') {
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(520, now); osc.frequency.exponentialRampToValueAtTime(200, now + 0.12);
+                gain.gain.setValueAtTime(0.14, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.12);
+            }
+        } catch (e) {}
+    }
+
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId = null;
+
+    function resizeCanvas() {
+        const container = document.getElementById('game-container');
+        if (container) { canvas.width = container.clientWidth; canvas.height = container.clientHeight; }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function launchConfetti() {
+        resizeCanvas();
+        particles = [];
+        const colors = ['#ff6b8b', '#ffd166', '#06d6a0', '#118ab2', '#a29bfe', '#fd79a8'];
+        for (let i = 0; i < 45; i++) {
+            particles.push({
+                x: canvas.width / 2 + (Math.random() - 0.5) * 240,
+                y: 220 + (Math.random() - 0.5) * 40,
+                vx: (Math.random() - 0.5) * 9,
+                vy: -Math.random() * 7 - 2,
+                size: Math.random() * 6 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 1,
+                rotation: Math.random() * Math.PI * 2,
+                vRot: (Math.random() - 0.5) * 0.22
+            });
+        }
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        updateConfetti();
+    }
+
+    function updateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let hasActive = false;
+        particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.alpha -= 0.018; p.rotation += p.vRot;
+            if (p.alpha > 0) {
+                hasActive = true; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
+                ctx.fillStyle = p.color; ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6); ctx.restore();
+            }
+        });
+        if (hasActive) animationFrameId = requestAnimationFrame(updateConfetti);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function handleImageError(imgElement) {
+        imgElement.style.display = 'none';
+        const fallbackBox = document.getElementById('avatar-fallback-box');
+        if (fallbackBox) fallbackBox.style.display = 'flex';
+    }
+
+    // =========================================================
+    // 9. TẠO ĐƠN KHÁCH HÀNG & PHA CHẾ
+    // =========================================================
+    function generateOrder() {
+        if (!dayOrdersQueue || dayOrdersQueue.length === 0) {
+            finishDay();
+            return;
+        }
+        currentOrder = dayOrdersQueue.shift();
+
+        let nextIndex;
+        do {
+            nextIndex = Math.floor(Math.random() * customerProfiles.length);
+        } while (nextIndex === lastCustomerIndex && customerProfiles.length > 1);
+        lastCustomerIndex = nextIndex;
+
+        currentCustomer = customerProfiles[nextIndex];
+        const lines = currentCustomer.getOrders(currentOrder.tea, currentOrder.size, currentOrder.topping);
+        document.getElementById('order-text').innerHTML = lines[Math.floor(Math.random() * lines.length)];
+        document.getElementById('customer-name').innerText = currentCustomer.name;
+
+        const imgElement = document.getElementById('customer-img');
+        const fallbackBox = document.getElementById('avatar-fallback-box');
+        imgElement.classList.remove('pop');
+        void imgElement.offsetWidth;
+        imgElement.style.display = 'block';
+        imgElement.src = currentCustomer.img;
+        imgElement.classList.add('pop');
+        fallbackBox.style.display = 'none';
+        fallbackBox.innerText = currentCustomer.name.slice(0, 4);
+
+        resetCup(false, true);
+        setMessage('', '');
+        setButtonsDisabled(false);
+        updateHUD();
+    }
+
+    // Ly mini đi theo chuột
+    const floatingMiniCup = document.getElementById('floating-mini-cup');
+    document.addEventListener('pointermove', (e) => {
+        if (isHoldingCup && !isPouring && e.pointerType === 'mouse') {
+            floatingMiniCup.style.left = `${e.clientX}px`;
+            floatingMiniCup.style.top = `${e.clientY}px`;
+            floatingMiniCup.style.display = 'block';
+        }
+    });
+    document.addEventListener('mouseleave', () => {
+        floatingMiniCup.style.display = 'none';
+    });
+
+    function handleCupClick() {
+        if (isServing || isPouring || isScooping) return;
+        if (!currentCup.size) {
+            playSound('error');
+            const cupBox = document.getElementById('visual-cup-box');
+            cupBox.classList.remove('cup-shake');
+            void cupBox.offsetWidth;
+            cupBox.classList.add('cup-shake');
+            setMessage('⚠️ Bạn hãy chọn Cỡ Ly (Size M hoặc L) trước rồi mới ấn vào ly nhé!', 'warn');
+            return;
+        }
+        playSound('click');
+        isHoldingCup = !isHoldingCup;
+        updateHoldStateUI();
+        setMessage(isHoldingCup ? '🧋 Cái ly đã hóa nhỏ! Hãy bấm vào 1 bình trà bên phải để hứng nước!' : '', isHoldingCup ? 'warn' : '');
+    }
+
+    function updateHoldStateUI() {
+        const cupBox = document.getElementById('visual-cup-box');
+        const hintPill = document.getElementById('cup-hint-pill');
+        const floatingSizeTxt = document.getElementById('floating-cup-size');
+
+        cupBox.classList.toggle('cup-shrunk', isHoldingCup || isPouring);
+        document.querySelectorAll('.drink-card').forEach(el => {
+            el.classList.toggle('awaiting-cup', isHoldingCup && !isPouring);
+        });
+
+        if (!isHoldingCup || isPouring) {
+            floatingMiniCup.style.display = 'none';
+        } else if (floatingSizeTxt) {
+            floatingSizeTxt.innerText = currentCup.size || 'M';
+        }
+
+        if (!currentCup.size) {
+            hintPill.style.display = 'none';
+            return;
+        }
+        hintPill.style.display = 'inline-block';
+        hintPill.classList.toggle('holding', isHoldingCup || isPouring);
+        if (isPouring) hintPill.innerText = '⏳ Đang hứng trà từ vòi vào ly nhỏ...';
+        else if (isHoldingCup) hintPill.innerText = '🧋 Ly đã hóa nhỏ! Bấm bình trà để hứng nước!';
+        else if (!currentCup.tea) hintPill.innerText = '👆 Ấn vào ly để hóa nhỏ & đi hứng trà!';
+        else hintPill.innerText = '👆 Ấn vào ly nếu muốn hứng lại vị trà khác';
+    }
+
+    function selectSize(size) {
+        if (isServing || isPouring || isScooping) return;
+        ensureStockOrEmergencyBuy('size_' + size, `Ly Size ${size}`, 10000);
+        playSound('click');
+        currentCup.size = size;
+
+        document.getElementById('btn-size-M').classList.toggle('selected', size === 'M');
+        document.getElementById('btn-size-L').classList.toggle('selected', size === 'L');
+
+        const cupBox = document.getElementById('visual-cup-box');
+        cupBox.classList.remove('size-M', 'size-L');
+        cupBox.classList.add(size === 'M' ? 'size-M' : 'size-L');
+
+        const sticker = document.getElementById('cup-size-sticker');
+        sticker.innerText = size;
+        sticker.style.display = 'block';
+
+        updateCupUI();
+        updateHoldStateUI();
+        setMessage('', '');
+    }
+
+    function selectTea(name) {
+        if (isServing || isPouring || isScooping) return;
+        if (!currentCup.size) {
+            playSound('error');
+            setMessage('⚠️ Bạn hãy chọn Cỡ Ly (Size M hoặc L) trước nhé!', 'warn');
+            return;
+        }
+        ensureStockOrEmergencyBuy(name, name, 12000);
+
+        const targetCard = Array.from(document.querySelectorAll('.drink-card'))
+            .find(el => el.getAttribute('data-drink') === name);
+        if (!targetCard) return;
+
+        isHoldingCup = false;
+        isPouring = true;
+        updateHoldStateUI();
+        playSound('pour_stream');
+
+        document.querySelectorAll('.drink-card').forEach(el => el.classList.remove('pouring-active', 'selected'));
+        targetCard.classList.add('pouring-active');
+
+        const miniLiquid = targetCard.querySelector('.mini-catch-liquid');
+        if (miniLiquid) {
+            miniLiquid.style.transition = 'none';
+            miniLiquid.style.height = '0%';
+            void miniLiquid.offsetWidth;
+            miniLiquid.style.transition = 'height 0.65s cubic-bezier(0.22, 1, 0.36, 1)';
+            miniLiquid.style.height = '78%';
+        }
+
+        setMessage(`⏳ Đang đưa ly nhỏ hứng ${name} từ vòi bình trà...`, 'warn');
+
+        if (pourTimer) clearTimeout(pourTimer);
+        pourTimer = setTimeout(() => {
+            targetCard.classList.remove('pouring-active');
+            targetCard.classList.add('selected');
+            currentCup.tea = name;
+            isPouring = false;
+
+            const cupBox = document.getElementById('visual-cup-box');
+            cupBox.classList.remove('cup-shrunk', 'cup-return');
+            void cupBox.offsetWidth;
+            cupBox.classList.add('cup-return');
+
+            updateCupUI();
+            updateHoldStateUI();
+            setMessage(`✅ Đã hứng đầy ${name}! ${currentCup.topping ? 'Sẵn sàng giao cho khách!' : 'Hãy múc thêm topping vào ly!'}`, 'success');
+        }, 760);
+    }
+
+    // MÚC TOPPING VỚI HIỆU ỨNG CÁI VÁ XÚC VÀ ĐỔ VÀO LY
+    function selectTopping(name) {
+        if (isServing || isPouring || isScooping) return;
+        if (!currentCup.size) {
+            playSound('error');
+            setMessage('⚠️ Bạn hãy chọn Cỡ Ly (Size M hoặc L) trước nhé!', 'warn');
+            return;
+        }
+        ensureStockOrEmergencyBuy(name, name, 10000);
+
+        const targetCard = Array.from(document.querySelectorAll('.topping-card'))
+            .find(el => el.getAttribute('data-topping') === name);
+        const topObj = toppingsCatalog.find(t => t.name === name);
+
+        isScooping = true;
+        playSound('scoop_pour');
+
+        // 1. Hiệu ứng cái vá xúc lên từ khay topping
+        document.querySelectorAll('.topping-card').forEach(el => el.classList.remove('scooping-active', 'selected'));
+        if (targetCard) {
+            void targetCard.offsetWidth;
+            targetCard.classList.add('scooping-active');
+        }
+
+        // 2. Hiệu ứng cái vá nghiêng trút topping từ miệng ly rơi xuống đáy ly
+        const cupLadle = document.getElementById('cup-pour-ladle');
+        const ladleFill = document.getElementById('ladle-fill-shape');
+        if (ladleFill && topObj) ladleFill.setAttribute('fill', topObj.ladleColor);
+
+        cupLadle.classList.remove('pouring');
+        void cupLadle.offsetWidth;
+        cupLadle.classList.add('pouring');
+
+        // Tạo các hạt topping rơi từ vá vào ly
+        const fallBox = document.getElementById('falling-toppings-box');
+        fallBox.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+            const bit = document.createElement('div');
+            bit.className = 'falling-bit';
+            bit.style.left = `${10 + (i % 4) * 8}px`;
+            bit.style.animationDelay = `${0.22 + i * 0.05}s`;
+            if (name === 'Trân châu đen' || name === 'Trân châu hoàng kim') {
+                bit.style.width = '9px';
+                bit.style.height = '9px';
+                bit.style.borderRadius = '50%';
+                bit.style.background = name === 'Trân châu đen' ? '#291712' : '#f59e0b';
+            } else if (name === 'Thạch dừa') {
+                bit.style.width = '10px';
+                bit.style.height = '10px';
+                bit.style.borderRadius = '2px';
+                bit.style.background = '#f8fafc';
+                bit.style.border = '1px solid #cbd5e1';
+            } else {
+                bit.style.width = '16px';
+                bit.style.height = '10px';
+                bit.style.borderRadius = '3px';
+                bit.style.background = '#fbbf24';
+                bit.style.borderTop = '3px solid #78350f';
+            }
+            fallBox.appendChild(bit);
+        }
+
+        setMessage(`🥄 Đang dùng vá múc ${name} đổ vào ly...`, 'warn');
+
+        if (scoopTimer) clearTimeout(scoopTimer);
+        scoopTimer = setTimeout(() => {
+            if (targetCard) {
+                targetCard.classList.remove('scooping-active');
+                targetCard.classList.add('selected');
+            }
+            cupLadle.classList.remove('pouring');
+            fallBox.innerHTML = '';
+            currentCup.topping = name;
+            isScooping = false;
+
+            updateCupUI();
+            setMessage(`✅ Đã đổ ${name} vào ly!`, 'success');
+        }, 680);
+    }
+
+    function renderDrinkGarnish(teaLayer, garnishType) {
+        if (!garnishType) return;
+        const points = [
+            { x: 18, y: 32, rot: '-18deg' },
+            { x: 64, y: 24, rot: '24deg' },
+            { x: 38, y: 48, rot: '12deg' },
+            { x: 24, y: 62, rot: '-28deg' },
+            { x: 66, y: 55, rot: '16deg' }
+        ];
+        points.forEach((pt, idx) => {
+            const el = document.createElement('div');
+            el.className = 'drink-garnish';
+            if (garnishType === 'tea-leaf') el.classList.add('tea-leaf-float');
+            else if (garnishType === 'melon') el.classList.add('melon-slice');
+            else if (garnishType === 'lychee') el.classList.add('lychee-orb');
+            else if (garnishType === 'pomegranate') el.classList.add('pom-seed');
+            else if (garnishType === 'passion') el.classList.add('passion-seed');
+            else if (garnishType === 'mint') el.classList.add('mint-leaf');
+            el.style.left = `${pt.x}%`;
+            el.style.top = `${pt.y}%`;
+            el.style.transform = `rotate(${pt.rot})`;
+            if (garnishType === 'pomegranate' || garnishType === 'passion') {
+                el.style.top = `${pt.y - 10 + (idx % 3) * 8}%`;
+            }
+            teaLayer.appendChild(el);
+        });
+    }
+
+    function renderToppingInsideCup(container, toppingName, hasTea) {
+        container.innerHTML = '';
+        if (!toppingName) { container.style.height = '0%'; return; }
+
+        if (toppingName === 'Bánh flan') {
+            container.style.height = '32px';
+            container.style.bottom = hasTea ? '56%' : '4%';
+            container.style.transition = 'bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+            [{ left: '16%', top: '2px', rot: '-8deg', delay: '0s' }, { left: '48%', top: '5px', rot: '7deg', delay: '0.07s' }].forEach(pos => {
+                const flan = document.createElement('div');
+                flan.className = 'flan-piece'; flan.style.left = pos.left; flan.style.top = pos.top;
+                flan.style.transform = `rotate(${pos.rot})`; flan.style.animationDelay = pos.delay;
+                const caramel = document.createElement('div'); caramel.className = 'flan-caramel';
+                const custard = document.createElement('div'); custard.className = 'flan-custard';
+                flan.appendChild(caramel); flan.appendChild(custard); container.appendChild(flan);
+            });
+            return;
+        }
+
+        container.style.bottom = '0'; container.style.height = '38%';
+        const syrup = document.createElement('div'); syrup.className = 'syrup-puddle';
+        if (toppingName === 'Trân châu đen') syrup.classList.add('syrup-black');
+        else if (toppingName === 'Trân châu hoàng kim') syrup.classList.add('syrup-gold');
+        else syrup.classList.add('syrup-coconut');
+        container.appendChild(syrup);
+
+        const itemsLayout = [
+            { x: 24, y: 4, s: 10 }, { x: 35, y: 3, s: 11 }, { x: 47, y: 4, s: 10 }, { x: 58, y: 3, s: 11 }, { x: 69, y: 5, s: 10 },
+            { x: 19, y: 14, s: 11 }, { x: 30, y: 13, s: 10 }, { x: 41, y: 15, s: 11 }, { x: 53, y: 13, s: 10 }, { x: 64, y: 14, s: 11 }, { x: 74, y: 15, s: 10 },
+            { x: 22, y: 24, s: 10 }, { x: 34, y: 25, s: 11 }, { x: 46, y: 24, s: 10 }, { x: 57, y: 26, s: 11 }, { x: 68, y: 24, s: 10 },
+            { x: 29, y: 34, s: 10 }, { x: 44, y: 35, s: 10 }, { x: 60, y: 33, s: 10 }
+        ];
+        itemsLayout.forEach((pt, idx) => {
+            const el = document.createElement('div');
+            if (toppingName === 'Trân châu đen') { el.className = 'pearl-black'; el.style.width = `${pt.s}px`; el.style.height = `${pt.s}px`; }
+            else if (toppingName === 'Trân châu hoàng kim') { el.className = 'pearl-gold'; el.style.width = `${pt.s}px`; el.style.height = `${pt.s}px`; }
+            else {
+                el.className = 'coconut-cube'; const cubeSize = pt.s + 2;
+                el.style.width = `${cubeSize}px`; el.style.height = `${cubeSize}px`;
+                el.style.transform = `rotate(${((idx * 37) % 40) - 20}deg)`;
+            }
+            el.style.left = `${pt.x}%`; el.style.bottom = `${pt.y}px`; el.style.animationDelay = `${(idx % 6) * 0.03}s`;
+            container.appendChild(el);
+        });
+    }
+
+    function updateCupUI() {
+        const statusSize = document.getElementById('status-size');
+        const statusTea = document.getElementById('status-tea');
+        const statusTopping = document.getElementById('status-topping');
+
+        statusSize.innerText = currentCup.size ? `Size ${currentCup.size}` : 'Chưa chọn size';
+        statusSize.style.color = currentCup.size ? '#2e7d32' : '#e91e63';
+        statusTea.innerText = currentCup.tea || 'Chưa rót trà';
+        statusTea.style.color = currentCup.tea ? '#2e7d32' : '#e91e63';
+        statusTopping.innerText = currentCup.topping || 'Chưa múc topping';
+        statusTopping.style.color = currentCup.topping ? '#2e7d32' : '#e91e63';
+
+        const emptyHint = document.getElementById('empty-hint');
+        const hasAny = currentCup.tea || currentCup.topping;
+        if (hasAny) {
+            emptyHint.style.display = 'none';
+        } else {
+            emptyHint.style.display = 'block';
+            emptyHint.innerText = currentCup.size ? `Ly Size ${currentCup.size} sẵn sàng` : 'Chọn size & pha chế';
+        }
+
+        document.getElementById('cup-straw').classList.toggle('visible', Boolean(hasAny));
+
+        const teaLayer = document.getElementById('cup-tea-layer');
+        teaLayer.innerHTML = '';
+        if (currentCup.tea) {
+            const drinkObj = drinksCatalog.find(d => d.name === currentCup.tea);
+            teaLayer.style.background = drinkObj ? drinkObj.gradient : '';
+            teaLayer.style.borderTop = drinkObj ? `3px solid ${drinkObj.borderTop}` : 'none';
+            teaLayer.style.height = '76%';
+
+            [{ left: '15%', top: '6%', rot: '-12deg' }, { left: '37%', top: '4%', rot: '15deg' }, { left: '57%', top: '8%', rot: '-6deg' }, { left: '72%', top: '5%', rot: '22deg' }].forEach(ice => {
+                const cube = document.createElement('div');
+                cube.className = 'ice-cube'; cube.style.left = ice.left; cube.style.top = ice.top; cube.style.setProperty('--rot', ice.rot);
+                teaLayer.appendChild(cube);
+            });
+            if (drinkObj && drinkObj.garnish) renderDrinkGarnish(teaLayer, drinkObj.garnish);
+        } else {
+            teaLayer.style.height = '0%';
+            teaLayer.style.background = 'none';
+            teaLayer.style.borderTop = 'none';
+        }
+
+        renderToppingInsideCup(document.getElementById('cup-topping-layer'), currentCup.topping, Boolean(currentCup.tea));
+    }
+
+    function resetCup(playSoundEffect = true, isNewCustomer = false) {
+        if (isServing) return;
+        if (pourTimer) { clearTimeout(pourTimer); pourTimer = null; }
+        if (scoopTimer) { clearTimeout(scoopTimer); scoopTimer = null; }
+        isPouring = false;
+        isScooping = false;
+        isHoldingCup = false;
+
+        // Nếu người chơi chủ động bấm "Đổ bỏ / Pha lại" khi đã chọn nguyên liệu
+        if (!isNewCustomer && (currentCup.size || currentCup.tea || currentCup.topping)) {
+            dayStats.resets += 1;
+            if (currentCup.size && (inventory['size_' + currentCup.size] || 0) > 0) inventory['size_' + currentCup.size] -= 1;
+            if (currentCup.tea && (inventory[currentCup.tea] || 0) > 0) inventory[currentCup.tea] -= 1;
+            if (currentCup.topping && (inventory[currentCup.topping] || 0) > 0) inventory[currentCup.topping] -= 1;
+            persistSave();
+            updateHUD();
+        }
+
+        if (playSoundEffect) playSound('reset');
+
+        currentCup = { size: '', tea: '', topping: '' };
+        document.querySelectorAll('.size-btn, .ingredient-card').forEach(el => {
+            el.classList.remove('selected', 'pouring-active', 'awaiting-cup', 'scooping-active');
+        });
+        const cupBox = document.getElementById('visual-cup-box');
+        cupBox.classList.remove('size-M', 'size-L', 'cup-shrunk', 'cup-return', 'cup-shake');
+        document.getElementById('cup-size-sticker').style.display = 'none';
+        document.getElementById('cup-pour-ladle').classList.remove('pouring');
+        document.getElementById('falling-toppings-box').innerHTML = '';
+
+        updateCupUI();
+        updateHoldStateUI();
+        if (playSoundEffect) {
+            setMessage('🗑️ Đã đổ bỏ ly cũ để pha lại!', 'warn');
+        }
+    }
+
+    function setMessage(text, type) {
+        const msg = document.getElementById('message');
+        msg.className = '';
+        msg.innerText = text;
+        if (type === 'success') msg.classList.add('msg-success');
+        if (type === 'error') msg.classList.add('msg-error');
+        if (type === 'warn') msg.classList.add('msg-warn');
+    }
+
+    function setButtonsDisabled(disabled) {
+        document.getElementById('btn-serve').disabled = disabled;
+        document.getElementById('btn-reset').disabled = disabled;
+    }
+
+    function showMoneyFloat(amountText) {
+        const container = document.getElementById('game-container');
+        const floatEl = document.createElement('div');
+        floatEl.className = 'money-float';
+        floatEl.innerText = amountText;
+        floatEl.style.left = '205px';
+        floatEl.style.top = '280px';
+        container.appendChild(floatEl);
+        setTimeout(() => floatEl.remove(), 1200);
+    }
+
+    function serveOrder() {
+        if (isServing || isPouring || isScooping) return;
+
+        if (!currentCup.size) { playSound('error'); setMessage('⚠️ Bạn chưa chọn Cỡ Ly (Size M hoặc L)!', 'warn'); return; }
+        if (!currentCup.tea) { playSound('error'); setMessage('⚠️ Bạn chưa hứng trà vào ly!', 'warn'); return; }
+        if (!currentCup.topping) { playSound('error'); setMessage('⚠️ Bạn chưa dùng vá múc Topping vào ly!', 'warn'); return; }
+
+        const isSizeCorrect = currentCup.size === currentOrder.size;
+        const isTeaCorrect = currentCup.tea === currentOrder.tea;
+        const isToppingCorrect = currentCup.topping === currentOrder.topping;
+
+        if (isSizeCorrect && isTeaCorrect && isToppingCorrect) {
+            isServing = true;
+            setButtonsDisabled(true);
+            playSound('success');
+            launchConfetti();
+
+            // Trừ kho khi giao thành công
+            if ((inventory['size_' + currentCup.size] || 0) > 0) inventory['size_' + currentCup.size] -= 1;
+            if ((inventory[currentCup.tea] || 0) > 0) inventory[currentCup.tea] -= 1;
+            if ((inventory[currentCup.topping] || 0) > 0) inventory[currentCup.topping] -= 1;
+
+            combo += 1;
+            let earned = 20000;
+            let bonusText = '';
+            if (combo >= 3) {
+                const bonus = 5000 * Math.min(combo - 2, 4);
+                earned += bonus;
+                bonusText = ` (+${bonus.toLocaleString('vi-VN')}đ tip Combo 🔥)`;
+            }
+
+            money += earned;
+            totalScore += 1;
+            dayCustomersDone += 1;
+            dayStats.served += 1;
+            dayStats.earnedToday += earned;
+            dayStats.drinksSold[currentCup.tea] = (dayStats.drinksSold[currentCup.tea] || 0) + 1;
+            dayStats.toppingsSold[currentCup.topping] = (dayStats.toppingsSold[currentCup.topping] || 0) + 1;
+
+            persistSave();
+            updateHUD();
+            showMoneyFloat(`+${earned.toLocaleString('vi-VN')}đ`);
+
+            const winQuote = currentCustomer ? currentCustomer.winMsg : 'Đúng món rồi! Cảm ơn bạn!';
+            setMessage(`✅ ${winQuote} (+${earned.toLocaleString('vi-VN')}đ${bonusText})`, 'success');
+
+            setTimeout(() => {
+                isServing = false;
+                generateOrder();
+            }, 1700);
+        } else {
+            playSound('error');
+            combo = 0;
+            dayStats.mistakes += 1;
+            updateHUD();
+
+            const errors = [];
+            if (!isSizeCorrect) errors.push(`cỡ ly (cần Size ${currentOrder.size})`);
+            if (!isTeaCorrect) errors.push(`loại trà (cần ${currentOrder.tea})`);
+            if (!isToppingCorrect) errors.push(`topping (cần ${currentOrder.topping})`);
+
+            const loseQuote = currentCustomer ? currentCustomer.loseMsg : 'Nhầm công thức rồi!';
+            setMessage(`❌ ${loseQuote} (Sai ${errors.join(', ')})`, 'error');
+        }
+    }
+
+    // Khởi tạo ban đầu
+    document.getElementById('sound-btn').innerText = soundEnabled ? '🔊' : '🔇';
+    buildShelves();
+    updateInventoryUI();
+    refreshStartScreen();
+</script>
+</body>
+</html>
