@@ -2372,7 +2372,7 @@
         </div>
         <div class="stats-bar">
             <div class="stat-pill">💰 Quỹ: <span><b id="money">0</b>đ</span></div>
-            <div class="stat-pill">👥 Khách: <b id="hud-customer-progress">0/4</b></div>
+            <div class="stat-pill">👥 Khách: <b id="hud-customer-progress">0/8</b></div>
             <div class="stat-pill">🔥 Combo: <b id="combo">0</b></div>
             <button class="top-icon-btn" onclick="openLevelMap('game')" title="Mở bản đồ chọn màn">🗺️ Màn</button>
             <button class="top-icon-btn" onclick="openMarketModal('game')" title="Đi chợ mua thêm hàng">🛒 Chợ</button>
@@ -3016,9 +3016,9 @@
     // 2. KHO NGUYÊN LIỆU & TIẾN TRÌNH THEO NGÀY (LOCALSTORAGE)
     // =========================================================
     function getDefaultInventory() {
-        const inv = { 'size_M': 8, 'size_L': 8 };
-        drinksCatalog.forEach(d => inv[d.name] = 5);
-        toppingsCatalog.forEach(t => inv[t.name] = 6);
+        const inv = { 'size_M': 10, 'size_L': 10 };
+        drinksCatalog.forEach(d => inv[d.name] = 6);
+        toppingsCatalog.forEach(t => inv[t.name] = 7);
         return inv;
     }
 
@@ -3128,86 +3128,86 @@
     function createDayConfig(dayNum) {
         const configs = {
             1: {
-                customers: 4, reward: 20000,
+                customers: 8, reward: 25000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 4, label: 'Bán cho 4 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa truyền thống', target: 2, label: 'Bán 2 ly Trà sữa truyền thống' },
+                    { id: 'm_serve', type: 'serve_count', target: 8, label: 'Bán cho 8 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa truyền thống', target: 3, label: 'Bán 3 ly Trà sữa truyền thống' },
                     { id: 'm_noerr', type: 'no_mistake', label: 'Không pha sai đơn nào' }
                 ]
             },
             2: {
-                customers: 5, reward: 25000,
+                customers: 8, reward: 30000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa matcha', target: 2, label: 'Bán 2 ly Trà sữa matcha' },
+                    { id: 'm_serve', type: 'serve_count', target: 8, label: 'Bán cho 8 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa matcha', target: 3, label: 'Bán 3 ly Trà sữa matcha' },
                     { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
                 ]
             },
             3: {
-                customers: 5, reward: 30000,
+                customers: 8, reward: 35000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 5, label: 'Bán cho 5 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà lựu đỏ', target: 2, label: 'Bán 2 ly Trà lựu đỏ' },
+                    { id: 'm_serve', type: 'serve_count', target: 8, label: 'Bán cho 8 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà lựu đỏ', target: 3, label: 'Bán 3 ly Trà lựu đỏ' },
                     { id: 'm_top', type: 'specific_topping', topping: 'Kem cheese', target: 2, label: 'Bán 2 ly có Kem cheese' }
                 ]
             },
             4: {
-                customers: 6, reward: 35000,
+                customers: 9, reward: 40000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà xoài chanh dây', target: 2, label: 'Bán 2 ly Trà xoài chanh dây' },
+                    { id: 'm_serve', type: 'serve_count', target: 9, label: 'Bán cho 9 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà xoài chanh dây', target: 3, label: 'Bán 3 ly Trà xoài chanh dây' },
                     { id: 'm_top', type: 'specific_topping', topping: 'Dâu tây sấy giòn', target: 2, label: 'Bán 2 ly Dâu tây sấy giòn' },
                     { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
                 ]
             },
             5: {
-                customers: 6, reward: 40000,
+                customers: 9, reward: 45000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa khoai môn', target: 2, label: 'Bán 2 ly Trà sữa khoai môn' },
+                    { id: 'm_serve', type: 'serve_count', target: 9, label: 'Bán cho 9 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa khoai môn', target: 3, label: 'Bán 3 ly Trà sữa khoai môn' },
                     { id: 'm_top', type: 'specific_topping', topping: 'Kem khoai môn', target: 2, label: 'Bán 2 ly có Kem khoai môn' },
                     { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
                 ]
             },
             6: {
-                customers: 6, reward: 45000,
+                customers: 9, reward: 50000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 6, label: 'Bán cho 6 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa thái đỏ', target: 2, label: 'Bán 2 ly Trà sữa thái đỏ' },
-                    { id: 'm_top', type: 'specific_topping', topping: 'Trân châu hoàng kim', target: 2, label: 'Bán 2 ly Trân châu hoàng kim' }
+                    { id: 'm_serve', type: 'serve_count', target: 9, label: 'Bán cho 9 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa thái đỏ', target: 3, label: 'Bán 3 ly Trà sữa thái đỏ' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Trân châu hoàng kim', target: 3, label: 'Bán 3 ly Trân châu hoàng kim' }
                 ]
             },
             7: {
-                customers: 7, reward: 50000,
+                customers: 9, reward: 55000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 7, label: 'Bán cho 7 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa socola', target: 2, label: 'Bán 2 ly Trà sữa socola' },
-                    { id: 'm_top', type: 'specific_topping', topping: 'Vụn Oreo', target: 2, label: 'Bán 2 ly có Vụn Oreo' },
+                    { id: 'm_serve', type: 'serve_count', target: 9, label: 'Bán cho 9 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà sữa socola', target: 3, label: 'Bán 3 ly Trà sữa socola' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Vụn Oreo', target: 3, label: 'Bán 3 ly có Vụn Oreo' },
                     { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
                 ]
             },
             8: {
-                customers: 7, reward: 55000,
+                customers: 10, reward: 60000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 7, label: 'Bán cho 7 khách' },
-                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà vải thiều', target: 2, label: 'Bán 2 ly Trà vải thiều' },
-                    { id: 'm_top', type: 'specific_topping', topping: 'Thạch cá', target: 2, label: 'Bán 2 ly có Thạch cá' },
+                    { id: 'm_serve', type: 'serve_count', target: 10, label: 'Bán cho 10 khách' },
+                    { id: 'm_drink', type: 'specific_drink', drink: 'Trà vải thiều', target: 3, label: 'Bán 3 ly Trà vải thiều' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Thạch cá', target: 3, label: 'Bán 3 ly có Thạch cá' },
                     { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
                 ]
             },
             9: {
-                customers: 8, reward: 60000,
+                customers: 10, reward: 65000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 8, label: 'Bán cho 8 khách' },
+                    { id: 'm_serve', type: 'serve_count', target: 10, label: 'Bán cho 10 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà táo bạc hà', target: 3, label: 'Bán 3 ly Trà táo bạc hà' },
-                    { id: 'm_top', type: 'specific_topping', topping: 'Bánh flan', target: 2, label: 'Bán 2 ly có Bánh flan' },
+                    { id: 'm_top', type: 'specific_topping', topping: 'Bánh flan', target: 3, label: 'Bán 3 ly có Bánh flan' },
                     { id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' }
                 ]
             },
             10: {
-                customers: 9, reward: 75000,
+                customers: 10, reward: 80000,
                 missions: [
-                    { id: 'm_serve', type: 'serve_count', target: 9, label: 'Bán cho 9 khách' },
+                    { id: 'm_serve', type: 'serve_count', target: 10, label: 'Bán cho 10 khách' },
                     { id: 'm_drink', type: 'specific_drink', drink: 'Trà Đài Loan nguyên lá', target: 3, label: 'Bán 3 ly Trà Đài Loan nguyên lá' },
                     { id: 'm_top', type: 'specific_topping', topping: 'Nho sấy giòn', target: 3, label: 'Bán 3 ly Nho sấy giòn' },
                     { id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' }
@@ -3217,17 +3217,61 @@
 
         if (configs[dayNum]) return configs[dayNum];
 
-        const totalCust = Math.min(5 + Math.floor(dayNum / 2), 9);
+        const totalCust = Math.min(8 + Math.floor(dayNum / 4), 10);
         const randDrink = drinksCatalog[(dayNum * 3) % drinksCatalog.length].name;
         const randTop = toppingsCatalog[(dayNum * 2) % toppingsCatalog.length].name;
         const missions = [
             { id: 'm_serve', type: 'serve_count', target: totalCust, label: `Bán cho ${totalCust} khách` },
-            { id: 'm_drink', type: 'specific_drink', drink: randDrink, target: 2, label: `Bán 2 ly ${randDrink}` },
-            { id: 'm_top', type: 'specific_topping', topping: randTop, target: 2, label: `Bán 2 ly có ${randTop}` }
+            { id: 'm_drink', type: 'specific_drink', drink: randDrink, target: 3, label: `Bán 3 ly ${randDrink}` },
+            { id: 'm_top', type: 'specific_topping', topping: randTop, target: 3, label: `Bán 3 ly có ${randTop}` }
         ];
         if (dayNum % 2 === 0) missions.push({ id: 'm_noreset', type: 'no_reset', label: 'Không đổ làm lại' });
         else missions.push({ id: 'm_noerr', type: 'no_mistake', label: 'Không làm sai' });
         return { customers: totalCust, reward: 30000 + dayNum * 3000, missions };
+    }
+
+    let stageCustomerPool = [];
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Chọn danh sách nhân vật không trùng lặp trong 1 màn và trộn xoay vòng qua các màn sau
+    function pickStageCustomerIndices(count, avoidFirstIdx) {
+        const total = customerProfiles.length;
+        const target = Math.min(count, total);
+        const chosen = [];
+        const chosenSet = new Set();
+
+        stageCustomerPool = stageCustomerPool.filter(idx => idx >= 0 && idx < total);
+
+        while (chosen.length < target) {
+            if (stageCustomerPool.length === 0) {
+                const fresh = [];
+                for (let i = 0; i < total; i++) {
+                    if (!chosenSet.has(i)) fresh.push(i);
+                }
+                shuffleArray(fresh);
+                stageCustomerPool = fresh;
+            }
+            const nextIdx = stageCustomerPool.pop();
+            if (!chosenSet.has(nextIdx)) {
+                chosenSet.add(nextIdx);
+                chosen.push(nextIdx);
+            }
+        }
+
+        shuffleArray(chosen);
+
+        if (chosen.length > 1 && avoidFirstIdx >= 0 && chosen[0] === avoidFirstIdx) {
+            const swapAt = 1 + Math.floor(Math.random() * (chosen.length - 1));
+            [chosen[0], chosen[swapAt]] = [chosen[swapAt], chosen[0]];
+        }
+        return chosen;
     }
 
     function buildDayOrdersQueue(config) {
@@ -3235,8 +3279,16 @@
         const drinkMission = config.missions.find(m => m.type === 'specific_drink');
         const topMission = config.missions.find(m => m.type === 'specific_topping');
 
+        // Cân bằng size M và L trong ngày (không bị dồn 1 size quá nhiều) rồi xáo trộn
+        const stageSizes = [];
+        const startWithL = Math.random() < 0.5;
         for (let i = 0; i < config.customers; i++) {
-            const size = sizes[Math.floor(Math.random() * sizes.length)];
+            stageSizes.push(sizes[(i + (startWithL ? 1 : 0)) % sizes.length]);
+        }
+        shuffleArray(stageSizes);
+
+        for (let i = 0; i < config.customers; i++) {
+            const size = stageSizes[i];
             let tea = drinksCatalog[Math.floor(Math.random() * drinksCatalog.length)].name;
             let topping = toppingsCatalog[Math.floor(Math.random() * toppingsCatalog.length)].name;
 
@@ -3250,11 +3302,12 @@
             queue.push({ size, tea, topping });
         }
 
-        // Xáo trộn thứ tự khách
-        for (let i = queue.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [queue[i], queue[j]] = [queue[j], queue[i]];
-        }
+        shuffleArray(queue);
+
+        const customerIndices = pickStageCustomerIndices(config.customers, lastCustomerIndex);
+        queue.forEach((order, i) => {
+            order.customerIndex = customerIndices[i];
+        });
         return queue;
     }
 
@@ -3712,6 +3765,8 @@
         highestUnlockedStage = 1;
         stageProgress = {};
         newlyUnlockedStage = 0;
+        stageCustomerPool = [];
+        lastCustomerIndex = -1;
         money = 40000;
         totalScore = 0;
         combo = 0;
@@ -4174,11 +4229,7 @@
         if (!Array.isArray(lines) || lines.length === 0) return '';
         let deck = customerLineDecks[customerId];
         if (!deck || deck.length === 0 || deck.some(idx => idx >= lines.length)) {
-            deck = Array.from({ length: lines.length }, (_, i) => i);
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
+            deck = shuffleArray(Array.from({ length: lines.length }, (_, i) => i));
             const lastIdx = lastSpokenLineByCustomer[customerId];
             if (deck.length > 1 && deck[deck.length - 1] === lastIdx) {
                 [deck[0], deck[deck.length - 1]] = [deck[deck.length - 1], deck[0]];
@@ -4197,10 +4248,11 @@
         }
         currentOrder = dayOrdersQueue.shift();
 
-        let nextIndex;
-        do {
-            nextIndex = Math.floor(Math.random() * customerProfiles.length);
-        } while (nextIndex === lastCustomerIndex && customerProfiles.length > 1);
+        const nextIndex = (typeof currentOrder.customerIndex === 'number'
+            && currentOrder.customerIndex >= 0
+            && currentOrder.customerIndex < customerProfiles.length)
+            ? currentOrder.customerIndex
+            : Math.floor(Math.random() * customerProfiles.length);
         lastCustomerIndex = nextIndex;
 
         const customerBox = document.getElementById('customer-box');
