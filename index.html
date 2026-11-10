@@ -781,8 +781,133 @@
             font-size: 11px;
             font-weight: 800;
         }
+        .order-ticket-board {
+            display: none;
+            width: 100%;
+            margin-top: 1px;
+        }
+        .order-ticket-board.visible {
+            display: block;
+        }
+        .multi-order-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        .multi-order-quote {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #334155;
+            line-height: 1.3;
+        }
+        .multi-order-count {
+            flex-shrink: 0;
+            background: #fce7f3;
+            color: #be185d;
+            border: 1px solid #f9a8d4;
+            border-radius: 999px;
+            padding: 1px 7px;
+            font-size: 10px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+        .multi-order-count.all-done {
+            background: #dcfce7;
+            color: #15803d;
+            border-color: #86efac;
+        }
+        .multi-order-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 5px;
+        }
+        .order-ticket-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #fff8fa;
+            border: 1.5px solid #fbcfe8;
+            border-radius: 9px;
+            padding: 4px 6px;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+        }
+        .order-ticket-chip.active {
+            border-color: #ec4899;
+            background: #fdf2f8;
+            box-shadow: 0 2px 6px rgba(236, 72, 153, 0.14);
+        }
+        .order-ticket-chip.done {
+            background: #f0fdf4;
+            border-color: #86efac;
+            opacity: 0.74;
+        }
+        .ticket-num {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #f472b6;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .order-ticket-chip.done .ticket-num {
+            background: #22c55e;
+        }
+        .ticket-info {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5px;
+        }
+        .ticket-top-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+            min-width: 0;
+        }
+        .ticket-size {
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 0 4px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            line-height: 1.35;
+        }
+        .ticket-tea {
+            color: #be185d;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.15;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .ticket-topping {
+            color: #c2410c;
+            font-size: 9.5px;
+            font-weight: 700;
+            line-height: 1.15;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .order-ticket-chip.done .ticket-tea,
+        .order-ticket-chip.done .ticket-topping {
+            text-decoration: line-through;
+            color: #15803d;
+        }
+        .ticket-state {
+            font-size: 10.5px;
+            flex-shrink: 0;
+        }
 
-        /* THANH TRẠNG THÁI CHỜ ĐỢI (20 GIÂY / KHÁCH) */
+        /* THANH TRẠNG THÁI CHỜ ĐỢI (20 GIÂY / MÓN) */
         .patience-wrap {
             width: 100%;
             display: flex;
@@ -1836,12 +1961,12 @@
             .summary-mission-item { font-size: 11.5px; }
             .market-items-grid { grid-template-columns: repeat(auto-fill, minmax(122px, 1fr)); gap: 6px; }
 
-            .top-bar { padding: 3px 8px; margin-bottom: 3px; gap: 4px; border-radius: 10px; flex-wrap: nowrap; }
-            .brand-title { font-size: 12.5px; gap: 5px; white-space: nowrap; }
-            .day-badge { font-size: 10px; padding: 1px 6px; }
-            .stats-bar { gap: 4px; flex-wrap: nowrap; }
-            .stat-pill { padding: 2px 6px; font-size: 10px; white-space: nowrap; }
-            .top-icon-btn { padding: 2px 7px; font-size: 11px; white-space: nowrap; }
+            .top-bar { padding: 3px 6px; margin-bottom: 3px; gap: 3px; border-radius: 10px; flex-wrap: nowrap; }
+            .brand-title { font-size: 11.5px; gap: 4px; white-space: nowrap; }
+            .day-badge { font-size: 9.5px; padding: 1px 5px; }
+            .stats-bar { gap: 3px; flex-wrap: nowrap; }
+            .stat-pill { padding: 2px 5px; font-size: 9.5px; white-space: nowrap; }
+            .top-icon-btn { padding: 2px 6px; font-size: 10.5px; white-space: nowrap; }
 
             .missions-strip {
                 padding: 2px 8px;
@@ -1856,41 +1981,63 @@
             .mission-chip { white-space: nowrap; flex-shrink: 0; font-size: 9.5px; padding: 1px 6px; }
 
             .main-workspace {
-                grid-template-columns: clamp(230px, 37vw, 294px) minmax(0, 1fr);
+                grid-template-columns: clamp(242px, 39vw, 300px) minmax(0, 1fr);
                 gap: 6px;
                 align-items: start;
             }
-            .left-station { padding: 5px; gap: 4px; border-radius: 12px; }
-            .customer-area { min-height: 58px; padding: 4px 6px; gap: 3px; border-radius: 10px; }
-            .customer-top-row { gap: 6px; }
-            .avatar-container { width: 42px; height: 42px; padding: 2px; border-radius: 9px; }
-            .customer-name-tag { font-size: 8px; padding: 1px 5px; max-width: 78px; }
+            .left-station {
+                padding: 4px 5px; gap: 4px; border-radius: 12px;
+                max-height: calc(100dvh - 54px);
+                overflow-y: auto;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+            }
+            .customer-area {
+                flex: 0 0 auto;
+                min-height: 50px; padding: 4px 5px; gap: 3px; border-radius: 10px;
+            }
+            .customer-top-row { gap: 5px; }
+            .avatar-container { width: 38px; height: 38px; padding: 2px; border-radius: 8px; }
+            .customer-name-tag { font-size: 8px; padding: 1px 4px; max-width: 74px; }
             .speech-bubble {
-                padding: 4px 7px;
-                font-size: 10px;
-                line-height: 1.26;
-                max-height: 48px;
+                padding: 3px 6px;
+                font-size: 9.5px;
+                line-height: 1.22;
+                max-height: 40px;
                 overflow-y: auto;
             }
+            .order-ticket-board.visible { margin-top: 1px; }
+            .multi-order-header { gap: 4px; }
+            .multi-order-quote { font-size: 9px; line-height: 1.15; }
+            .multi-order-count { font-size: 8.2px; padding: 1px 5px; }
+            .multi-order-grid { gap: 3px; }
+            .order-ticket-chip { padding: 2px 4px; gap: 3px; border-radius: 6px; }
+            .ticket-num { width: 13px; height: 13px; font-size: 8px; }
+            .ticket-size { font-size: 7.8px; padding: 0 3px; }
+            .ticket-tea { font-size: 8.5px; line-height: 1.1; }
+            .ticket-topping { font-size: 8px; line-height: 1.1; }
+            .ticket-state { font-size: 8.5px; }
             .bubble-error-detail { font-size: 9px; padding: 1px 5px; margin-top: 2px; }
             .patience-wrap { padding: 1px 5px; gap: 4px; }
-            .patience-track { height: 5.5px; }
-            .patience-label, .patience-time-badge { font-size: 9px; min-width: 24px; }
+            .patience-track { height: 5px; }
+            .patience-label, .patience-time-badge { font-size: 8.5px; min-width: 22px; }
 
-            .cup-area { padding: 4px 5px; border-radius: 10px; flex: 0 0 auto; }
+            .cup-area { padding: 3px 5px; border-radius: 10px; flex: 0 0 auto; }
             .cup-and-size-row { gap: 6px; }
-            .size-vertical-group { width: 76px; gap: 4px; }
-            .size-btn { padding: 4px 3px; font-size: 10px; border-radius: 8px; }
-            .stock-mini { font-size: 8px; padding: 0 4px; }
-            .cup-stage { height: 86px; width: 96px; margin-top: 0; }
-            .cup-coaster { width: 64px; height: 8px; }
-            .cup-visual-box.size-M { width: 58px; height: 68px; }
-            .cup-visual-box.size-L { width: 67px; height: 78px; }
-            .cup-status-text { margin-top: 2px; gap: 3px; font-size: 8.5px; }
+            .size-vertical-group { width: 72px; gap: 3px; }
+            .size-btn { padding: 3px 3px; font-size: 9.5px; border-radius: 8px; }
+            .stock-mini { font-size: 7.8px; padding: 0 4px; }
+            .cup-stage { height: 64px; width: 82px; margin-top: 0; }
+            .cup-coaster { width: 54px; height: 7px; }
+            .cup-visual-box { width: 50px; height: 56px; }
+            .cup-visual-box.size-M { width: 50px; height: 56px; }
+            .cup-visual-box.size-L { width: 57px; height: 63px; }
+            .cup-status-text { margin-top: 2px; gap: 3px; font-size: 8.2px; }
             .cup-tag { padding: 1px 4px; }
-            .cup-hint-pill { font-size: 9px; padding: 1px 6px; margin-top: 2px; }
-            .actions-group { gap: 5px; }
-            .action-btn, .reset-btn { padding: 5px 5px; font-size: 10.5px; border-radius: 9px; }
+            .cup-hint-pill { font-size: 8.5px; padding: 1px 5px; margin-top: 2px; }
+            .actions-group { gap: 4px; flex: 0 0 auto; }
+            .reset-btn { flex: 0 0 auto; padding: 5px 7px; font-size: 9px; border-radius: 8px; white-space: nowrap; }
+            .action-btn { flex: 1; min-width: 0; padding: 5px 6px; font-size: 9px; border-radius: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             #message { min-height: 16px; font-size: 9.5px; padding: 2px 6px; }
             #message:empty { display: none; min-height: 0; padding: 0; }
 
@@ -1923,6 +2070,20 @@
             .topping-scroll-row .topping-card { flex: 0 0 66px; padding: 3px 2px; }
             .card-stock-badge { font-size: 8.5px; padding: 0 4px; top: 2px; left: 3px; }
             .item-label { font-size: 8.8px; line-height: 1.12; }
+        }
+        @media (max-height: 385px) and (orientation: landscape) {
+            #game-container { padding: 4px 7px; }
+            .top-bar { padding: 2px 6px; margin-bottom: 2px; }
+            .missions-strip { padding: 1px 6px; margin-bottom: 2px; }
+            .left-station { padding: 3px 5px; gap: 3px; max-height: calc(100dvh - 46px); }
+            .customer-area { padding: 3px 5px; gap: 2px; }
+            .avatar-container { width: 34px; height: 34px; }
+            .cup-stage { height: 56px; width: 76px; }
+            .cup-visual-box, .cup-visual-box.size-M { width: 44px; height: 49px; }
+            .cup-visual-box.size-L { width: 50px; height: 55px; }
+            .cup-status-text { margin-top: 1px; font-size: 7.8px; }
+            .cup-hint-pill { font-size: 8px; margin-top: 1px; }
+            .reset-btn, .action-btn { padding: 4px 5px; font-size: 8.6px; }
         }
 
         /* Dự phòng màn hình rất hẹp hoặc đang cầm dọc */
@@ -2406,8 +2567,9 @@
                         <div id="order-text">Đang mở cửa đón khách...</div>
                     </div>
                 </div>
+                <div class="order-ticket-board" id="order-ticket-board"></div>
                 <div class="patience-wrap" id="patience-wrap">
-                    <span class="patience-label">⏳ Chờ đợi</span>
+                    <span class="patience-label" id="patience-label">⏳ Chờ đợi</span>
                     <div class="patience-track">
                         <div class="patience-fill" id="patience-fill"></div>
                     </div>
@@ -3012,13 +3174,131 @@
         }
     ];
 
+    const multiOrderOpenersByCustomer = {
+        den_vau: (qty) => [
+            `Nay anh đặt luôn ${qty} ly mang về chia cho anh em Đồng Âm cùng chill nhé em! 🎶`,
+            `Viết nhạc đông vui quá nên cho anh chốt trọn ${qty} món dưới đây luôn nè!`,
+            `Đưa nhau đi trốn mà đi đông lắm, quán pha giúp anh đủ ${qty} ly nha! 🧢`
+        ],
+        hieu_thu_hai: (qty) => [
+            `Team GERDNANG kéo qua đông quá nên chốt luôn ${qty} ly nè quán ơi! 😎`,
+            `Chấm trình quán 10 điểm nếu làm mượt hết ${qty} món này cho Hiếu nha! ✨`,
+            `Vừa quay xong 2 Ngày 1 Đêm khát quá trời, cho Hiếu ${qty} ly giải nhiệt coi!`
+        ],
+        phap_kieu: (qty) => [
+            `Xà nữ bao cả hội hôm nay nha mấy cưng! Làm thật slay đủ ${qty} ly coi nào! 💅`,
+            `Diva xuất hiện là phải chốt tận ${qty} món thế này mới keo lì tái châu nha cưng! 👑`,
+            `Đừng nhìn nữa mấy cưng, lên liền cho chị Kiều ${qty} ly cực cháy đi! ✨`
+        ],
+        truc_nhan: (qty) => [
+            `Thật bất ngờ! Hôm nay Nhân nổi hứng rinh liền ${qty} ly uống cho đã nư! 😜`,
+            `Có không giữ mất đừng tìm nha! Nhanh tay pha đủ ${qty} món cho Trúc Nhân coi nào!`,
+            `Nhân bao cả hội bạn thân nè quán ơi, chuẩn vị hết ${qty} ly giúp Nhân nha! 🎶`
+        ],
+        le_duong_bao_lam: (qty) => [
+            `Mấy bà ơi tin được hông, Lee Min Ho Đồng Nai chốt luôn ${qty} ly chấn động nè! 😂`,
+            `Diễm ơi Diễm à! Làm gấp giùm anh Lâm ${qty} món đi, cả nhà đang đợi luôn á!`,
+            `Nay chạy show có thưởng nên anh Lâm bao cả đoàn ${qty} ly luôn bà nội ơi! 🤣`
+        ],
+        cardi_B: (qty) => [
+            `Okurrr bestie! Hôm nay chị chi mạnh chốt hẳn ${qty} món cho Bardi Gang nha! 💄`,
+            `Make it quick baby! Bardi lấy trọn ${qty} ly này mang đi after-party nè! 💅`,
+            `Tiền không thành vấn đề, miễn quán pha thật luxury hết ${qty} ly này cho chị! 💰`
+        ],
+        phuong_my_chi: (qty) => [
+            `Dạ hôm nay Chị Bảy đi diễn cùng ekip nên đặt luôn ${qty} ly ngọt ngào ạ! 🇻🇳`,
+            `Chạy show Vũ trụ có anh đông vui lắm, quán làm giúp Chi đủ ${qty} món nha! ✨`,
+            `Đẩy xe bò chở hẳn ${qty} ly về khao mọi người nè, cảm ơn quán nhiều ạ!`
+        ],
+        arianna_grande: (qty) => [
+            `Yuh~ Hôm nay Ari rinh luôn ${qty} món về phòng thu cho các vũ công nhé darling! 🎶`,
+            `I want it, I got it! Làm giúp công chúa nhạc Pop trọn bộ ${qty} ly thật ngọt đi cưng! ✨`,
+            `Thank u, next... làm nhanh đủ ${qty} món dưới đây giúp Ari nha, love u~ 💖`
+        ],
+        truong_giang: (qty) => [
+            `Chào bà con! Mười Khó ghé mua liền ${qty} ly về đãi cả nhà với chị Nhã Phương nè! 🎤`,
+            `Ơn giời đúng lúc quá! Làm giùm anh Giang đủ ${qty} món chuẩn vị Quảng Nam coi!`,
+            `Nhân viên quán cơm quê đang chờ, chốt gấp giúp Mười Khó ${qty} ly nha em! 😄`
+        ],
+        chi_phien: (qty) => [
+            `Tới công chuyện rồi mấy cưng! Hôm nay hội phòng gym xả cơ đặt luôn ${qty} ly nè! 💪`,
+            `Nè mấy bà, chị Phiến bao nguyên tổ đẩy tạ ${qty} món luôn đó, pha lẹ coi! 😂`,
+            `Tập xong khát muốn xỉu cả nhóm! Quán múc gọn giúp chị Phiến đủ ${qty} ly nha! 🔥`
+        ],
+        khach3: (qty) => [
+            `Đom đóm tụ họp đông vui quá, cho Tuấn chốt luôn ${qty} ly thật cháy em ơi! ✨`,
+            `Thiên lý ơi! Anh bay từ Bến Tre lên khao anh em hẳn ${qty} món chuẩn gu nè! 😎`,
+            `Sóng gió gì cũng phải uống đủ ${qty} ly rồi mới tính tiếp nha quán ơi! 🎶`
+        ],
+        khach1: (qty) => [
+            `Cô chú ơi nhóm bạn cùng bàn cháu mới tan học ghé mua ${qty} ly luôn ạ! 🎒`,
+            `Cả tổ cháu hôm nay đều được điểm 10 nên kéo nhau đặt ${qty} món ăn mừng nè! ✨`,
+            `Cháu mua giùm mấy bạn chờ ở trạm xe buýt nữa, đủ ${qty} ly nha cô chú ơi! 🚌`
+        ],
+        khach4: (qty) => [
+            `Ting ting! Đơn nhóm GrabFood nổ một lúc ${qty} ly luôn quán ơi, làm lẹ kẻo khách hối! 🛵`,
+            `Bác tài Grab nhận đơn văn phòng gồm ${qty} món nè, quán đóng giúp anh chuẩn từng ly nha!`,
+            `Cuốc gộp ${qty} ly luôn quán ơi! Làm chuẩn để anh Ba giữ trọn 5 sao nhé! ⭐`
+        ],
+        khach5: (qty) => [
+            `Hôm nay tôi review cả menu với Bộ Tộc nên gọi liền ${qty} món lên sóng nhé các bạn! 😎`,
+            `Mấy anh em ngồi talkshow khát khô cổ rồi, cứu tôi ${qty} ly chuẩn vị hết nước chấm đi!`,
+            `Đơn này tôi khao anh em phòng stream luôn, quán pha mượt đủ ${qty} món nhé! 🎙️`
+        ],
+        khach6: (qty) => [
+            `Chào đồng chí! Tổ tuần tra ca chiều cần tiếp tế gấp ${qty} ly giải nhiệt nhé! 🫡`,
+            `Báo cáo quán, cho tôi đặt đúng quy trình ${qty} món mang về chốt trực cho anh em!`,
+            `Phường hôm nay bình yên nên chú đặt ${qty} ly khao cả tổ công tác luôn cháu ơi! 🚔`
+        ],
+        khach7: (qty) => [
+            `Con ơi hôm nay ngoại mua về chia cho mấy đứa cháu ở nhà nên lấy ${qty} ly nghen con! 👵`,
+            `Bà Năm ghé ủng hộ tiệm con luôn ${qty} món cho cả xóm cùng thưởng thức nè!`,
+            `Làm khéo giùm ngoại đủ ${qty} ly mát ruột nghen con, tụi nhỏ đang trông dữ lắm! 💖`
+        ],
+        khach8: (qty) => [
+            `Hôm nay hội bạn thân tụi em đi check-in nên đặt hẳn ${qty} ly cho đủ màu sống ảo ạ! 🎀`,
+            `Mỗi góc chụp 1 ly luôn nha anh chị! Pha thật xinh đủ ${qty} món giúp Bé Kẹo đi! 📸`,
+            `Chỉ có combo ${qty} ly lung linh này mới chữa lành hết mood tụi em hôm nay thôi ạ! 💖`
+        ],
+        khach9: (qty) => [
+            `Đơn Xanh SM Express giao cùng lúc ${qty} ly cho nhóm khách văn phòng nha quán ơi! ⚡`,
+            `Cốp xe điện rộng thênh thang luôn, quán lên đủ ${qty} món cho anh giao một lượt nhé! 🛵`,
+            `Khách đặt đơn công ty ${qty} ly đánh giá kỹ lắm đó, quán làm chuẩn từng món nha! ⭐`
+        ],
+        khach10: (qty) => [
+            `Ting ting! Khách săn Flash Sale ShopeeFood nổ hẳn ${qty} ly cùng lúc nè quán ơi! 🧡`,
+            `Đơn nhóm áp mã Freeship gồm ${qty} món đó, làm chuẩn giúp shipper áo cam nha!`,
+            `Anh Cam chờ lấy trọn ${qty} ly một lần luôn, đừng sót món nào tội anh nhé quán ơi! 🏃`
+        ],
+        be_bap: (qty) => [
+            `Mợ Ba ơi! Hôm nay Bắp gọi tới ${qty} món chia mẹ với mấy bạn luôn nè! 🥺🌽`,
+            `Mợ Ba thương Bắp hông? Pha cho Bắp đủ ${qty} ly ngọt ngọt đi mợ ơi! 💛`,
+            `Bắp ngoan lắm luôn á! Mợ Ba cho Bắp rinh ${qty} ly này về nha mợ! 🍼`
+        ],
+        em_ut: (qty) => [
+            `Chị hai ơi, nhóm bạn cấp 3 của em út mới tan học thêm ghé mua luôn ${qty} ly nè! 🥺🎀`,
+            `Năn nỉ chị hai yêu dấu pha lẹ giúp em út đủ ${qty} món đãi hội bạn cùng lớp đi mà! ✨`,
+            `Tuổi 16 đi chơi nhóm là phải chốt ${qty} ly chuẩn gu Gen Z thế này mới đỉnh nha chị hai! 📸`
+        ],
+        em_ho: (qty) => [
+            `Chị Hai ơi! Hào mua tới ${qty} ly mang về chia cả nhà với đem chút quà về quê nữa nè! 🌾`,
+            `Lên phố thăm chị Hai thích quá trời, cho Hào gọi luôn ${qty} món coi chị Hai trổ tài nha! 🥤`,
+            `Chị Hai làm giúp Hào đủ ${qty} ly nghen, cả nhà đang ngồi chờ trà sữa của chị Hai đó! 😄`
+        ],
+        thuy_trang: (qty) => [
+            `Mỹ ơi hôm nay phòng ban công ty cũ đặt nhờ tui ghé quán bà mua luôn ${qty} ly nè! 👓`,
+            `Tám chuyện tới khuya luôn bạn thân ơi, chốt trước ${qty} món dưới đây cho xôm tụ coi Mỹ! 💖`,
+            `Ê Mỹ, đồng nghiệp cũ kéo nhau ủng hộ hẳn ${qty} ly luôn đó, trổ tài cho tui tự hào coi! ☕`
+        ]
+    };
+
     // =========================================================
     // 2. KHO NGUYÊN LIỆU & TIẾN TRÌNH THEO NGÀY (LOCALSTORAGE)
     // =========================================================
     function getDefaultInventory() {
-        const inv = { 'size_M': 10, 'size_L': 10 };
-        drinksCatalog.forEach(d => inv[d.name] = 6);
-        toppingsCatalog.forEach(t => inv[t.name] = 7);
+        const inv = { 'size_M': 15, 'size_L': 15 };
+        drinksCatalog.forEach(d => inv[d.name] = 8);
+        toppingsCatalog.forEach(t => inv[t.name] = 8);
         return inv;
     }
 
@@ -3097,6 +3377,7 @@
     let dayCustomersDone = 0;
     let dayStats = {
         served: 0,
+        customersServed: 0,
         mistakes: 0,
         resets: 0,
         earnedToday: 0,
@@ -3274,40 +3555,63 @@
         return chosen;
     }
 
+    const MAX_ITEMS_PER_CUSTOMER = 4;
+
+    function pickCustomerItemCounts(dayNum, totalCustomers) {
+        const counts = [1, 2, 3, 4];
+        const extraPool = dayNum <= 2
+            ? [1, 2, 2, 3]
+            : (dayNum <= 6 ? [2, 2, 3, 3, 4] : [2, 3, 3, 4, 4]);
+        while (counts.length < totalCustomers) {
+            const pick = extraPool[Math.floor(Math.random() * extraPool.length)];
+            counts.push(Math.min(MAX_ITEMS_PER_CUSTOMER, Math.max(1, pick)));
+        }
+        return shuffleArray(counts.slice(0, totalCustomers));
+    }
+
     function buildDayOrdersQueue(config) {
-        const queue = [];
         const drinkMission = config.missions.find(m => m.type === 'specific_drink');
         const topMission = config.missions.find(m => m.type === 'specific_topping');
 
-        // Cân bằng size M và L trong ngày (không bị dồn 1 size quá nhiều) rồi xáo trộn
-        const stageSizes = [];
-        const startWithL = Math.random() < 0.5;
-        for (let i = 0; i < config.customers; i++) {
-            stageSizes.push(sizes[(i + (startWithL ? 1 : 0)) % sizes.length]);
-        }
-        shuffleArray(stageSizes);
+        const itemCounts = pickCustomerItemCounts(currentDay || 1, config.customers);
+        const totalDrinks = itemCounts.reduce((sum, n) => sum + n, 0);
 
-        for (let i = 0; i < config.customers; i++) {
-            const size = stageSizes[i];
+        // Cân bằng size M và L trên toàn bộ số ly trong màn rồi xáo trộn
+        const allSizes = [];
+        const startWithL = Math.random() < 0.5;
+        for (let i = 0; i < totalDrinks; i++) {
+            allSizes.push(sizes[(i + (startWithL ? 1 : 0)) % sizes.length]);
+        }
+        shuffleArray(allSizes);
+
+        const allItems = [];
+        for (let i = 0; i < totalDrinks; i++) {
+            const size = allSizes[i];
             let tea = drinksCatalog[Math.floor(Math.random() * drinksCatalog.length)].name;
             let topping = toppingsCatalog[Math.floor(Math.random() * toppingsCatalog.length)].name;
 
-            // Đảm bảo có đủ đơn hàng đúng loại nhiệm vụ trong ngày
+            // Đảm bảo luôn có đủ món theo nhiệm vụ trong màn
             if (drinkMission && i < drinkMission.target) {
                 tea = drinkMission.drink;
             }
-            if (topMission && i >= config.customers - topMission.target) {
+            if (topMission && i >= totalDrinks - topMission.target) {
                 topping = topMission.topping;
             }
-            queue.push({ size, tea, topping });
+            allItems.push({ size, tea, topping, done: false });
         }
-
-        shuffleArray(queue);
+        shuffleArray(allItems);
 
         const customerIndices = pickStageCustomerIndices(config.customers, lastCustomerIndex);
-        queue.forEach((order, i) => {
-            order.customerIndex = customerIndices[i];
-        });
+        const queue = [];
+        let cursor = 0;
+        for (let c = 0; c < config.customers; c++) {
+            const cnt = itemCounts[c];
+            queue.push({
+                customerIndex: customerIndices[c],
+                items: allItems.slice(cursor, cursor + cnt)
+            });
+            cursor += cnt;
+        }
         return queue;
     }
 
@@ -3422,10 +3726,11 @@
     // =========================================================
     function evaluateMission(m) {
         if (m.type === 'serve_count') {
+            const custDone = dayStats.customersServed || 0;
             return {
-                passed: dayStats.served >= m.target,
+                passed: custDone >= m.target,
                 failedNow: false,
-                progressText: `${Math.min(dayStats.served, m.target)}/${m.target}`
+                progressText: `${Math.min(custDone, m.target)}/${m.target}`
             };
         }
         if (m.type === 'specific_drink') {
@@ -3786,6 +4091,7 @@
         combo = 0;
         dayStats = {
             served: 0,
+            customersServed: 0,
             mistakes: 0,
             resets: 0,
             earnedToday: 0,
@@ -4241,12 +4547,113 @@
         return lines[pickedIdx];
     }
 
+    function getOrderItemsList(order) {
+        if (!order) return [];
+        if (Array.isArray(order.items) && order.items.length > 0) return order.items;
+        if (order.tea && order.size && order.topping) return [order];
+        return [];
+    }
+
+    function syncActiveOrderTarget() {
+        const items = getOrderItemsList(currentOrder);
+        const nextPending = items.find(it => !it.done) || items[0];
+        if (nextPending && currentOrder) {
+            currentOrder.size = nextPending.size;
+            currentOrder.tea = nextPending.tea;
+            currentOrder.topping = nextPending.topping;
+        }
+    }
+
+    function updatePatienceLabel(items) {
+        const labelEl = document.getElementById('patience-label');
+        if (!labelEl) return;
+        if (!items || items.length <= 1) {
+            labelEl.innerText = '⏳ Chờ đợi';
+            return;
+        }
+        const doneCount = items.filter(it => it.done).length;
+        const stepNum = Math.min(doneCount + 1, items.length);
+        labelEl.innerText = `⏳ Món ${stepNum}/${items.length}`;
+    }
+
+    function renderCustomerOrderBubble() {
+        const speechBubble = document.getElementById('speech-bubble');
+        const orderTextEl = document.getElementById('order-text');
+        const ticketBoardEl = document.getElementById('order-ticket-board');
+        if (!orderTextEl || !currentCustomer) return;
+
+        const items = getOrderItemsList(currentOrder);
+        if (items.length <= 1) {
+            if (speechBubble) speechBubble.classList.remove('multi-order');
+            if (ticketBoardEl) {
+                ticketBoardEl.classList.remove('visible');
+                ticketBoardEl.innerHTML = '';
+            }
+            const target = items[0] || currentOrder;
+            if (!currentOrder._singleLine) {
+                const lines = currentCustomer.getOrders(target.tea, target.size, target.topping);
+                currentOrder._singleLine = pickCustomerOrderLine(currentCustomer.id, lines);
+            }
+            orderTextEl.innerHTML = currentOrder._singleLine;
+            updatePatienceLabel(items);
+            return;
+        }
+
+        if (speechBubble) speechBubble.classList.add('multi-order');
+        if (!currentOrder._multiOpener) {
+            const openerFn = multiOrderOpenersByCustomer[currentCustomer.id];
+            const openers = openerFn
+                ? openerFn(items.length)
+                : [`Cho mình đặt một lúc ${items.length} món dưới đây nhé! 🧋`];
+            currentOrder._multiOpener = pickCustomerOrderLine(currentCustomer.id + '_multi', openers);
+        }
+
+        const doneCount = items.filter(it => it.done).length;
+        const allDone = doneCount === items.length;
+        const firstPendingIdx = items.findIndex(it => !it.done);
+
+        const cardsHtml = items.map((it, idx) => {
+            const stateCls = it.done ? 'done' : (idx === firstPendingIdx ? 'active' : '');
+            const stateIcon = it.done ? '✅' : (idx === firstPendingIdx ? '⏳' : '🥤');
+            return `
+                <div class="order-ticket-chip ${stateCls}" data-item-idx="${idx}">
+                    <span class="ticket-num">${idx + 1}</span>
+                    <div class="ticket-info">
+                        <div class="ticket-top-line">
+                            <span class="ticket-size">${it.size}</span>
+                            <span class="ticket-tea">${it.tea}</span>
+                        </div>
+                        <div class="ticket-topping">+ ${it.topping}</div>
+                    </div>
+                    <span class="ticket-state">${stateIcon}</span>
+                </div>
+            `;
+        }).join('');
+
+        const badgeText = allDone
+            ? `✅ Đủ ${items.length}/${items.length}`
+            : `🧋 ${doneCount}/${items.length} món`;
+
+        orderTextEl.innerHTML = `
+            <div class="multi-order-header">
+                <div class="multi-order-quote">${currentOrder._multiOpener}</div>
+                <span class="multi-order-count ${allDone ? 'all-done' : ''}">${badgeText}</span>
+            </div>
+        `;
+        if (ticketBoardEl) {
+            ticketBoardEl.innerHTML = `<div class="multi-order-grid">${cardsHtml}</div>`;
+            ticketBoardEl.classList.add('visible');
+        }
+        updatePatienceLabel(items);
+    }
+
     function generateOrder() {
         if (!dayOrdersQueue || dayOrdersQueue.length === 0) {
             finishDay();
             return;
         }
         currentOrder = dayOrdersQueue.shift();
+        syncActiveOrderTarget();
 
         const nextIndex = (typeof currentOrder.customerIndex === 'number'
             && currentOrder.customerIndex >= 0
@@ -4261,8 +4668,7 @@
         if (speechBubble) speechBubble.classList.remove('bubble-angry', 'bubble-happy');
 
         currentCustomer = customerProfiles[nextIndex];
-        const lines = currentCustomer.getOrders(currentOrder.tea, currentOrder.size, currentOrder.topping);
-        document.getElementById('order-text').innerHTML = pickCustomerOrderLine(currentCustomer.id, lines);
+        renderCustomerOrderBubble();
         document.getElementById('customer-name').innerText = currentCustomer.name;
 
         const imgElement = document.getElementById('customer-img');
@@ -5021,7 +5427,10 @@
         const orderTextEl = document.getElementById('order-text');
 
         if (customerBox) customerBox.classList.add('customer-angry');
-        if (speechBubble) speechBubble.classList.add('bubble-angry');
+        if (speechBubble) {
+            speechBubble.classList.remove('multi-order');
+            speechBubble.classList.add('bubble-angry');
+        }
         if (imgEl) {
             imgEl.classList.remove('pop', 'angry-leave');
             void imgEl.offsetWidth;
@@ -5029,6 +5438,11 @@
         }
         if (orderTextEl) {
             orderTextEl.innerHTML = `💢 <b>${headlineQuote}</b><br><span class="bubble-error-detail">${detailLabel}</span>`;
+        }
+        const ticketBoardEl = document.getElementById('order-ticket-board');
+        if (ticketBoardEl) {
+            ticketBoardEl.classList.remove('visible');
+            ticketBoardEl.innerHTML = '';
         }
         setMessage('', '');
 
@@ -5042,10 +5456,36 @@
 
     function handleCustomerTimeout() {
         if (isServing || isPouring || isScooping) return;
+        const items = getOrderItemsList(currentOrder);
+        const remainingCount = items.filter(it => !it.done).length;
         const timeoutQuote = (currentCustomer && currentCustomer.timeoutMsg)
             ? currentCustomer.timeoutMsg
             : 'Đợi 20 giây lâu quá rồi! Quán làm chậm quá, mình đi đây!';
-        triggerAngryDeparture(timeoutQuote, '⏰ Hết 20 giây chờ — Khách tức giận bỏ đi!');
+        const detailMsg = items.length > 1
+            ? `⏰ Hết 20 giây chờ món (còn ${remainingCount}/${items.length} ly) — Khách tức giận bỏ đi!`
+            : '⏰ Hết 20 giây chờ — Khách tức giận bỏ đi!';
+        triggerAngryDeparture(timeoutQuote, detailMsg);
+    }
+
+    function consumeCupIngredients(cup) {
+        if ((inventory['size_' + cup.size] || 0) > 0) inventory['size_' + cup.size] -= 1;
+        if ((inventory[cup.tea] || 0) > 0) inventory[cup.tea] -= 1;
+        if ((inventory[cup.topping] || 0) > 0) inventory[cup.topping] -= 1;
+    }
+
+    function findClosestPendingItem(pendingItems, cup) {
+        let best = pendingItems[0];
+        let bestScore = -1;
+        pendingItems.forEach(item => {
+            const score = (item.size === cup.size ? 1 : 0)
+                + (item.tea === cup.tea ? 1 : 0)
+                + (item.topping === cup.topping ? 1 : 0);
+            if (score > bestScore) {
+                bestScore = score;
+                best = item;
+            }
+        });
+        return best;
     }
 
     function serveOrder() {
@@ -5055,21 +5495,25 @@
         if (!currentCup.tea) { playSound('error'); setMessage('⚠️ Bạn chưa hứng trà vào ly!', 'warn'); return; }
         if (!currentCup.topping) { playSound('error'); setMessage('⚠️ Bạn chưa dùng vá múc Topping vào ly!', 'warn'); return; }
 
-        const isSizeCorrect = currentCup.size === currentOrder.size;
-        const isTeaCorrect = currentCup.tea === currentOrder.tea;
-        const isToppingCorrect = currentCup.topping === currentOrder.topping;
+        const items = getOrderItemsList(currentOrder);
+        const matchedIdx = items.findIndex(it =>
+            !it.done
+            && it.size === currentCup.size
+            && it.tea === currentCup.tea
+            && it.topping === currentCup.topping
+        );
 
-        if (isSizeCorrect && isTeaCorrect && isToppingCorrect) {
+        if (matchedIdx !== -1) {
             stopCustomerTimer();
             isServing = true;
             setButtonsDisabled(true);
             playSound('success');
-            launchConfetti();
+            consumeCupIngredients(currentCup);
 
-            // Trừ kho khi giao thành công
-            if ((inventory['size_' + currentCup.size] || 0) > 0) inventory['size_' + currentCup.size] -= 1;
-            if ((inventory[currentCup.tea] || 0) > 0) inventory[currentCup.tea] -= 1;
-            if ((inventory[currentCup.topping] || 0) > 0) inventory[currentCup.topping] -= 1;
+            items[matchedIdx].done = true;
+            const totalItemsCount = items.length;
+            const doneCount = items.filter(it => it.done).length;
+            const remainingCount = totalItemsCount - doneCount;
 
             combo += 1;
             let earned = 20000;
@@ -5082,12 +5526,48 @@
 
             money += earned;
             totalScore += 1;
-            dayCustomersDone += 1;
             dayStats.served += 1;
             dayStats.earnedToday += earned;
             dayStats.drinksSold[currentCup.tea] = (dayStats.drinksSold[currentCup.tea] || 0) + 1;
             dayStats.toppingsSold[currentCup.topping] = (dayStats.toppingsSold[currentCup.topping] || 0) + 1;
 
+            const cupBox = document.getElementById('visual-cup-box');
+            if (cupBox) {
+                cupBox.classList.remove('cup-served');
+                void cupBox.offsetWidth;
+                cupBox.classList.add('cup-served');
+            }
+
+            if (remainingCount > 0) {
+                // Khách còn món tiếp theo -> đánh dấu ✅ món vừa xong và reset bộ đếm 20s cho món kế tiếp
+                syncActiveOrderTarget();
+                renderCustomerOrderBubble();
+                persistSave();
+                updateHUD();
+                triggerOnceAnim(document.getElementById('money')?.closest('.stat-pill'), 'hud-pop', 450);
+                triggerOnceAnim(document.getElementById('combo')?.closest('.stat-pill'), 'hud-pop', 450);
+                showMoneyFloat(`+${earned.toLocaleString('vi-VN')}đ`, combo);
+                setMessage(`✅ Xong ly ${doneCount}/${totalItemsCount}! Pha tiếp ${remainingCount} món còn lại nha (+${earned.toLocaleString('vi-VN')}đ${bonusText})`, 'success');
+
+                if (serveNextTimer) clearTimeout(serveNextTimer);
+                serveNextTimer = setTimeout(() => {
+                    serveNextTimer = null;
+                    isServing = false;
+                    resetCup(false, true);
+                    setButtonsDisabled(false);
+                    startCustomerTimer();
+                }, 650);
+                return;
+            }
+
+            // Đã hoàn thành tất cả 1..4 món của khách này
+            launchConfetti();
+            dayCustomersDone += 1;
+            dayStats.customersServed = (dayStats.customersServed || 0) + 1;
+
+            if (totalItemsCount > 1) {
+                renderCustomerOrderBubble();
+            }
             persistSave();
             updateHUD();
             triggerOnceAnim(document.getElementById('money')?.closest('.stat-pill'), 'hud-pop', 450);
@@ -5097,18 +5577,12 @@
             const customerBox = document.getElementById('customer-box');
             const speechBubble = document.getElementById('speech-bubble');
             const custImg = document.getElementById('customer-img');
-            const cupBox = document.getElementById('visual-cup-box');
             if (customerBox) customerBox.classList.add('customer-happy');
             if (speechBubble) speechBubble.classList.add('bubble-happy');
             if (custImg) {
                 custImg.classList.remove('pop', 'angry-leave', 'happy-bounce');
                 void custImg.offsetWidth;
                 custImg.classList.add('happy-bounce');
-            }
-            if (cupBox) {
-                cupBox.classList.remove('cup-served');
-                void cupBox.offsetWidth;
-                cupBox.classList.add('cup-served');
             }
 
             const winQuote = currentCustomer ? currentCustomer.winMsg : 'Đúng món rồi! Cảm ơn bạn!';
@@ -5122,14 +5596,17 @@
             }, 1700);
         } else {
             // Trừ nguyên liệu của ly pha sai trước khi khách bỏ đi
-            if ((inventory['size_' + currentCup.size] || 0) > 0) inventory['size_' + currentCup.size] -= 1;
-            if ((inventory[currentCup.tea] || 0) > 0) inventory[currentCup.tea] -= 1;
-            if ((inventory[currentCup.topping] || 0) > 0) inventory[currentCup.topping] -= 1;
+            consumeCupIngredients(currentCup);
+
+            const pendingItems = items.filter(it => !it.done);
+            const refItem = pendingItems.length > 0
+                ? findClosestPendingItem(pendingItems, currentCup)
+                : currentOrder;
 
             const errors = [];
-            if (!isSizeCorrect) errors.push(`cỡ ly (cần Size ${currentOrder.size})`);
-            if (!isTeaCorrect) errors.push(`loại trà (cần ${currentOrder.tea})`);
-            if (!isToppingCorrect) errors.push(`topping (cần ${currentOrder.topping})`);
+            if (currentCup.size !== refItem.size) errors.push(`cỡ ly (cần Size ${refItem.size})`);
+            if (currentCup.tea !== refItem.tea) errors.push(`loại trà (cần ${refItem.tea})`);
+            if (currentCup.topping !== refItem.topping) errors.push(`topping (cần ${refItem.topping})`);
 
             const loseQuote = currentCustomer ? currentCustomer.loseMsg : 'Nhầm công thức rồi! Mình đi quán khác đây!';
             triggerAngryDeparture(loseQuote, `❌ Sai ${errors.join(', ')} — Khách giận bỏ đi!`);
