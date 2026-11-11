@@ -493,10 +493,32 @@
         .stat-pill.hud-pop {
             animation: hudStatPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        .stat-pill.combo-hot {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.92), rgba(239, 68, 68, 0.92));
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.65), inset 0 1px 0 rgba(255,255,255,0.45);
+            animation: comboHotPulse 0.65s ease-in-out infinite alternate;
+        }
+        @keyframes comboHotPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.07); }
+        }
         @keyframes hudStatPop {
             0% { transform: scale(1); }
             45% { transform: scale(1.16); background: rgba(255, 255, 255, 0.42); }
             100% { transform: scale(1); }
+        }
+        #game-container.fx-angry-shake {
+            animation: screenAngryShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
+        @keyframes screenAngryShake {
+            0%, 100% { transform: translateX(0); }
+            18% { transform: translateX(-6px) rotate(-0.3deg); }
+            36% { transform: translateX(5px) rotate(0.3deg); }
+            54% { transform: translateX(-4px); }
+            72% { transform: translateX(3px); }
+        }
+        #game-container.fx-happy-flash {
+            box-shadow: 0 14px 36px rgba(34, 197, 94, 0.25), 0 0 0 3px rgba(74, 222, 128, 0.45);
         }
         .stat-pill b {
             font-size: 13px;
@@ -840,7 +862,15 @@
         .order-ticket-chip.done {
             background: #f0fdf4;
             border-color: #86efac;
-            opacity: 0.74;
+            opacity: 0.78;
+        }
+        .order-ticket-chip.just-done {
+            animation: ticketCheckPop 0.46s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes ticketCheckPop {
+            0% { transform: scale(0.92); }
+            50% { transform: scale(1.08); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.28); }
+            100% { transform: scale(1); }
         }
         .ticket-num {
             width: 16px;
@@ -1148,6 +1178,15 @@
             100% { transform: scale(0.76) translate(-26px, -38px) rotate(-8deg); opacity: 0; }
         }
         .cup-visual-box.cup-shake { animation: cupShake 0.35s ease; }
+        .cup-visual-box.cup-topping-bounce {
+            animation: cupToppingSquish 0.44s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes cupToppingSquish {
+            0% { transform: scale(1, 1); }
+            32% { transform: scale(1.09, 0.91) translateY(2px); }
+            68% { transform: scale(0.96, 1.05) translateY(-3px); }
+            100% { transform: scale(1, 1) translateY(0); }
+        }
         @keyframes cupShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-6px); }
@@ -1652,25 +1691,46 @@
         /* NÚT HÀNH ĐỘNG & THÔNG BÁO */
         .actions-group { display: flex; gap: 8px; }
         button.action-btn {
+            position: relative;
+            overflow: hidden;
             flex: 2;
-            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
-            color: white; border: none; padding: 10px; font-size: 13.5px; font-weight: 800;
-            border-radius: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
-            transition: transform 0.14s ease, filter 0.18s ease, box-shadow 0.18s ease;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 45%, #16a34a 100%);
+            color: white; border: none; border-bottom: 3.5px solid #15803d;
+            padding: 9px 10px; font-size: 13.5px; font-weight: 800;
+            border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.32);
+            transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.18s ease, box-shadow 0.18s ease, border-bottom-width 0.12s ease;
         }
-        button.action-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.04); box-shadow: 0 6px 14px rgba(76, 175, 80, 0.36); }
-        button.action-btn:active:not(:disabled) { transform: scale(0.96); }
-        button.action-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+        button.action-btn::after {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -65%;
+            width: 45%;
+            height: 140%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.42), transparent);
+            transform: skewX(-22deg);
+            animation: btnShineSweep 3.2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes btnShineSweep {
+            0%, 55% { left: -65%; }
+            90%, 100% { left: 135%; }
+        }
+        button.action-btn:hover:not(:disabled) { transform: translateY(-1.5px); filter: brightness(1.04); box-shadow: 0 6px 16px rgba(34, 197, 94, 0.38); }
+        button.action-btn:active:not(:disabled) { transform: translateY(2px) scale(0.96); border-bottom-width: 1.5px; }
+        button.action-btn:disabled { background: #cbd5e1; border-bottom-color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+        button.action-btn:disabled::after { display: none; }
         button.reset-btn {
-            flex: 1; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1;
-            padding: 10px 6px; font-size: 11.5px; font-weight: 700; border-radius: 12px; cursor: pointer;
-            transition: transform 0.14s ease, background 0.18s ease;
+            flex: 1; background: #f8fafc; color: #475569; border: 1.5px solid #cbd5e1;
+            border-bottom: 3px solid #94a3b8;
+            padding: 9px 6px; font-size: 11.5px; font-weight: 700; border-radius: 12px; cursor: pointer;
+            transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.18s ease;
         }
-        button.reset-btn:hover:not(:disabled) { background: #e2e8f0; color: #1e293b; }
-        button.reset-btn:active:not(:disabled) { transform: scale(0.95); }
+        button.reset-btn:hover:not(:disabled) { background: #e2e8f0; color: #1e293b; transform: translateY(-1px); }
+        button.reset-btn:active:not(:disabled) { transform: translateY(2px) scale(0.95); }
         button.reset-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         #message {
-            text-align: center; font-weight: 700; min-height: 26px; font-size: 11px;
+            text-align: center; font-weight: 700; min-height: 24px; font-size: 11px;
             line-height: 1.3; padding: 3px 8px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
         }
@@ -1679,34 +1739,39 @@
         .msg-warn { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
 
         /* =========================================================
-           5. CỘT PHẢI: 4 HÀNG NGANG NGUYÊN LIỆU + VÒI RÓT + VÁ MÚC
+           5. CỘT PHẢI: 5 QUẦY NGUYÊN LIỆU KHÔNG TRƯỢT + VÒI RÓT + VÁ MÚC
            ========================================================= */
         .right-station {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            justify-content: space-between;
+            gap: 5px;
+            justify-content: flex-start;
             min-width: 0;
         }
         .shelf-box {
             background: #f8fafc;
             border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 6px 10px;
+            border-radius: 13px;
+            padding: 5px 8px;
         }
         .shelf-box.milk-tea-shelf { background: #fff9f2; border-color: #f3d5b5; }
         .shelf-box.pure-tea-shelf { background: #f4fbf5; border-color: #c8e6c9; }
         .shelf-box.fruit-tea-shelf { background: #fff5f7; border-color: #fecdd3; }
-        .shelf-box.topping-shelf {
-            background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
-            border: 2px solid #94a3b8;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+        .shelf-box.chewy-top-shelf {
+            background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-color: #7dd3fc;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+        }
+        .shelf-box.cream-top-shelf {
+            background: linear-gradient(180deg, #fdf4ff 0%, #fae8ff 100%);
+            border-color: #e879f9;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
         }
         .shelf-title {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 800;
             color: #334155;
-            margin: 0 0 5px 0;
+            margin: 0 0 4px 0;
             padding-left: 7px;
             border-left: 4px solid #ff6b8b;
             display: flex;
@@ -1716,62 +1781,58 @@
         .milk-tea-shelf .shelf-title { border-left-color: #d97706; color: #92400e; }
         .pure-tea-shelf .shelf-title { border-left-color: #16a34a; color: #166534; }
         .fruit-tea-shelf .shelf-title { border-left-color: #e11d48; color: #9f1239; }
-        .topping-shelf .shelf-title { border-left-color: #475569; color: #1e293b; }
+        .chewy-top-shelf .shelf-title { border-left-color: #0284c7; color: #075985; }
+        .cream-top-shelf .shelf-title { border-left-color: #c026d3; color: #86198f; }
 
-        .horizontal-row { display: flex; flex-direction: row; gap: 7px; align-items: stretch; }
-        .topping-scroll-row {
-            display: flex;
-            flex-direction: row;
-            gap: 7px;
+        .horizontal-row { display: flex; flex-direction: row; gap: 6px; align-items: stretch; }
+        .topping-grid-row {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 6px;
             align-items: stretch;
-            overflow-x: auto;
-            padding: 16px 2px 6px 2px;
-            margin-top: -12px;
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: #ff8da1 #e2e8f0;
         }
-        .topping-scroll-row::-webkit-scrollbar { height: 6px; }
-        .topping-scroll-row::-webkit-scrollbar-track { background: rgba(255,255,255,0.5); border-radius: 4px; }
-        .topping-scroll-row::-webkit-scrollbar-thumb { background: #ff8da1; border-radius: 4px; }
-        .topping-scroll-row .topping-card { flex: 0 0 84px; }
-        .scroll-nav-group { display: flex; align-items: center; gap: 4px; }
-        .scroll-nav-btn {
-            background: rgba(255,255,255,0.88);
-            border: 1px solid #94a3b8;
-            color: #334155;
-            border-radius: 8px;
-            padding: 1px 7px;
-            font-size: 11px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .scroll-nav-btn:hover { background: #ffffff; border-color: #e91e63; color: #e91e63; }
         .ingredient-card {
-            flex: 1; min-width: 0; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;
-            padding: 5px 4px; text-align: center; cursor: pointer; font-size: 11px; font-weight: 700;
-            color: #334155; transition: all 0.16s ease; position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            flex: 1; min-width: 0; background: #ffffff; border: 1.5px solid #cbd5e1; border-bottom: 3.5px solid #94a3b8; border-radius: 11px;
+            padding: 4px 3px; text-align: center; cursor: pointer; font-size: 10.5px; font-weight: 700;
+            color: #334155; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.16s ease, box-shadow 0.2s ease, background-color 0.18s ease;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .ingredient-card:hover { border-color: #ffb6c1; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(255,107,139,0.18); }
-        .ingredient-card:active { transform: scale(0.94); }
-        .size-btn:active { transform: scale(0.94); }
-        .scroll-nav-btn:active { transform: scale(0.9); }
-        .ingredient-card.selected { border-color: #e91e63; background-color: #fff0f5; color: #c2185b; box-shadow: 0 0 0 2px rgba(233,30,99,0.22); }
-        .ingredient-card.selected::after { content: '✓'; position: absolute; top: 3px; right: 6px; font-size: 11px; font-weight: 900; color: #e91e63; }
-        .ingredient-card.awaiting-cup { border-color: #f472b6; box-shadow: 0 0 0 2px rgba(244,114,182,0.28); }
+        .ingredient-card:hover { border-color: #f472b6; transform: translateY(-2.5px) scale(1.02); box-shadow: 0 6px 14px rgba(244,114,182,0.22); }
+        .ingredient-card:active { transform: translateY(2px) scale(0.93); border-bottom-width: 1.5px; }
+        .ingredient-card.just-picked { animation: cardRubberPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes cardRubberPop {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.12, 0.89); }
+            62% { transform: scale(0.95, 1.07); }
+            100% { transform: scale(1); }
+        }
+        .size-btn {
+            border-bottom-width: 3.5px;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+        .size-btn:active { transform: translateY(2px) scale(0.94); }
+        .ingredient-card.selected {
+            border-color: #e91e63; border-bottom-color: #be185d; background-color: #fff0f5; color: #c2185b;
+            box-shadow: 0 0 0 2px rgba(233,30,99,0.2), 0 4px 10px rgba(233,30,99,0.16);
+        }
+        .ingredient-card.selected::after { content: '✓'; position: absolute; top: 3px; right: 5px; font-size: 10.5px; font-weight: 900; color: #e91e63; }
+        .ingredient-card.awaiting-cup { border-color: #f472b6; border-bottom-color: #db2777; box-shadow: 0 0 0 2.5px rgba(244,114,182,0.34); animation: cardReadyGlow 0.9s ease-in-out infinite alternate; }
+        @keyframes cardReadyGlow {
+            from { box-shadow: 0 0 0 2px rgba(244,114,182,0.25); }
+            to { box-shadow: 0 0 0 4px rgba(236,72,153,0.42), 0 4px 12px rgba(236,72,153,0.24); }
+        }
         .ingredient-card.pouring-active { border-color: #e91e63; background-color: #fff5f8; box-shadow: 0 0 0 3px rgba(233,30,99,0.25); }
         .ingredient-card.out-of-stock { opacity: 0.72; border-style: dashed; border-color: #ef4444; background: #fff5f5; }
 
         .card-stock-badge {
             position: absolute;
             top: 3px;
-            left: 5px;
-            font-size: 9.5px;
+            left: 4px;
+            font-size: 9px;
             font-weight: 800;
-            padding: 1px 5px;
+            padding: 1px 4.5px;
             border-radius: 7px;
             background: #e0f2fe;
             color: #0369a1;
@@ -1782,14 +1843,14 @@
 
         /* KHUNG BÌNH Ủ TRÀ & VÒI RÓT */
         .drink-img-wrap {
-            position: relative; width: 74px; height: 74px;
+            position: relative; width: 64px; height: 58px;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-bottom: 2px;
         }
-        .img-crop-box { width: 100%; height: 56px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .img-crop-box { width: 100%; height: 47px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .drink-thumb { width: 100%; height: 100%; object-fit: cover; object-position: center; mix-blend-mode: multiply; transition: transform 0.2s ease; }
         .tap-target-glow {
-            position: absolute; top: 45px; left: 50%; transform: translate(-50%, -50%);
-            width: 17px; height: 17px; border-radius: 50%; border: 2px solid #e91e63;
+            position: absolute; top: 37px; left: 50%; transform: translate(-50%, -50%);
+            width: 16px; height: 16px; border-radius: 50%; border: 2px solid #e91e63;
             background: rgba(233,30,99,0.22); opacity: 0; pointer-events: none; z-index: 11;
         }
         .ingredient-card.awaiting-cup .tap-target-glow { opacity: 1; animation: tapPulse 0.9s ease-in-out infinite alternate; }
@@ -1798,7 +1859,7 @@
             to { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
         }
         .pour-stream {
-            position: absolute; top: 45px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 37px; left: 50%; transform: translateX(-50%);
             width: 5px; height: 0px; border-radius: 3px; opacity: 0; z-index: 15; pointer-events: none;
             transition: height 0.14s ease, opacity 0.14s ease;
             overflow: hidden;
@@ -1815,11 +1876,11 @@
             from { background-position: 0 0; }
             to { background-position: 0 16px; }
         }
-        .ingredient-card.pouring-active .pour-stream { height: 19px; opacity: 0.96; animation: streamWiggle 0.12s infinite alternate; }
+        .ingredient-card.pouring-active .pour-stream { height: 16px; opacity: 0.96; animation: streamWiggle 0.12s infinite alternate; }
         @keyframes streamWiggle { from { width: 4.5px; } to { width: 6px; } }
         .mini-catch-cup {
-            position: absolute; top: 54px; left: 50%; transform: translateX(-50%) scale(0.2);
-            width: 22px; height: 24px; background: rgba(255,255,255,0.88); border: 1.5px solid #475569;
+            position: absolute; top: 44px; left: 50%; transform: translateX(-50%) scale(0.2);
+            width: 20px; height: 21px; background: rgba(255,255,255,0.88); border: 1.5px solid #475569;
             border-top: 2px solid #64748b; border-radius: 2px 2px 7px 7px; overflow: hidden; opacity: 0; z-index: 14;
             pointer-events: none; transition: transform 0.24s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
         }
@@ -1833,7 +1894,7 @@
             to { transform: translateX(-50%) scale(1.03) translateY(1.5px); }
         }
         .mini-catch-liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.62s cubic-bezier(0.22,1,0.36,1); }
-        .splash-drop { position: absolute; top: 53px; width: 4px; height: 4px; border-radius: 50%; opacity: 0; z-index: 16; pointer-events: none; }
+        .splash-drop { position: absolute; top: 44px; width: 4px; height: 4px; border-radius: 50%; opacity: 0; z-index: 16; pointer-events: none; }
         .ingredient-card.pouring-active .splash-drop.left { left: calc(50% - 13px); animation: splashLeft 0.45s ease-out infinite; }
         .ingredient-card.pouring-active .splash-drop.right { left: calc(50% + 9px); animation: splashRight 0.45s ease-out 0.15s infinite; }
         @keyframes splashLeft { 0% { opacity: 1; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(-7px,-9px) scale(0.4); } }
@@ -1841,8 +1902,8 @@
 
         /* KHAY TOPPING + HIỆU ỨNG MÚC BẰNG VÁ */
         .topping-img-wrap {
-            position: relative; width: 72px; height: 46px;
-            display: flex; align-items: center; justify-content: center; margin-bottom: 3px;
+            position: relative; width: 60px; height: 36px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 2px;
         }
         .topping-thumb {
             width: 100%; height: 100%; object-fit: contain;
@@ -1850,11 +1911,11 @@
         }
         .tray-scoop-ladle {
             position: absolute;
-            top: 2px;
+            top: 0px;
             left: 50%;
             transform: translate(-50%, 6px) scale(0.7);
-            width: 44px;
-            height: 28px;
+            width: 40px;
+            height: 25px;
             opacity: 0;
             pointer-events: none;
             z-index: 18;
@@ -1868,7 +1929,73 @@
             75% { opacity: 1; transform: translate(-65%, -20px) rotate(-12deg) scale(1.06); }
             100% { opacity: 0; transform: translate(-85%, -34px) rotate(-25deg) scale(0.7); }
         }
-        .item-label { font-size: 10.5px; line-height: 1.2; padding: 0 2px; }
+        .item-label { font-size: 9.8px; line-height: 1.15; padding: 0 1px; }
+
+        /* MOBILE-GAME VFX: TAP RIPPLE, SPARKS, FLYING SCOOP, FIZZ BUBBLES, AVATAR REACTION */
+        .tap-ripple-ring {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2.5px solid #ec4899;
+            transform: translate(-50%, -50%) scale(0.4);
+            pointer-events: none;
+            z-index: 210;
+            animation: tapRippleExpand 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes tapRippleExpand {
+            0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.35); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(2.8); }
+        }
+        .tap-spark-particle {
+            position: absolute;
+            font-size: 12px;
+            font-weight: 900;
+            pointer-events: none;
+            z-index: 211;
+            animation: tapSparkFly 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes tapSparkFly {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 0; transform: translate(calc(-50% + var(--tx, 0px)), calc(-50% + var(--ty, -24px))) scale(1.05) rotate(var(--trot, 30deg)); }
+        }
+        .flying-scoop-orb {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22), inset 0 2px 4px rgba(255,255,255,0.65);
+            pointer-events: none;
+            z-index: 950;
+            transform: translate(-50%, -50%);
+        }
+        .cup-fizz-bubble {
+            position: absolute;
+            bottom: 8%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.35));
+            pointer-events: none;
+            z-index: 9;
+            animation: cupFizzRise 0.85s ease-out forwards;
+        }
+        @keyframes cupFizzRise {
+            0% { opacity: 0; transform: translateY(0) scale(0.4); }
+            25% { opacity: 0.9; transform: translateY(-14px) scale(1); }
+            100% { opacity: 0; transform: translateY(-64px) scale(0.65); }
+        }
+        .avatar-burst-emoji {
+            position: absolute;
+            font-size: 15px;
+            pointer-events: none;
+            z-index: 25;
+            animation: avatarReactionFloat 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes avatarReactionFloat {
+            0% { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
+            28% { opacity: 1; transform: translate(calc(-50% + var(--ax, 0px)), -16px) scale(1.18); }
+            100% { opacity: 0; transform: translate(calc(-50% + var(--ax2, 0px)), -44px) scale(0.85) rotate(var(--arot, 12deg)); }
+        }
 
         /* Floating Money & Coin Sparks Animation */
         .money-float {
@@ -1897,21 +2024,16 @@
             body { padding: 6px max(6px, env(safe-area-inset-right)) 6px max(6px, env(safe-area-inset-left)); }
             #game-container { padding: 10px 12px; min-height: auto; border-radius: 18px; }
             .main-workspace { grid-template-columns: clamp(256px, 34vw, 315px) minmax(0, 1fr); gap: 10px; }
-            .horizontal-row {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                scrollbar-width: thin;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 3px;
-            }
-            .horizontal-row .ingredient-card { flex: 1 0 64px; }
-            .drink-img-wrap { width: 58px; height: 64px; }
-            .img-crop-box { height: 50px; }
-            .tap-target-glow { top: 40px; }
-            .pour-stream { top: 40px; }
-            .mini-catch-cup { top: 44px; width: 20px; height: 22px; }
-            .topping-img-wrap { width: 58px; height: 40px; }
-            .item-label { font-size: 9.5px; }
+            .horizontal-row { gap: 5px; }
+            .horizontal-row .ingredient-card { flex: 1 1 0; min-width: 0; }
+            .topping-grid-row { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+            .drink-img-wrap { width: 52px; height: 54px; }
+            .img-crop-box { height: 42px; }
+            .tap-target-glow { top: 34px; }
+            .pour-stream { top: 34px; }
+            .mini-catch-cup { top: 38px; width: 18px; height: 20px; }
+            .topping-img-wrap { width: 50px; height: 34px; }
+            .item-label { font-size: 9px; }
         }
 
         /* Màn hình ngang thấp (Laptop 1366x600 / Điện thoại xoay ngang 640x360 -> 932x430) */
@@ -2036,54 +2158,58 @@
             .cup-tag { padding: 1px 4px; }
             .cup-hint-pill { font-size: 8.5px; padding: 1px 5px; margin-top: 2px; }
             .actions-group { gap: 4px; flex: 0 0 auto; }
-            .reset-btn { flex: 0 0 auto; padding: 5px 7px; font-size: 9px; border-radius: 8px; white-space: nowrap; }
-            .action-btn { flex: 1; min-width: 0; padding: 5px 6px; font-size: 9px; border-radius: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .reset-btn { flex: 0 0 auto; max-width: 68px; white-space: normal; line-height: 1.08; padding: 3px 5px; font-size: 8px; border-radius: 8px; text-align: center; }
+            .action-btn { flex: 1; min-width: 0; padding: 5px 5px; font-size: 9px; border-radius: 8px; white-space: nowrap; }
             #message { min-height: 16px; font-size: 9.5px; padding: 2px 6px; }
             #message:empty { display: none; min-height: 0; padding: 0; }
 
             .right-station {
-                gap: 4px;
-                justify-content: flex-start;
-                max-height: calc(100dvh - 68px);
+                display: grid;
+                grid-template-columns: minmax(0, 2.08fr) minmax(0, 4fr);
+                gap: 3px;
+                align-content: start;
+                max-height: calc(100dvh - 52px);
                 overflow-y: auto;
-                padding-right: 2px;
+                padding-right: 1px;
                 -webkit-overflow-scrolling: touch;
             }
-            .shelf-box { padding: 4px 7px; border-radius: 10px; flex-shrink: 0; }
-            .shelf-title { font-size: 10px; margin-bottom: 3px; }
-            .horizontal-row {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                gap: 5px;
-                padding-bottom: 2px;
-                -webkit-overflow-scrolling: touch;
+            .shelf-box.milk-tea-shelf,
+            .shelf-box.chewy-top-shelf,
+            .shelf-box.cream-top-shelf {
+                grid-column: 1 / -1;
             }
-            .horizontal-row .ingredient-card { flex: 1 0 58px; padding: 3px 2px; border-radius: 9px; }
-            .drink-img-wrap { width: 42px; height: 46px; margin-bottom: 1px; }
-            .img-crop-box { height: 36px; }
-            .tap-target-glow { top: 28px; width: 12px; height: 12px; }
-            .pour-stream { top: 28px; }
-            .ingredient-card.pouring-active .pour-stream { height: 13px; }
-            .mini-catch-cup { top: 32px; width: 15px; height: 17px; }
-            .topping-img-wrap { width: 44px; height: 28px; margin-bottom: 1px; }
-            .topping-scroll-row { gap: 5px; padding: 11px 2px 4px 2px; margin-top: -8px; }
-            .topping-scroll-row .topping-card { flex: 0 0 66px; padding: 3px 2px; }
-            .card-stock-badge { font-size: 8.5px; padding: 0 4px; top: 2px; left: 3px; }
-            .item-label { font-size: 8.8px; line-height: 1.12; }
+            .shelf-box { padding: 3px 5px; border-radius: 9px; min-width: 0; }
+            .shelf-title { font-size: 8.6px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .horizontal-row { gap: 3.5px; }
+            .horizontal-row .ingredient-card { flex: 1 1 0; min-width: 0; padding: 2.5px 2px; border-radius: 8px; }
+            .topping-grid-row { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3.5px; }
+            .topping-grid-row .topping-card { min-width: 0; padding: 2.5px 2px; border-radius: 8px; }
+            .drink-img-wrap { width: 34px; height: 34px; margin-bottom: 1px; }
+            .img-crop-box { height: 28px; }
+            .tap-target-glow { top: 22px; width: 11px; height: 11px; }
+            .pour-stream { top: 22px; }
+            .ingredient-card.pouring-active .pour-stream { height: 10px; }
+            .mini-catch-cup { top: 25px; width: 12px; height: 14px; }
+            .splash-drop { top: 25px; }
+            .topping-img-wrap { width: 34px; height: 22px; margin-bottom: 1px; }
+            .tray-scoop-ladle { width: 30px; height: 18px; }
+            .card-stock-badge { font-size: 7.5px; padding: 0 3px; top: 1.5px; left: 2px; }
+            .item-label { font-size: 7.7px; line-height: 1.05; word-break: break-word; }
         }
         @media (max-height: 385px) and (orientation: landscape) {
             #game-container { padding: 4px 7px; }
             .top-bar { padding: 2px 6px; margin-bottom: 2px; }
             .missions-strip { padding: 1px 6px; margin-bottom: 2px; }
-            .left-station { padding: 3px 5px; gap: 3px; max-height: calc(100dvh - 46px); }
+            .left-station { padding: 3px 5px; gap: 2px; max-height: calc(100dvh - 44px); }
             .customer-area { padding: 3px 5px; gap: 2px; }
-            .avatar-container { width: 34px; height: 34px; }
-            .cup-stage { height: 56px; width: 76px; }
-            .cup-visual-box, .cup-visual-box.size-M { width: 44px; height: 49px; }
-            .cup-visual-box.size-L { width: 50px; height: 55px; }
+            .avatar-container { width: 32px; height: 32px; }
+            .cup-stage { height: 48px; width: 72px; }
+            .cup-visual-box, .cup-visual-box.size-M { width: 42px; height: 44px; }
+            .cup-visual-box.size-L { width: 48px; height: 48px; }
             .cup-status-text { margin-top: 1px; font-size: 7.8px; }
-            .cup-hint-pill { font-size: 8px; margin-top: 1px; }
-            .reset-btn, .action-btn { padding: 4px 5px; font-size: 8.6px; }
+            .cup-hint-pill { font-size: 7.8px; margin-top: 1px; }
+            .reset-btn { padding: 3px 4px; font-size: 7.5px; }
+            .action-btn { padding: 4px 4px; font-size: 8px; letter-spacing: -0.25px; }
         }
 
         /* Dự phòng màn hình rất hẹp hoặc đang cầm dọc */
@@ -2092,8 +2218,9 @@
             #game-container { padding: 8px; min-height: auto; border-radius: 14px; overflow: visible; }
             .overlay-screen { position: fixed; inset: 0; z-index: 250; padding: 10px; align-items: flex-start; }
             .main-workspace { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-            .horizontal-row { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
-            .ingredient-card { flex: 0 0 82px; }
+            .horizontal-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+            .topping-grid-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+            .ingredient-card { flex: unset; min-width: 0; }
         }
         /* BẢN ĐỒ MÀN CHƠI (STAGE MAP + 3 SAO + MỞ KHÓA TUẦN TỰ) */
         .map-modal-card {
@@ -2682,7 +2809,7 @@
             <div id="message"></div>
         </div>
 
-        <!-- CỘT PHẢI: 4 HÀNG NGANG NGUYÊN LIỆU -->
+        <!-- CỘT PHẢI: 5 QUẦY NGUYÊN LIỆU SẮP XẾP SẴN TRÊN MÀN HÌNH -->
         <div class="right-station">
             <div class="shelf-box milk-tea-shelf">
                 <div class="shelf-title"><span>🧋 Quầy Trà Sữa Béo Ngậy (5 vị)</span></div>
@@ -2699,15 +2826,14 @@
                 <div class="horizontal-row" id="row-fruit-tea"></div>
             </div>
 
-            <div class="shelf-box topping-shelf">
-                <div class="shelf-title">
-                    <span>🥣 Khay Topping Thẳng Hàng (12 món — Múc bằng vá)</span>
-                    <div class="scroll-nav-group">
-                        <button type="button" class="scroll-nav-btn" onclick="scrollToppings(-1)" title="Trượt sang trái">◀</button>
-                        <button type="button" class="scroll-nav-btn" onclick="scrollToppings(1)" title="Trượt sang phải">▶</button>
-                    </div>
-                </div>
-                <div class="topping-scroll-row" id="row-topping"></div>
+            <div class="shelf-box chewy-top-shelf">
+                <div class="shelf-title"><span>🫧 Quầy Trân Châu, Thạch &amp; Flan (6 món — Múc bằng vá)</span></div>
+                <div class="topping-grid-row" id="row-topping-chewy"></div>
+            </div>
+
+            <div class="shelf-box cream-top-shelf">
+                <div class="shelf-title"><span>🧀 Quầy Kem Phủ, Oreo &amp; Trái Cây Sấy (6 món — Múc bằng vá)</span></div>
+                <div class="topping-grid-row" id="row-topping-cream"></div>
             </div>
         </div>
     </div>
@@ -2735,18 +2861,18 @@
     ];
 
     const toppingsCatalog = [
-        { name: 'Trân châu hoàng kim', shortName: 'Trân Châu Hoàng Kim', img: 'tranchau.png', ladleColor: '#f59e0b', packCost: 10000 },
-        { name: 'Trân châu đen', shortName: 'Trân Châu Đen', img: 'tran_chau_den.png', ladleColor: '#291712', packCost: 10000 },
-        { name: 'Trân châu trắng', shortName: 'Trân Châu Trắng', img: 'tran_chau_trang.png', ladleColor: '#e2e8f0', packCost: 11000 },
-        { name: 'Thạch dừa', shortName: 'Thạch Dừa', img: 'thach_dua.png', ladleColor: '#f1f5f9', packCost: 10000 },
-        { name: 'Thạch cá', shortName: 'Thạch Cá', img: 'thach_ca.png', ladleColor: '#0ea5e9', packCost: 12000 },
-        { name: 'Bánh flan', shortName: 'Bánh Flan', img: 'banh_flan.png', ladleColor: '#fbbf24', packCost: 12000 },
-        { name: 'Kem cheese', shortName: 'Kem Cheese', img: 'kem_chese.png', ladleColor: '#fef3c7', packCost: 14000 },
-        { name: 'Kem khoai môn', shortName: 'Kem Khoai Môn', img: 'kem_khoai_mon.png', ladleColor: '#c084fc', packCost: 14000 },
-        { name: 'Vụn Oreo', shortName: 'Vụn Oreo', img: 'vun_oreo.png', ladleColor: '#292524', packCost: 13000 },
-        { name: 'Dâu tây sấy giòn', shortName: 'Dâu Tây Sấy Giòn', img: 'dau_tay_say_gion.png', ladleColor: '#e11d48', packCost: 15000 },
-        { name: 'Nho sấy giòn', shortName: 'Nho Sấy Giòn', img: 'nho_say_gion.png', ladleColor: '#7e22ce', packCost: 15000 },
-        { name: 'Táo sấy giòn', shortName: 'Táo Sấy Giòn', img: 'tao_say_gion.png', ladleColor: '#fde68a', packCost: 15000 }
+        { name: 'Trân châu hoàng kim', shortName: 'Trân Châu Hoàng Kim', category: 'chewy', img: 'tranchau.png', ladleColor: '#f59e0b', packCost: 10000 },
+        { name: 'Trân châu đen', shortName: 'Trân Châu Đen', category: 'chewy', img: 'tran_chau_den.png', ladleColor: '#291712', packCost: 10000 },
+        { name: 'Trân châu trắng', shortName: 'Trân Châu Trắng', category: 'chewy', img: 'tran_chau_trang.png', ladleColor: '#e2e8f0', packCost: 11000 },
+        { name: 'Thạch dừa', shortName: 'Thạch Dừa', category: 'chewy', img: 'thach_dua.png', ladleColor: '#f1f5f9', packCost: 10000 },
+        { name: 'Thạch cá', shortName: 'Thạch Cá', category: 'chewy', img: 'thach_ca.png', ladleColor: '#0ea5e9', packCost: 12000 },
+        { name: 'Bánh flan', shortName: 'Bánh Flan', category: 'chewy', img: 'banh_flan.png', ladleColor: '#fbbf24', packCost: 12000 },
+        { name: 'Kem cheese', shortName: 'Kem Cheese', category: 'cream', img: 'kem_chese.png', ladleColor: '#fef3c7', packCost: 14000 },
+        { name: 'Kem khoai môn', shortName: 'Kem Khoai Môn', category: 'cream', img: 'kem_khoai_mon.png', ladleColor: '#c084fc', packCost: 14000 },
+        { name: 'Vụn Oreo', shortName: 'Vụn Oreo', category: 'cream', img: 'vun_oreo.png', ladleColor: '#292524', packCost: 13000 },
+        { name: 'Dâu tây sấy giòn', shortName: 'Dâu Tây Sấy Giòn', category: 'cream', img: 'dau_tay_say_gion.png', ladleColor: '#e11d48', packCost: 15000 },
+        { name: 'Nho sấy giòn', shortName: 'Nho Sấy Giòn', category: 'cream', img: 'nho_say_gion.png', ladleColor: '#7e22ce', packCost: 15000 },
+        { name: 'Táo sấy giòn', shortName: 'Táo Sấy Giòn', category: 'cream', img: 'tao_say_gion.png', ladleColor: '#fde68a', packCost: 15000 }
     ];
 
     const sizes = ['M', 'L'];
@@ -3622,12 +3748,14 @@
         const milkRow = document.getElementById('row-milk-tea');
         const pureRow = document.getElementById('row-pure-tea');
         const fruitRow = document.getElementById('row-fruit-tea');
-        const toppingRow = document.getElementById('row-topping');
+        const chewyTopRow = document.getElementById('row-topping-chewy');
+        const creamTopRow = document.getElementById('row-topping-cream');
 
         milkRow.innerHTML = '';
         pureRow.innerHTML = '';
         fruitRow.innerHTML = '';
-        toppingRow.innerHTML = '';
+        chewyTopRow.innerHTML = '';
+        creamTopRow.innerHTML = '';
 
         drinksCatalog.forEach(drink => {
             const card = document.createElement('div');
@@ -3668,7 +3796,7 @@
                 <div class="topping-img-wrap">
                     <img src="${top.img}" alt="${top.name}" class="topping-thumb">
                     <div class="tray-scoop-ladle">
-                        <svg viewBox="0 0 50 30" width="44" height="28">
+                        <svg viewBox="0 0 50 30" width="40" height="25">
                             <rect x="22" y="4" width="25" height="4" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
                             <path d="M 3 10 Q 3 25 14 25 Q 25 25 25 10 Z" fill="#cbd5e1" stroke="#475569" stroke-width="1.3"/>
                             <ellipse cx="14" cy="11" rx="8" ry="4" fill="${top.ladleColor}"/>
@@ -3677,7 +3805,8 @@
                 </div>
                 <span class="item-label">${top.shortName}</span>
             `;
-            toppingRow.appendChild(card);
+            if (top.category === 'chewy') chewyTopRow.appendChild(card);
+            else creamTopRow.appendChild(card);
         });
     }
 
@@ -3794,7 +3923,10 @@
     function updateHUD() {
         document.getElementById('hud-day-badge').innerText = `📅 Màn ${currentDay}`;
         document.getElementById('money').innerText = money.toLocaleString('vi-VN');
-        document.getElementById('combo').innerText = combo;
+        const comboEl = document.getElementById('combo');
+        comboEl.innerText = combo;
+        const comboPill = comboEl.closest('.stat-pill');
+        if (comboPill) comboPill.classList.toggle('combo-hot', combo >= 3);
         if (dayPlan) {
             document.getElementById('hud-customer-progress').innerText = `${dayCustomersDone}/${dayPlan.customers}`;
         }
@@ -4483,21 +4615,24 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    function launchConfetti() {
+    function launchConfetti(burstCount = 56) {
         resizeCanvas();
         particles = [];
-        const colors = ['#ff6b8b', '#ffd166', '#06d6a0', '#118ab2', '#a29bfe', '#fd79a8'];
-        for (let i = 0; i < 45; i++) {
+        const colors = ['#ff6b8b', '#ffd166', '#06d6a0', '#118ab2', '#a29bfe', '#fd79a8', '#f59e0b'];
+        const origins = [canvas.width * 0.28, canvas.width * 0.72];
+        for (let i = 0; i < burstCount; i++) {
+            const originX = origins[i % 2];
             particles.push({
-                x: canvas.width / 2 + (Math.random() - 0.5) * 240,
-                y: 220 + (Math.random() - 0.5) * 40,
-                vx: (Math.random() - 0.5) * 9,
-                vy: -Math.random() * 7 - 2,
-                size: Math.random() * 6 + 4,
+                x: originX + (Math.random() - 0.5) * 80,
+                y: canvas.height * 0.42 + (Math.random() - 0.5) * 35,
+                vx: (Math.random() - 0.5) * 11,
+                vy: -Math.random() * 8.5 - 2.2,
+                size: Math.random() * 6.5 + 4,
                 color: colors[Math.floor(Math.random() * colors.length)],
+                shape: i % 3 === 0 ? 'circle' : 'rect',
                 alpha: 1,
                 rotation: Math.random() * Math.PI * 2,
-                vRot: (Math.random() - 0.5) * 0.22
+                vRot: (Math.random() - 0.5) * 0.26
             });
         }
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -4508,11 +4643,27 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         let hasActive = false;
         particles.forEach(p => {
-            p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.alpha -= 0.018; p.rotation += p.vRot;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.99;
+            p.vy += 0.24;
+            p.alpha -= 0.017;
+            p.rotation += p.vRot;
             if (p.alpha > 0) {
-                hasActive = true; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
-                ctx.fillStyle = p.color; ctx.globalAlpha = Math.max(0, p.alpha);
-                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6); ctx.restore();
+                hasActive = true;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                if (p.shape === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size * 0.48, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.58);
+                }
+                ctx.restore();
             }
         });
         if (hasActive) animationFrameId = requestAnimationFrame(updateConfetti);
@@ -4749,14 +4900,131 @@
         else hintPill.innerText = '👆 Ấn vào ly nếu muốn hứng lại vị trà khác';
     }
 
+    function spawnTapBurst(targetEl, accentColor = '#ec4899', symbols = ['✨', '💧']) {
+        const container = document.getElementById('game-container');
+        if (!container || !targetEl) return;
+        const cRect = container.getBoundingClientRect();
+        const tRect = targetEl.getBoundingClientRect();
+        if (!tRect.width || !cRect.width) return;
+
+        const cx = tRect.left - cRect.left + tRect.width / 2;
+        const cy = tRect.top - cRect.top + tRect.height / 2;
+
+        const ring = document.createElement('div');
+        ring.className = 'tap-ripple-ring';
+        ring.style.borderColor = accentColor;
+        ring.style.left = `${cx}px`;
+        ring.style.top = `${cy}px`;
+        container.appendChild(ring);
+        setTimeout(() => ring.remove(), 460);
+
+        const offsets = [
+            { x: '-18px', y: '-18px', r: '-25deg' },
+            { x: '18px', y: '-16px', r: '30deg' },
+            { x: '-14px', y: '14px', r: '18deg' },
+            { x: '16px', y: '14px', r: '-20deg' }
+        ];
+        offsets.forEach((off, idx) => {
+            const sp = document.createElement('div');
+            sp.className = 'tap-spark-particle';
+            sp.innerText = symbols[idx % symbols.length];
+            sp.style.color = accentColor;
+            sp.style.left = `${cx}px`;
+            sp.style.top = `${cy}px`;
+            sp.style.setProperty('--tx', off.x);
+            sp.style.setProperty('--ty', off.y);
+            sp.style.setProperty('--trot', off.r);
+            container.appendChild(sp);
+            setTimeout(() => sp.remove(), 600);
+        });
+    }
+
+    function launchFlyingTopping(fromCard, orbColor) {
+        const cupBox = document.getElementById('visual-cup-box');
+        if (!fromCard || !cupBox) return;
+        const rFrom = fromCard.getBoundingClientRect();
+        const rTo = cupBox.getBoundingClientRect();
+        if (!rFrom.width || !rTo.width) return;
+
+        const startX = rFrom.left + rFrom.width / 2;
+        const startY = rFrom.top + rFrom.height * 0.35;
+        const endX = rTo.left + rTo.width / 2;
+        const endY = rTo.top + 4;
+        const peakY = Math.min(startY, endY) - 46;
+
+        const orb = document.createElement('div');
+        orb.className = 'flying-scoop-orb';
+        orb.style.left = `${startX}px`;
+        orb.style.top = `${startY}px`;
+        orb.style.background = `radial-gradient(circle at 35% 30%, #ffffff 0%, ${orbColor || '#f59e0b'} 65%)`;
+        document.body.appendChild(orb);
+
+        if (typeof orb.animate === 'function') {
+            const anim = orb.animate([
+                { left: `${startX}px`, top: `${startY}px`, transform: 'translate(-50%, -50%) scale(0.7)', opacity: 0.95 },
+                { left: `${(startX + endX) / 2}px`, top: `${peakY}px`, transform: 'translate(-50%, -50%) scale(1.22)', opacity: 1 },
+                { left: `${endX}px`, top: `${endY}px`, transform: 'translate(-50%, -50%) scale(0.55)', opacity: 0 }
+            ], { duration: 360, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
+            anim.onfinish = () => orb.remove();
+        } else {
+            setTimeout(() => orb.remove(), 360);
+        }
+    }
+
+    function spawnCupFizzBubbles(count = 6) {
+        const teaLayer = document.getElementById('cup-tea-layer');
+        if (!teaLayer) return;
+        for (let i = 0; i < count; i++) {
+            const b = document.createElement('div');
+            b.className = 'cup-fizz-bubble';
+            const size = 4 + (i % 3) * 2.5;
+            b.style.width = `${size}px`;
+            b.style.height = `${size}px`;
+            b.style.left = `${14 + ((i * 15) % 72)}%`;
+            b.style.animationDelay = `${i * 0.06}s`;
+            teaLayer.appendChild(b);
+            setTimeout(() => b.remove(), 950);
+        }
+    }
+
+    function spawnAvatarReaction(kind = 'happy') {
+        const avatarBox = document.querySelector('#customer-box .avatar-container');
+        if (!avatarBox) return;
+        const icons = kind === 'angry'
+            ? ['💢', '💨', '😤', '⚡']
+            : ['💖', '⭐', '✨', '🧋'];
+        const paths = [
+            { x1: '-14px', x2: '-26px', rot: '-22deg', d: '0s' },
+            { x1: '14px', x2: '26px', rot: '22deg', d: '0.08s' },
+            { x1: '-4px', x2: '-10px', rot: '14deg', d: '0.16s' },
+            { x1: '8px', x2: '16px', rot: '-16deg', d: '0.24s' }
+        ];
+        paths.forEach((p, idx) => {
+            const el = document.createElement('div');
+            el.className = 'avatar-burst-emoji';
+            el.innerText = icons[idx % icons.length];
+            el.style.left = '50%';
+            el.style.top = '15%';
+            el.style.setProperty('--ax', p.x1);
+            el.style.setProperty('--ax2', p.x2);
+            el.style.setProperty('--arot', p.rot);
+            el.style.animationDelay = p.d;
+            avatarBox.appendChild(el);
+            setTimeout(() => el.remove(), 1100);
+        });
+    }
+
     function selectSize(size) {
         if (isServing || isPouring || isScooping) return;
         ensureStockOrEmergencyBuy('size_' + size, `Ly Size ${size}`, 10000);
         playSound('click');
         currentCup.size = size;
 
-        document.getElementById('btn-size-M').classList.toggle('selected', size === 'M');
-        document.getElementById('btn-size-L').classList.toggle('selected', size === 'L');
+        const btnM = document.getElementById('btn-size-M');
+        const btnL = document.getElementById('btn-size-L');
+        btnM.classList.toggle('selected', size === 'M');
+        btnL.classList.toggle('selected', size === 'L');
+        spawnTapBurst(size === 'M' ? btnM : btnL, '#ec4899', ['✨', '🥤']);
 
         const cupBox = document.getElementById('visual-cup-box');
         cupBox.classList.remove('size-M', 'size-L');
@@ -4776,6 +5044,7 @@
         if (isServing || isPouring || isScooping) return;
         if (!currentCup.size) {
             playSound('error');
+            triggerOnceAnim(document.getElementById('visual-cup-box'), 'cup-shake', 360);
             setMessage('⚠️ Bạn hãy chọn Cỡ Ly (Size M hoặc L) trước nhé!', 'warn');
             return;
         }
@@ -4783,12 +5052,15 @@
 
         const targetCard = Array.from(document.querySelectorAll('.drink-card'))
             .find(el => el.getAttribute('data-drink') === name);
+        const drinkObj = drinksCatalog.find(d => d.name === name);
         if (!targetCard) return;
 
         isHoldingCup = false;
         isPouring = true;
         updateHoldStateUI();
         playSound('pour_stream');
+        spawnTapBurst(targetCard, drinkObj ? drinkObj.streamColor : '#ec4899', ['💧', '✨']);
+        triggerOnceAnim(targetCard, 'just-picked', 420);
 
         document.querySelectorAll('.drink-card').forEach(el => el.classList.remove('pouring-active', 'selected'));
         targetCard.classList.add('pouring-active');
@@ -4818,14 +5090,11 @@
 
             updateCupUI();
             triggerOnceAnim(document.getElementById('cup-tea-layer'), 'tea-slosh', 580);
+            spawnCupFizzBubbles(6);
+            spawnTapBurst(cupBox, drinkObj ? drinkObj.streamColor : '#e91e63', ['🧋', '✨']);
             updateHoldStateUI();
             setMessage(`✅ Đã hứng đầy ${name}! ${currentCup.topping ? 'Sẵn sàng giao cho khách!' : 'Hãy múc thêm topping vào ly!'}`, 'success');
         }, 760);
-    }
-
-    function scrollToppings(dir) {
-        const row = document.getElementById('row-topping');
-        if (row) row.scrollBy({ left: dir * 240, behavior: 'smooth' });
     }
 
     // MÚC TOPPING VỚI HIỆU ỨNG CÁI VÁ XÚC VÀ ĐỔ VÀO LY
@@ -4833,6 +5102,7 @@
         if (isServing || isPouring || isScooping) return;
         if (!currentCup.size) {
             playSound('error');
+            triggerOnceAnim(document.getElementById('visual-cup-box'), 'cup-shake', 360);
             setMessage('⚠️ Bạn hãy chọn Cỡ Ly (Size M hoặc L) trước nhé!', 'warn');
             return;
         }
@@ -4846,11 +5116,14 @@
         updateCupDecorFinish();
         playSound('scoop_pour');
 
-        // 1. Hiệu ứng cái vá xúc lên từ khay topping
+        // 1. Hiệu ứng cái vá xúc lên từ khay topping & vệt bay vào ly
         document.querySelectorAll('.topping-card').forEach(el => el.classList.remove('scooping-active', 'selected'));
         if (targetCard) {
             void targetCard.offsetWidth;
             targetCard.classList.add('scooping-active');
+            triggerOnceAnim(targetCard, 'just-picked', 420);
+            spawnTapBurst(targetCard, topObj ? topObj.ladleColor : '#f59e0b', ['✨', '🥣']);
+            launchFlyingTopping(targetCard, topObj ? topObj.ladleColor : '#f59e0b');
         }
 
         // 2. Hiệu ứng cái vá nghiêng trút topping từ miệng ly rơi xuống đáy ly
@@ -4943,6 +5216,9 @@
             isScooping = false;
 
             updateCupUI();
+            const cupBox = document.getElementById('visual-cup-box');
+            triggerOnceAnim(cupBox, 'cup-topping-bounce', 440);
+            spawnTapBurst(cupBox, topObj ? topObj.ladleColor : '#f59e0b', ['✨', '🫧']);
             setMessage(`✅ Đã đổ ${name} vào ly!`, 'success');
         }, 680);
     }
@@ -5381,7 +5657,12 @@
 
         const floatEl = document.createElement('div');
         floatEl.className = 'money-float';
-        floatEl.innerHTML = comboCount >= 3 ? `${amountText} <span style="font-size:13px;color:#ea580c;">🔥x${comboCount}</span>` : amountText;
+        const comboBadge = comboCount >= 7
+            ? `<span style="font-size:13px;color:#d97706;">👑 HUYỀN THOẠI x${comboCount}!</span>`
+            : (comboCount >= 5
+                ? `<span style="font-size:13px;color:#ea580c;">⚡ SIÊU COMBO x${comboCount}!</span>`
+                : (comboCount >= 3 ? `<span style="font-size:13px;color:#ea580c;">🔥 COMBO x${comboCount}</span>` : ''));
+        floatEl.innerHTML = comboBadge ? `${amountText} ${comboBadge}` : amountText;
         floatEl.style.left = `${originX}px`;
         floatEl.style.top = `${originY}px`;
         container.appendChild(floatEl);
@@ -5431,6 +5712,8 @@
             speechBubble.classList.remove('multi-order');
             speechBubble.classList.add('bubble-angry');
         }
+        triggerOnceAnim(document.getElementById('game-container'), 'fx-angry-shake', 420);
+        spawnAvatarReaction('angry');
         if (imgEl) {
             imgEl.classList.remove('pop', 'angry-leave');
             void imgEl.offsetWidth;
@@ -5542,6 +5825,10 @@
                 // Khách còn món tiếp theo -> đánh dấu ✅ món vừa xong và reset bộ đếm 20s cho món kế tiếp
                 syncActiveOrderTarget();
                 renderCustomerOrderBubble();
+                const checkedChip = document.querySelector(`.order-ticket-chip[data-item-idx="${matchedIdx}"]`);
+                triggerOnceAnim(checkedChip, 'just-done', 480);
+                launchConfetti(22);
+                spawnTapBurst(document.getElementById('btn-serve'), '#22c55e', ['✅', '✨']);
                 persistSave();
                 updateHUD();
                 triggerOnceAnim(document.getElementById('money')?.closest('.stat-pill'), 'hud-pop', 450);
@@ -5561,12 +5848,16 @@
             }
 
             // Đã hoàn thành tất cả 1..4 món của khách này
-            launchConfetti();
+            launchConfetti(60);
+            triggerOnceAnim(document.getElementById('game-container'), 'fx-happy-flash', 650);
+            spawnAvatarReaction('happy');
             dayCustomersDone += 1;
             dayStats.customersServed = (dayStats.customersServed || 0) + 1;
 
             if (totalItemsCount > 1) {
                 renderCustomerOrderBubble();
+                const checkedChip = document.querySelector(`.order-ticket-chip[data-item-idx="${matchedIdx}"]`);
+                triggerOnceAnim(checkedChip, 'just-done', 480);
             }
             persistSave();
             updateHUD();
